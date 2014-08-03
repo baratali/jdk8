@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.java</groupId>
+  <artifactId>jdk</artifactId>
+  <packaging>jar</packaging>
+  <version>3.1.1.RELEASE</version>
+  
+	<build>
+		<plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<configuration>
+			    <configLocation>checkstyle_checks.xml</configLocation>
+			    <enableFilesSummary>false</enableFilesSummary>
+			</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
