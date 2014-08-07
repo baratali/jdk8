@@ -1,0 +1,874 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>DTMManagerDefault xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../../apidocs/com/sun/org/apache/xml/internal/dtm/ref/DTMManagerDefault.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2007-2012, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Copyright 1999-2004 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *     <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> * $Id: DTMManagerDefault.java,v 1.2.4.1 2005/09/15 08:15:02 suresh_emailid Exp $</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">package</strong> com.sun.org.apache.xml.internal.dtm.ref;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xalan.internal.utils.FactoryImpl;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> javax.xml.parsers.DocumentBuilder;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> javax.xml.parsers.DocumentBuilderFactory;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.Source;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.dom.DOMSource;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.sax.SAXSource;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.stream.StreamSource;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTM;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTMException;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTMFilter;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTMIterator;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTMManager;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.DTMWSFilter;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.ref.dom2dtm.DOM2DTM;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.ref.sax2dtm.SAX2DTM;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.dtm.ref.sax2dtm.SAX2RTFDTM;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.res.XMLErrorResources;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.res.XMLMessages;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.utils.PrefixResolver;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.utils.SystemIDResolver;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.utils.XMLReaderManager;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.utils.XMLStringFactory;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Document;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.InputSource;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXException;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXNotRecognizedException;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXNotSupportedException;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.XMLReader;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.helpers.DefaultHandler;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * The default implementation for the DTMManager.</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * %REVIEW% There is currently a reentrancy issue, since the finalizer</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * for XRTreeFrag (which runs in the GC thread) wants to call</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * DTMManager.release(), and may do so at the same time that the main</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * transformation thread is accessing the manager. Our current solution is</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * to make most of the manager's methods &lt;code&gt;synchronized&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * Early tests suggest that doing so is not causing a significant</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * performance hit in Xalan. However, it should be noted that there</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * is a possible alternative solution: rewrite release() so it merely</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * posts a request for release onto a threadsafe queue, and explicitly</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * process that queue on an infrequent basis during main-thread</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * activity (eg, when getDTM() is invoked). The downside of that solution</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * would be a greater delay before the DTM's storage is actually released</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * for reuse.</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * */</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMManagerDefault.html">DTMManagerDefault</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMManager.html">DTMManager</a>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <em class="jxr_comment">//static final boolean JKESS_XNI_EXPERIMENT=true;</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <em class="jxr_javadoccomment">/** Set this to true if you want a dump of the DTM after creation. */</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> DUMPTREE = false;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>    <em class="jxr_javadoccomment">/** Set this to true if you want a basic diagnostics. */</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> DEBUG = false;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   * Map from DTM identifier numbers to DTM objects that this manager manages.</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">   * One DTM may have several prefix numbers, if extended node indexing</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">   * is in use; in that case, m_dtm_offsets[] will used to control which</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">   * prefix maps to which section of the DTM.</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">   * This array grows as necessary; see addDTM().</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">   * This array grows as necessary; see addDTM(). Growth is uncommon... but</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">   * access needs to be blindingly fast since it's used in node addressing.</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>    <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> m_dtms[] = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a>[256];
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>    <em class="jxr_javadoccomment">/** Map from DTM identifier numbers to offsets. For small DTMs with a</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   * single identifier, this will always be 0. In overflow addressing, where</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">   * additional identifiers are allocated to access nodes beyond the range of</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">   * a single Node Handle, this table is used to map the handle's node field</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">   * into the actual node identifier.</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">   * This array grows as necessary; see addDTM().</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">   * This array grows as necessary; see addDTM(). Growth is uncommon... but</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">   * access needs to be blindingly fast since it's used in node addressing.</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">   * (And at the moment, that includes accessing it from DTMDefaultBase,</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">   * which is why this is not Protected or Private.)</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">int</strong> m_dtm_offsets[] = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[256];
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">   * The cache for XMLReader objects to be used if the user did not</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">   * supply an XMLReader for a SAXSource or supplied a StreamSource.</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>   <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/XMLReaderManager.html">XMLReaderManager</a> m_readerManager = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">   * The default implementation of ContentHandler, DTDHandler and ErrorHandler.</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>   <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../../org/xml/sax/helpers/DefaultHandler.html">DefaultHandler</a> m_defaultHandler = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../org/xml/sax/helpers/DefaultHandler.html">DefaultHandler</a>();
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">   * Add a DTM to the DTM table. This convenience call adds it as the</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">   * "base DTM ID", with offset 0. The other version of addDTM should</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">   * be used if you want to add "extended" DTM IDs with nonzero offsets.</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">   * @param dtm Should be a valid reference to a DTM.</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   * @param id Integer DTM ID to be bound to this DTM</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addDTM(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> dtm, <strong class="jxr_keyword">int</strong> id) {    addDTM(dtm,id,0); }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">   * Add a DTM to the DTM table.</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">   * @param dtm Should be a valid reference to a DTM.</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">   * @param id Integer DTM ID to be bound to this DTM.</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">   * @param offset Integer addressing offset. The internal DTM Node ID is</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">   * obtained by adding this offset to the node-number field of the</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">   * public DTM Handle. For the first DTM ID accessing each DTM, this is 0;</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">   * for overflow addressing it will be a multiple of 1&lt;&lt;IDENT_DTM_NODE_BITS.</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addDTM(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> dtm, <strong class="jxr_keyword">int</strong> id, <strong class="jxr_keyword">int</strong> offset)
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 <strong class="jxr_keyword">if</strong>(id&gt;=IDENT_MAX_DTMS)
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                         <em class="jxr_comment">// TODO: %REVIEW% Not really the right error message.</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMException.html">DTMException</a>(XMLMessages.createXMLMessage(XMLErrorResources.ER_NO_DTMIDS_AVAIL, <strong class="jxr_keyword">null</strong>)); <em class="jxr_comment">//"No more DTM IDs are available!");</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                 }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                 <em class="jxr_comment">// We used to just allocate the array size to IDENT_MAX_DTMS.</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                 <em class="jxr_comment">// But we expect to increase that to 16 bits, and I'm not willing</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                 <em class="jxr_comment">// to allocate that much space unless needed. We could use one of our</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                 <em class="jxr_comment">// handy-dandy Fast*Vectors, but this will do for now.</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                 <em class="jxr_comment">// %REVIEW%</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>                 <strong class="jxr_keyword">int</strong> oldlen=m_dtms.length;
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>                 <strong class="jxr_keyword">if</strong>(oldlen&lt;=id)
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>                 {
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                         <em class="jxr_comment">// Various growth strategies are possible. I think we don't want</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                         <em class="jxr_comment">// to over-allocate excessively, and I'm willing to reallocate</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                         <em class="jxr_comment">// more often to get that. See also Fast*Vector classes.</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                         <em class="jxr_comment">// %REVIEW% Should throw a more diagnostic error if we go over the max...</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                         <strong class="jxr_keyword">int</strong> newlen=Math.min((id+256),IDENT_MAX_DTMS);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                         <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> <strong class="jxr_keyword">new</strong>_m_dtms[] = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a>[newlen];
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>                         System.arraycopy(m_dtms,0,<strong class="jxr_keyword">new</strong>_m_dtms,0,oldlen);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>                         m_dtms=<strong class="jxr_keyword">new</strong>_m_dtms;
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>                         <strong class="jxr_keyword">int</strong> <strong class="jxr_keyword">new</strong>_m_dtm_offsets[] = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[newlen];
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>                         System.arraycopy(m_dtm_offsets,0,<strong class="jxr_keyword">new</strong>_m_dtm_offsets,0,oldlen);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                         m_dtm_offsets=<strong class="jxr_keyword">new</strong>_m_dtm_offsets;
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>                 }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     m_dtms[id] = dtm;
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>                 m_dtm_offsets[id]=offset;
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     dtm.documentRegistration();
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>                 <em class="jxr_comment">// The DTM should have been told who its manager was when we created it.</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>                 <em class="jxr_comment">// Do we need to allow for adopting DTMs _not_ created by this manager?</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>   }
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> 
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">   * Get the first free DTM ID available. %OPT% Linear search is inefficient!</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getFirstFreeDTMID()
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>   {
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <strong class="jxr_keyword">int</strong> n = m_dtms.length;
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 1; i &lt; n; i++)
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>       <strong class="jxr_keyword">if</strong>(<strong class="jxr_keyword">null</strong> == m_dtms[i])
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>       {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>         <strong class="jxr_keyword">return</strong> i;
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>       }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     }
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                 <strong class="jxr_keyword">return</strong> n; <em class="jxr_comment">// count on addDTM() to throw exception if out of range</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>   }
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">   * The default table for exandedNameID lookups.</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>   <strong class="jxr_keyword">private</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/ExpandedNameTable.html">ExpandedNameTable</a> m_expandedNameTable =
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/ExpandedNameTable.html">ExpandedNameTable</a>();
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> 
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">   * Constructor DTMManagerDefault</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMManagerDefault.html">DTMManagerDefault</a>(){}
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> 
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">   * Get an instance of a DTM, loaded with the content from the</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">   * specified source.  If the unique flag is true, a new instance will</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">   * always be returned.  Otherwise it is up to the DTMManager to return a</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">   * new instance or an instance that it already created and may be being used</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">   * by someone else.</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">   * A bit of magic in this implementation: If the source is null, unique is true,</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">   * and incremental and doIndexing are both false, we return an instance of</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">   * SAX2RTFDTM, which see.</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">   * (I think more parameters will need to be added for error handling, and entity</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">   * resolution, and more explicit control of the RTF situation).</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">   * @param source the specification of the source object.</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">   * @param unique true if the returned DTM must be unique, probably because it</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">   * is going to be mutated.</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">   * @param whiteSpaceFilter Enables filtering of whitespace nodes, and may</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">   *                         be null.</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">   * @param incremental true if the DTM should be built incrementally, if</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">   *                    possible.</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">   * @param doIndexing true if the caller considers it worth it to use</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">   *                   indexing schemes.</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">   * @return a non-null DTM reference.</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> getDTM(<a href="../../../../../../../../javax/xml/transform/Source.html">Source</a> source, <strong class="jxr_keyword">boolean</strong> unique,
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>                                  <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMWSFilter.html">DTMWSFilter</a> whiteSpaceFilter,
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>                                  <strong class="jxr_keyword">boolean</strong> incremental, <strong class="jxr_keyword">boolean</strong> doIndexing)
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>   {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">if</strong>(DEBUG &amp;&amp; <strong class="jxr_keyword">null</strong> != source)
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>       System.out.println(<span class="jxr_string">"Starting "</span>+
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>                          (unique ? <span class="jxr_string">"UNIQUE"</span> : <span class="jxr_string">"shared"</span>)+
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>                          <span class="jxr_string">" source: "</span>+source.getSystemId()
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>                          );
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/XMLStringFactory.html">XMLStringFactory</a> xstringFactory = m_xsf;
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     <strong class="jxr_keyword">int</strong> dtmPos = getFirstFreeDTMID();
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <strong class="jxr_keyword">int</strong> documentID = dtmPos &lt;&lt; IDENT_DTM_NODE_BITS;
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">if</strong> ((<strong class="jxr_keyword">null</strong> != source) &amp;&amp; source instanceof DOMSource)
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     {
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/dom2dtm/DOM2DTM.html">DOM2DTM</a> dtm = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/dom2dtm/DOM2DTM.html">DOM2DTM</a>(<strong class="jxr_keyword">this</strong>, (DOMSource) source, documentID,
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                                 whiteSpaceFilter, xstringFactory, doIndexing);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> 
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>       addDTM(dtm, dtmPos, 0);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>       <em class="jxr_comment">//      if (DUMPTREE)</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>       <em class="jxr_comment">//      {</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>       <em class="jxr_comment">//        dtm.dumpDTM();</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>       <em class="jxr_comment">//      }</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>       <strong class="jxr_keyword">return</strong> dtm;
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>       <strong class="jxr_keyword">boolean</strong> isSAXSource = (<strong class="jxr_keyword">null</strong> != source)
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         ? (source instanceof SAXSource) : <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>       <strong class="jxr_keyword">boolean</strong> isStreamSource = (<strong class="jxr_keyword">null</strong> != source)
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         ? (source instanceof StreamSource) : false;
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> 
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>       <strong class="jxr_keyword">if</strong> (isSAXSource || isStreamSource) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         <a href="../../../../../../../../org/xml/sax/XMLReader.html">XMLReader</a> reader = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/sax2dtm/SAX2DTM.html">SAX2DTM</a> dtm;
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>           <a href="../../../../../../../../org/xml/sax/InputSource.html">InputSource</a> xmlSource;
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>           <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == source) {
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>             xmlSource = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>             reader = getXMLReader(source);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>             xmlSource = SAXSource.sourceToInputSource(source);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>             <a href="../../../../../../../../java/lang/String.html">String</a> urlOfSource = xmlSource.getSystemId();
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> != urlOfSource) {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>               <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                 urlOfSource = SystemIDResolver.getAbsoluteURI(urlOfSource);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>               } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>                 <em class="jxr_comment">// %REVIEW% Is there a better way to send a warning?</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                 System.err.println(<span class="jxr_string">"Can not absolutize URL: "</span> + urlOfSource);
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>               }
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>               xmlSource.setSystemId(urlOfSource);
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             }
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>           }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>           <strong class="jxr_keyword">if</strong> (source==<strong class="jxr_keyword">null</strong> &amp;&amp; unique &amp;&amp; !incremental &amp;&amp; !doIndexing) {
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>             <em class="jxr_comment">// Special case to support RTF construction into shared DTM.</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>             <em class="jxr_comment">// It should actually still work for other uses,</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>             <em class="jxr_comment">// but may be slightly deoptimized relative to the base</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             <em class="jxr_comment">// to allow it to deal with carrying multiple documents.</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>             <em class="jxr_comment">// %REVIEW% This is a sloppy way to request this mode;</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>             <em class="jxr_comment">// we need to consider architectural improvements.</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>             dtm = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/sax2dtm/SAX2RTFDTM.html">SAX2RTFDTM</a>(<strong class="jxr_keyword">this</strong>, source, documentID, whiteSpaceFilter,
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>                                  xstringFactory, doIndexing);
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>           }
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>           <em class="jxr_javadoccomment">/**************************************************************</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">          // EXPERIMENTAL 3/22/02</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">          else if(JKESS_XNI_EXPERIMENT &amp;&amp; m_incremental) {</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">            dtm = new XNI2DTM(this, source, documentID, whiteSpaceFilter,</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">                              xstringFactory, doIndexing);</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">          }</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">          **************************************************************/</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>           <em class="jxr_comment">// Create the basic SAX2DTM.</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>           <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>             dtm = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/sax2dtm/SAX2DTM.html">SAX2DTM</a>(<strong class="jxr_keyword">this</strong>, source, documentID, whiteSpaceFilter,
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                               xstringFactory, doIndexing);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>           }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>           <em class="jxr_comment">// Go ahead and add the DTM to the lookup table.  This needs to be</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>           <em class="jxr_comment">// done before any parsing occurs. Note offset 0, since we've just</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>           <em class="jxr_comment">// created a new DTM.</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>           addDTM(dtm, dtmPos, 0);
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>           <strong class="jxr_keyword">boolean</strong> haveXercesParser =
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>                      (<strong class="jxr_keyword">null</strong> != reader)
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>                      &amp;&amp; (reader.getClass()
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>                                .getName()
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>                                .equals(<span class="jxr_string">"com.sun.org.apache.xerces.internal.parsers.SAXParser"</span>) );
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>           <strong class="jxr_keyword">if</strong> (haveXercesParser) {
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>             incremental = <strong class="jxr_keyword">true</strong>;  <em class="jxr_comment">// No matter what.  %REVIEW%</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>           }
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>           <em class="jxr_comment">// If the reader is null, but they still requested an incremental</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>           <em class="jxr_comment">// build, then we still want to set up the IncrementalSAXSource stuff.</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>           <strong class="jxr_keyword">if</strong> (m_incremental &amp;&amp; incremental
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>                <em class="jxr_comment">/* || ((null == reader) &amp;&amp; incremental) */</em>) {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/IncrementalSAXSource.html">IncrementalSAXSource</a> coParser=<strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> 
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>             <strong class="jxr_keyword">if</strong> (haveXercesParser) {
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>               <em class="jxr_comment">// IncrementalSAXSource_Xerces to avoid threading.</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>               <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>                 coParser =(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/IncrementalSAXSource.html">IncrementalSAXSource</a>)
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>                   Class.forName(<span class="jxr_string">"com.sun.org.apache.xml.internal.dtm.ref.IncrementalSAXSource_Xerces"</span>).newInstance();
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>               }  <strong class="jxr_keyword">catch</strong>( Exception ex ) {
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>                 ex.printStackTrace();
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                 coParser=<strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>               }
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>             }
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> 
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>             <strong class="jxr_keyword">if</strong> (coParser==<strong class="jxr_keyword">null</strong> ) {
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>               <em class="jxr_comment">// Create a IncrementalSAXSource to run on the secondary thread.</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>               <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == reader) {
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>                 coParser = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/IncrementalSAXSource_Filter.html">IncrementalSAXSource_Filter</a>();
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>               } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>                 <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/IncrementalSAXSource_Filter.html">IncrementalSAXSource_Filter</a> filter =
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>                          <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/IncrementalSAXSource_Filter.html">IncrementalSAXSource_Filter</a>();
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>                 filter.setXMLReader(reader);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>                 coParser=filter;
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>               }
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>             }
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> 
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> 
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>             <em class="jxr_javadoccomment">/**************************************************************</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">            // EXPERIMENTAL 3/22/02</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">            if (JKESS_XNI_EXPERIMENT &amp;&amp; m_incremental &amp;&amp;</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">                  dtm instanceof XNI2DTM &amp;&amp;</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">                  coParser instanceof IncrementalSAXSource_Xerces) {</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">                com.sun.org.apache.xerces.internal.xni.parser.XMLPullParserConfiguration xpc=</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">                      ((IncrementalSAXSource_Xerces)coParser)</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">                                           .getXNIParserConfiguration();</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">              if (xpc!=null) {</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">                // Bypass SAX; listen to the XNI stream</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">                ((XNI2DTM)dtm).setIncrementalXNISource(xpc);</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">              } else {</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">                  // Listen to the SAX stream (will fail, diagnostically...)</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">                dtm.setIncrementalSAXSource(coParser);</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_javadoccomment">              }</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">            } else</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">            ***************************************************************/</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>             <em class="jxr_comment">// Have the DTM set itself up as IncrementalSAXSource's listener.</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>             dtm.setIncrementalSAXSource(coParser);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> 
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == xmlSource) {
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> 
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>               <em class="jxr_comment">// Then the user will construct it themselves.</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>               <strong class="jxr_keyword">return</strong> dtm;
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>             }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> 
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == reader.getErrorHandler()) {
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>               reader.setErrorHandler(dtm);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>             }
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>             reader.setDTDHandler(dtm);
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>               <em class="jxr_comment">// Launch parsing coroutine.  Launches a second thread,</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>               <em class="jxr_comment">// if we're using IncrementalSAXSource.filter().</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> 
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>               coParser.startParse(xmlSource);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>             } <strong class="jxr_keyword">catch</strong> (RuntimeException re) {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> 
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>               dtm.clearCoRoutine();
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>               <strong class="jxr_keyword">throw</strong> re;
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>             } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> 
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>               dtm.clearCoRoutine();
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>               <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> com.sun.org.apache.xml.internal.utils.WrappedRuntimeException(e);
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>             }
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>           } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == reader) {
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> 
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>               <em class="jxr_comment">// Then the user will construct it themselves.</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>               <strong class="jxr_keyword">return</strong> dtm;
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>             }
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> 
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>             <em class="jxr_comment">// not incremental</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>             reader.setContentHandler(dtm);
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             reader.setDTDHandler(dtm);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == reader.getErrorHandler()) {
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>               reader.setErrorHandler(dtm);
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>             }
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> 
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>               reader.setProperty(
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>                                <span class="jxr_string">"http://xml.org/sax/properties/lexical-handler"</span>,
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                                dtm);
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             } <strong class="jxr_keyword">catch</strong> (SAXNotRecognizedException e){}
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>               <strong class="jxr_keyword">catch</strong> (SAXNotSupportedException e){}
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>               reader.parse(xmlSource);
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>             } <strong class="jxr_keyword">catch</strong> (RuntimeException re) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>               dtm.clearCoRoutine();
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> 
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>               <strong class="jxr_keyword">throw</strong> re;
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>             } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>               dtm.clearCoRoutine();
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> 
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>               <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> com.sun.org.apache.xml.internal.utils.WrappedRuntimeException(e);
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>             }
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>           }
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>           <strong class="jxr_keyword">if</strong> (DUMPTREE) {
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>             System.out.println(<span class="jxr_string">"Dumping SAX2DOM"</span>);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>             dtm.dumpDTM(System.err);
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>           }
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> 
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>           <strong class="jxr_keyword">return</strong> dtm;
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>           <em class="jxr_comment">// Reset the ContentHandler, DTDHandler, ErrorHandler to the DefaultHandler</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>           <em class="jxr_comment">// after creating the DTM.</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>           <strong class="jxr_keyword">if</strong> (reader != <strong class="jxr_keyword">null</strong> &amp;&amp; !(m_incremental &amp;&amp; incremental)) {
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>             reader.setContentHandler(m_defaultHandler);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>             reader.setDTDHandler(m_defaultHandler);
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>             reader.setErrorHandler(m_defaultHandler);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> 
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>             <em class="jxr_comment">// Reset the LexicalHandler to null after creating the DTM.</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>               reader.setProperty(<span class="jxr_string">"http://xml.org/sax/properties/lexical-handler"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>             }
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <strong class="jxr_keyword">catch</strong> (Exception e) {}
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>           }
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>           releaseXMLReader(reader);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         }
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         <em class="jxr_comment">// It should have been handled by a derived class or the caller</em>
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         <em class="jxr_comment">// made a mistake.</em>
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMException.html">DTMException</a>(XMLMessages.createXMLMessage(XMLErrorResources.ER_NOT_SUPPORTED, <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../java/lang/Object.html">Object</a>[]{source})); <em class="jxr_comment">//"Not supported: " + source);</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>       }
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>     }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>   }
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">   * Given a W3C DOM node, try and return a DTM handle.</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">   * Note: calling this may be non-optimal, and there is no guarantee that</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">   * the node will be found in any particular DTM.</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">   * @param node Non-null reference to a DOM node.</em>
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">   * @return a valid DTM handle.</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getDTMHandleFromNode(org.w3c.dom.Node node)
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>   {
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     <strong class="jxr_keyword">if</strong>(<strong class="jxr_keyword">null</strong> == node)
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(XMLMessages.createXMLMessage(XMLErrorResources.ER_NODE_NON_NULL, <strong class="jxr_keyword">null</strong>)); <em class="jxr_comment">//"node must be non-null for getDTMHandleFromNode!");</em>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <strong class="jxr_keyword">if</strong> (node instanceof com.sun.org.apache.xml.internal.dtm.ref.DTMNodeProxy)
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>       <strong class="jxr_keyword">return</strong> ((com.sun.org.apache.xml.internal.dtm.ref.DTMNodeProxy) node).getDTMNodeNumber();
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>     <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>     {
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>       <em class="jxr_comment">// Find the DOM2DTMs wrapped around this Document (if any)</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>       <em class="jxr_comment">// and check whether they contain the Node in question.</em>
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>       <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>       <em class="jxr_comment">// NOTE that since a DOM2DTM may represent a subtree rather</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>       <em class="jxr_comment">// than a full document, we have to be prepared to check more</em>
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>       <em class="jxr_comment">// than one -- and there is no guarantee that we will find</em>
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>       <em class="jxr_comment">// one that contains ancestors or siblings of the node we're</em>
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>       <em class="jxr_comment">// seeking.</em>
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>       <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>       <em class="jxr_comment">// %REVIEW% We could search for the one which contains this</em>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>       <em class="jxr_comment">// node at the deepest level, and thus covers the widest</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>       <em class="jxr_comment">// subtree, but that's going to entail additional work</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>       <em class="jxr_comment">// checking more DTMs... and getHandleOfNode is not a</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>       <em class="jxr_comment">// cheap operation in most implementations.</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>                         <em class="jxr_comment">// TODO: %REVIEW% If overflow addressing, we may recheck a DTM</em>
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>                         <em class="jxr_comment">// already examined. Ouch. But with the increased number of DTMs,</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>                         <em class="jxr_comment">// scanning back to check this is painful.</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>                         <em class="jxr_comment">// POSSIBLE SOLUTIONS:</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>                         <em class="jxr_comment">//   Generate a list of _unique_ DTM objects?</em>
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>                         <em class="jxr_comment">//   Have each DTM cache last DOM node search?</em>
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>                         <strong class="jxr_keyword">int</strong> max = m_dtms.length;
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>       <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> i = 0; i &lt; max; i++)
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>         {
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>           <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> thisDTM=m_dtms[i];
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>           <strong class="jxr_keyword">if</strong>((<strong class="jxr_keyword">null</strong> != thisDTM) &amp;&amp; thisDTM instanceof DOM2DTM)
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>           {
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             <strong class="jxr_keyword">int</strong> handle=((DOM2DTM)thisDTM).getHandleOfNode(node);
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>             <strong class="jxr_keyword">if</strong>(handle!=DTM.NULL) <strong class="jxr_keyword">return</strong> handle;
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>           }
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>          }
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> 
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>                         <em class="jxr_comment">// Not found; generate a new DTM.</em>
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>                         <em class="jxr_comment">// %REVIEW% Is this really desirable, or should we return null</em>
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>                         <em class="jxr_comment">// and make folks explicitly instantiate from a DOMSource? The</em>
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>                         <em class="jxr_comment">// latter is more work but gives the caller the opportunity to</em>
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>                         <em class="jxr_comment">// explicitly add the DTM to a DTMManager... and thus to know when</em>
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>                         <em class="jxr_comment">// it can be discarded again, which is something we need to pay much</em>
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>                         <em class="jxr_comment">// more attention to. (Especially since only DTMs which are assigned</em>
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>                         <em class="jxr_comment">// to a manager can use the overflow addressing scheme.)</em>
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>                         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>                         <em class="jxr_comment">// %BUG% If the source node was a DOM2DTM$defaultNamespaceDeclarationNode</em>
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>                         <em class="jxr_comment">// and the DTM wasn't registered with this DTMManager, we will create</em>
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>                         <em class="jxr_comment">// a new DTM and _still_ not be able to find the node (since it will</em>
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>                         <em class="jxr_comment">// be resynthesized). Another reason to push hard on making all DTMs</em>
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>                         <em class="jxr_comment">// be managed DTMs.</em>
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>                         <em class="jxr_comment">// Since the real root of our tree may be a DocumentFragment, we need to</em>
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>       <em class="jxr_comment">// use getParent to find the root, instead of getOwnerDocument.  Otherwise</em>
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>       <em class="jxr_comment">// DOM2DTM#getHandleOfNode will be very unhappy.</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/Trie.html">Node</a> root = node;
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/Trie.html">Node</a> p = (root.getNodeType() == Node.ATTRIBUTE_NODE) ? ((org.w3c.dom.Attr)root).getOwnerElement() : root.getParentNode();
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>       <strong class="jxr_keyword">for</strong> (; p != <strong class="jxr_keyword">null</strong>; p = p.getParentNode())
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>       {
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>         root = p;
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>       }
+<a class="jxr_linenumber" name="L561" href="#L561">561</a> 
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/dom2dtm/DOM2DTM.html">DOM2DTM</a> dtm = (DOM2DTM) getDTM(<strong class="jxr_keyword">new</strong> javax.xml.transform.dom.DOMSource(root),
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>                                                                                                                                                  false, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">true</strong>, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> 
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>       <strong class="jxr_keyword">int</strong> handle;
+<a class="jxr_linenumber" name="L566" href="#L566">566</a> 
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>       <strong class="jxr_keyword">if</strong>(node instanceof com.sun.org.apache.xml.internal.dtm.ref.dom2dtm.DOM2DTMdefaultNamespaceDeclarationNode)
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>       {
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>                                 <em class="jxr_comment">// Can't return the same node since it's unique to a specific DTM,</em>
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>                                 <em class="jxr_comment">// but can return the equivalent node -- find the corresponding</em>
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>                                 <em class="jxr_comment">// Document Element, then ask it for the xml: namespace decl.</em>
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>                                 handle=dtm.getHandleOfNode(((org.w3c.dom.Attr)node).getOwnerElement());
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>                                 handle=dtm.getAttributeNode(handle,node.getNamespaceURI(),node.getLocalName());
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>       }
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>       <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L576" href="#L576">576</a>                                 handle = ((DOM2DTM)dtm).getHandleOfNode(node);
+<a class="jxr_linenumber" name="L577" href="#L577">577</a> 
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>       <strong class="jxr_keyword">if</strong>(DTM.NULL == handle)
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../java/lang/RuntimeException.html">RuntimeException</a>(XMLMessages.createXMLMessage(XMLErrorResources.ER_COULD_NOT_RESOLVE_NODE, <strong class="jxr_keyword">null</strong>)); <em class="jxr_comment">//"Could not resolve the node to a handle!");</em>
+<a class="jxr_linenumber" name="L580" href="#L580">580</a> 
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>       <strong class="jxr_keyword">return</strong> handle;
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>     }
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>   }
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> 
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L586" href="#L586">586</a> <em class="jxr_javadoccomment">   * This method returns the SAX2 parser to use with the InputSource</em>
+<a class="jxr_linenumber" name="L587" href="#L587">587</a> <em class="jxr_javadoccomment">   * obtained from this URI.</em>
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">   * It may return null if any SAX2-conformant XML parser can be used,</em>
+<a class="jxr_linenumber" name="L589" href="#L589">589</a> <em class="jxr_javadoccomment">   * or if getInputSource() will also return null. The parser must</em>
+<a class="jxr_linenumber" name="L590" href="#L590">590</a> <em class="jxr_javadoccomment">   * be free for use (i.e., not currently in use for another parse().</em>
+<a class="jxr_linenumber" name="L591" href="#L591">591</a> <em class="jxr_javadoccomment">   * After use of the parser is completed, the releaseXMLReader(XMLReader)</em>
+<a class="jxr_linenumber" name="L592" href="#L592">592</a> <em class="jxr_javadoccomment">   * must be called.</em>
+<a class="jxr_linenumber" name="L593" href="#L593">593</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L594" href="#L594">594</a> <em class="jxr_javadoccomment">   * @param inputSource The value returned from the URIResolver.</em>
+<a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">   * @return  a SAX2 XMLReader to use to resolve the inputSource argument.</em>
+<a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">   * @return non-null XMLReader reference ready to parse.</em>
+<a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../org/xml/sax/XMLReader.html">XMLReader</a> getXMLReader(<a href="../../../../../../../../javax/xml/transform/Source.html">Source</a> inputSource)
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>   {
+<a class="jxr_linenumber" name="L601" href="#L601">601</a> 
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>     <strong class="jxr_keyword">try</strong>
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     {
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>       <a href="../../../../../../../../org/xml/sax/XMLReader.html">XMLReader</a> reader = (inputSource instanceof SAXSource)
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>                          ? ((SAXSource) inputSource).getXMLReader() : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L606" href="#L606">606</a> 
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>       <em class="jxr_comment">// If user did not supply a reader, ask for one from the reader manager</em>
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>       <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == reader) {
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         <strong class="jxr_keyword">if</strong> (m_readerManager == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>             m_readerManager = XMLReaderManager.getInstance(<strong class="jxr_keyword">super</strong>.useServicesMechnism());
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>         }
+<a class="jxr_linenumber" name="L612" href="#L612">612</a> 
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         reader = m_readerManager.getXMLReader();
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>       }
+<a class="jxr_linenumber" name="L615" href="#L615">615</a> 
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>       <strong class="jxr_keyword">return</strong> reader;
+<a class="jxr_linenumber" name="L617" href="#L617">617</a> 
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>     } <strong class="jxr_keyword">catch</strong> (SAXException se) {
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMException.html">DTMException</a>(se.getMessage(), se);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>     }
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>   }
+<a class="jxr_linenumber" name="L622" href="#L622">622</a> 
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L624" href="#L624">624</a> <em class="jxr_javadoccomment">   * Indicates that the XMLReader object is no longer in use for the transform.</em>
+<a class="jxr_linenumber" name="L625" href="#L625">625</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L626" href="#L626">626</a> <em class="jxr_javadoccomment">   * Note that the getXMLReader method may return an XMLReader that was</em>
+<a class="jxr_linenumber" name="L627" href="#L627">627</a> <em class="jxr_javadoccomment">   * specified on the SAXSource object by the application code.  Such a</em>
+<a class="jxr_linenumber" name="L628" href="#L628">628</a> <em class="jxr_javadoccomment">   * reader should still be passed to releaseXMLReader, but the reader manager</em>
+<a class="jxr_linenumber" name="L629" href="#L629">629</a> <em class="jxr_javadoccomment">   * will only re-use XMLReaders that it created.</em>
+<a class="jxr_linenumber" name="L630" href="#L630">630</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L631" href="#L631">631</a> <em class="jxr_javadoccomment">   * @param reader The XMLReader to be released.</em>
+<a class="jxr_linenumber" name="L632" href="#L632">632</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> releaseXMLReader(<a href="../../../../../../../../org/xml/sax/XMLReader.html">XMLReader</a> reader) {
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     <strong class="jxr_keyword">if</strong> (m_readerManager != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>       m_readerManager.releaseXMLReader(reader);
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     }
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>   }
+<a class="jxr_linenumber" name="L638" href="#L638">638</a> 
+<a class="jxr_linenumber" name="L639" href="#L639">639</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L640" href="#L640">640</a> <em class="jxr_javadoccomment">   * Return the DTM object containing a representation of this node.</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">   * @param nodeHandle DTM Handle indicating which node to retrieve</em>
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">   * @return a reference to the DTM object containing this node.</em>
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> getDTM(<strong class="jxr_keyword">int</strong> nodeHandle)
+<a class="jxr_linenumber" name="L647" href="#L647">647</a>   {
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>     <strong class="jxr_keyword">try</strong>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>     {
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>       <em class="jxr_comment">// Performance critical function.</em>
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>       <strong class="jxr_keyword">return</strong> m_dtms[nodeHandle &gt;&gt;&gt; IDENT_DTM_NODE_BITS];
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>     }
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>     <strong class="jxr_keyword">catch</strong>(java.lang.ArrayIndexOutOfBoundsException e)
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>     {
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>       <strong class="jxr_keyword">if</strong>(nodeHandle==DTM.NULL)
+<a class="jxr_linenumber" name="L656" href="#L656">656</a>                                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;            <em class="jxr_comment">// Accept as a special case.</em>
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>       <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>                                 <strong class="jxr_keyword">throw</strong> e;                <em class="jxr_comment">// Programming error; want to know about it.</em>
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>     }
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>   }
+<a class="jxr_linenumber" name="L661" href="#L661">661</a> 
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L663" href="#L663">663</a> <em class="jxr_javadoccomment">   * Given a DTM, find the ID number in the DTM tables which addresses</em>
+<a class="jxr_linenumber" name="L664" href="#L664">664</a> <em class="jxr_javadoccomment">   * the start of the document. If overflow addressing is in use, other</em>
+<a class="jxr_linenumber" name="L665" href="#L665">665</a> <em class="jxr_javadoccomment">   * DTM IDs may also be assigned to this DTM.</em>
+<a class="jxr_linenumber" name="L666" href="#L666">666</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L667" href="#L667">667</a> <em class="jxr_javadoccomment">   * @param dtm The DTM which (hopefully) contains this node.</em>
+<a class="jxr_linenumber" name="L668" href="#L668">668</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L669" href="#L669">669</a> <em class="jxr_javadoccomment">   * @return The DTM ID (as the high bits of a NodeHandle, not as our</em>
+<a class="jxr_linenumber" name="L670" href="#L670">670</a> <em class="jxr_javadoccomment">   * internal index), or -1 if the DTM doesn't belong to this manager.</em>
+<a class="jxr_linenumber" name="L671" href="#L671">671</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L672" href="#L672">672</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getDTMIdentity(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> dtm)
+<a class="jxr_linenumber" name="L673" href="#L673">673</a>   {
+<a class="jxr_linenumber" name="L674" href="#L674">674</a>         <em class="jxr_comment">// Shortcut using DTMDefaultBase's extension hooks</em>
+<a class="jxr_linenumber" name="L675" href="#L675">675</a>         <em class="jxr_comment">// %REVIEW% Should the lookup be part of the basic DTM API?</em>
+<a class="jxr_linenumber" name="L676" href="#L676">676</a>         <strong class="jxr_keyword">if</strong>(dtm instanceof <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMDefaultBase.html">DTMDefaultBase</a>)
+<a class="jxr_linenumber" name="L677" href="#L677">677</a>         {
+<a class="jxr_linenumber" name="L678" href="#L678">678</a>                 <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMDefaultBase.html">DTMDefaultBase</a> dtmdb=(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMDefaultBase.html">DTMDefaultBase</a>)dtm;
+<a class="jxr_linenumber" name="L679" href="#L679">679</a>                 <strong class="jxr_keyword">if</strong>(dtmdb.getManager()==<strong class="jxr_keyword">this</strong>)
+<a class="jxr_linenumber" name="L680" href="#L680">680</a>                         <strong class="jxr_keyword">return</strong> dtmdb.getDTMIDs().elementAt(0);
+<a class="jxr_linenumber" name="L681" href="#L681">681</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>                         <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>         }
+<a class="jxr_linenumber" name="L684" href="#L684">684</a> 
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>     <strong class="jxr_keyword">int</strong> n = m_dtms.length;
+<a class="jxr_linenumber" name="L686" href="#L686">686</a> 
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; n; i++)
+<a class="jxr_linenumber" name="L688" href="#L688">688</a>     {
+<a class="jxr_linenumber" name="L689" href="#L689">689</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> tdtm = m_dtms[i];
+<a class="jxr_linenumber" name="L690" href="#L690">690</a> 
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>       <strong class="jxr_keyword">if</strong> (tdtm == dtm &amp;&amp; m_dtm_offsets[i]==0)
+<a class="jxr_linenumber" name="L692" href="#L692">692</a>         <strong class="jxr_keyword">return</strong> i &lt;&lt; IDENT_DTM_NODE_BITS;
+<a class="jxr_linenumber" name="L693" href="#L693">693</a>     }
+<a class="jxr_linenumber" name="L694" href="#L694">694</a> 
+<a class="jxr_linenumber" name="L695" href="#L695">695</a>     <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>   }
+<a class="jxr_linenumber" name="L697" href="#L697">697</a> 
+<a class="jxr_linenumber" name="L698" href="#L698">698</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">   * Release the DTMManager's reference(s) to a DTM, making it unmanaged.</em>
+<a class="jxr_linenumber" name="L700" href="#L700">700</a> <em class="jxr_javadoccomment">   * This is typically done as part of returning the DTM to the heap after</em>
+<a class="jxr_linenumber" name="L701" href="#L701">701</a> <em class="jxr_javadoccomment">   * we're done with it.</em>
+<a class="jxr_linenumber" name="L702" href="#L702">702</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L703" href="#L703">703</a> <em class="jxr_javadoccomment">   * @param dtm the DTM to be released.</em>
+<a class="jxr_linenumber" name="L704" href="#L704">704</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L705" href="#L705">705</a> <em class="jxr_javadoccomment">   * @param shouldHardDelete If false, this call is a suggestion rather than an</em>
+<a class="jxr_linenumber" name="L706" href="#L706">706</a> <em class="jxr_javadoccomment">   * order, and we may not actually release the DTM. This is intended to</em>
+<a class="jxr_linenumber" name="L707" href="#L707">707</a> <em class="jxr_javadoccomment">   * support intelligent caching of documents... which is not implemented</em>
+<a class="jxr_linenumber" name="L708" href="#L708">708</a> <em class="jxr_javadoccomment">   * in this version of the DTM manager.</em>
+<a class="jxr_linenumber" name="L709" href="#L709">709</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L710" href="#L710">710</a> <em class="jxr_javadoccomment">   * @return true if the DTM was released, false if shouldHardDelete was set</em>
+<a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">   * and we decided not to.</em>
+<a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> release(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> dtm, <strong class="jxr_keyword">boolean</strong> shouldHardDelete)
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>   {
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>     <strong class="jxr_keyword">if</strong>(DEBUG)
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>     {
+<a class="jxr_linenumber" name="L717" href="#L717">717</a>       System.out.println(<span class="jxr_string">"Releasing "</span>+
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>                          (shouldHardDelete ? <span class="jxr_string">"HARD"</span> : <span class="jxr_string">"soft"</span>)+
+<a class="jxr_linenumber" name="L719" href="#L719">719</a>                          <span class="jxr_string">" dtm="</span>+
+<a class="jxr_linenumber" name="L720" href="#L720">720</a>                          <em class="jxr_comment">// Following shouldn't need a nodeHandle, but does...</em>
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>                          <em class="jxr_comment">// and doesn't seem to report the intended value</em>
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>                          dtm.getDocumentBaseURI()
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>                          );
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>     }
+<a class="jxr_linenumber" name="L725" href="#L725">725</a> 
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>     <strong class="jxr_keyword">if</strong> (dtm instanceof SAX2DTM)
+<a class="jxr_linenumber" name="L727" href="#L727">727</a>     {
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>       ((<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/sax2dtm/SAX2DTM.html">SAX2DTM</a>) dtm).clearCoRoutine();
+<a class="jxr_linenumber" name="L729" href="#L729">729</a>     }
+<a class="jxr_linenumber" name="L730" href="#L730">730</a> 
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>                 <em class="jxr_comment">// Multiple DTM IDs may be assigned to a single DTM.</em>
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>                 <em class="jxr_comment">// The Right Answer is to ask which (if it supports</em>
+<a class="jxr_linenumber" name="L733" href="#L733">733</a>                 <em class="jxr_comment">// extension, the DTM will need a list anyway). The</em>
+<a class="jxr_linenumber" name="L734" href="#L734">734</a>                 <em class="jxr_comment">// Wrong Answer, applied if the DTM can't help us,</em>
+<a class="jxr_linenumber" name="L735" href="#L735">735</a>                 <em class="jxr_comment">// is to linearly search them all; this may be very</em>
+<a class="jxr_linenumber" name="L736" href="#L736">736</a>                 <em class="jxr_comment">// painful.</em>
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>                 <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L738" href="#L738">738</a>                 <em class="jxr_comment">// %REVIEW% Should the lookup move up into the basic DTM API?</em>
+<a class="jxr_linenumber" name="L739" href="#L739">739</a>                 <strong class="jxr_keyword">if</strong>(dtm instanceof <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/DTMDefaultBase.html">DTMDefaultBase</a>)
+<a class="jxr_linenumber" name="L740" href="#L740">740</a>                 {
+<a class="jxr_linenumber" name="L741" href="#L741">741</a>                         com.sun.org.apache.xml.internal.utils.SuballocatedIntVector ids=((DTMDefaultBase)dtm).getDTMIDs();
+<a class="jxr_linenumber" name="L742" href="#L742">742</a>                         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> i=ids.size()-1;i&gt;=0;--i)
+<a class="jxr_linenumber" name="L743" href="#L743">743</a>                                 m_dtms[ids.elementAt(i)&gt;&gt;&gt;DTMManager.IDENT_DTM_NODE_BITS]=<strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>                 }
+<a class="jxr_linenumber" name="L745" href="#L745">745</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a>                 {
+<a class="jxr_linenumber" name="L747" href="#L747">747</a>                         <strong class="jxr_keyword">int</strong> i = getDTMIdentity(dtm);
+<a class="jxr_linenumber" name="L748" href="#L748">748</a>                     <strong class="jxr_keyword">if</strong> (i &gt;= 0)
+<a class="jxr_linenumber" name="L749" href="#L749">749</a>                         {
+<a class="jxr_linenumber" name="L750" href="#L750">750</a>                                 m_dtms[i &gt;&gt;&gt; DTMManager.IDENT_DTM_NODE_BITS] = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L751" href="#L751">751</a>                         }
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>                 }
+<a class="jxr_linenumber" name="L753" href="#L753">753</a> 
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>     dtm.documentRelease();
+<a class="jxr_linenumber" name="L755" href="#L755">755</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L756" href="#L756">756</a>   }
+<a class="jxr_linenumber" name="L757" href="#L757">757</a> 
+<a class="jxr_linenumber" name="L758" href="#L758">758</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">   * Method createDocumentFragment</em>
+<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L761" href="#L761">761</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L762" href="#L762">762</a> <em class="jxr_javadoccomment">   * NEEDSDOC (createDocumentFragment) @return</em>
+<a class="jxr_linenumber" name="L763" href="#L763">763</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L764" href="#L764">764</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> createDocumentFragment()
+<a class="jxr_linenumber" name="L765" href="#L765">765</a>   {
+<a class="jxr_linenumber" name="L766" href="#L766">766</a> 
+<a class="jxr_linenumber" name="L767" href="#L767">767</a>     <strong class="jxr_keyword">try</strong>
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>     {
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>       <a href="../../../../../../../../javax/xml/parsers/DocumentBuilderFactory.html">DocumentBuilderFactory</a> dbf = FactoryImpl.getDOMFactory(<strong class="jxr_keyword">super</strong>.useServicesMechnism());
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>       dbf.setNamespaceAware(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L771" href="#L771">771</a> 
+<a class="jxr_linenumber" name="L772" href="#L772">772</a>       <a href="../../../../../../../../javax/xml/parsers/DocumentBuilder.html">DocumentBuilder</a> db = dbf.newDocumentBuilder();
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>       <a href="../../../../../../../../org/w3c/dom/Document.html">Document</a> doc = db.newDocument();
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>       <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/Trie.html">Node</a> df = doc.createDocumentFragment();
+<a class="jxr_linenumber" name="L775" href="#L775">775</a> 
+<a class="jxr_linenumber" name="L776" href="#L776">776</a>       <strong class="jxr_keyword">return</strong> getDTM(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../../javax/xml/transform/dom/DOMSource.html">DOMSource</a>(df), <strong class="jxr_keyword">true</strong>, <strong class="jxr_keyword">null</strong>, false, false);
+<a class="jxr_linenumber" name="L777" href="#L777">777</a>     }
+<a class="jxr_linenumber" name="L778" href="#L778">778</a>     <strong class="jxr_keyword">catch</strong> (Exception e)
+<a class="jxr_linenumber" name="L779" href="#L779">779</a>     {
+<a class="jxr_linenumber" name="L780" href="#L780">780</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMException.html">DTMException</a>(e);
+<a class="jxr_linenumber" name="L781" href="#L781">781</a>     }
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>   }
+<a class="jxr_linenumber" name="L783" href="#L783">783</a> 
+<a class="jxr_linenumber" name="L784" href="#L784">784</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L785" href="#L785">785</a> <em class="jxr_javadoccomment">   * NEEDSDOC Method createDTMIterator</em>
+<a class="jxr_linenumber" name="L786" href="#L786">786</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L787" href="#L787">787</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L788" href="#L788">788</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param whatToShow</em>
+<a class="jxr_linenumber" name="L789" href="#L789">789</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param filter</em>
+<a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param entityReferenceExpansion</em>
+<a class="jxr_linenumber" name="L791" href="#L791">791</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L792" href="#L792">792</a> <em class="jxr_javadoccomment">   * NEEDSDOC (createDTMIterator) @return</em>
+<a class="jxr_linenumber" name="L793" href="#L793">793</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMIterator.html">DTMIterator</a> createDTMIterator(<strong class="jxr_keyword">int</strong> whatToShow, <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMFilter.html">DTMFilter</a> filter,
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>                                        <strong class="jxr_keyword">boolean</strong> entityReferenceExpansion)
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>   {
+<a class="jxr_linenumber" name="L797" href="#L797">797</a> 
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>     <em class="jxr_javadoccomment">/** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */</em>
+<a class="jxr_linenumber" name="L799" href="#L799">799</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>   }
+<a class="jxr_linenumber" name="L801" href="#L801">801</a> 
+<a class="jxr_linenumber" name="L802" href="#L802">802</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L803" href="#L803">803</a> <em class="jxr_javadoccomment">   * NEEDSDOC Method createDTMIterator</em>
+<a class="jxr_linenumber" name="L804" href="#L804">804</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L805" href="#L805">805</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L806" href="#L806">806</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param xpathString</em>
+<a class="jxr_linenumber" name="L807" href="#L807">807</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param presolver</em>
+<a class="jxr_linenumber" name="L808" href="#L808">808</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L809" href="#L809">809</a> <em class="jxr_javadoccomment">   * NEEDSDOC (createDTMIterator) @return</em>
+<a class="jxr_linenumber" name="L810" href="#L810">810</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L811" href="#L811">811</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMIterator.html">DTMIterator</a> createDTMIterator(<a href="../../../../../../../../java/lang/String.html">String</a> xpathString,
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>                                        <a href="../../../../../../../../com/sun/org/apache/xml/internal/utils/PrefixResolver.html">PrefixResolver</a> presolver)
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>   {
+<a class="jxr_linenumber" name="L814" href="#L814">814</a> 
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>     <em class="jxr_javadoccomment">/** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */</em>
+<a class="jxr_linenumber" name="L816" href="#L816">816</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>   }
+<a class="jxr_linenumber" name="L818" href="#L818">818</a> 
+<a class="jxr_linenumber" name="L819" href="#L819">819</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L820" href="#L820">820</a> <em class="jxr_javadoccomment">   * NEEDSDOC Method createDTMIterator</em>
+<a class="jxr_linenumber" name="L821" href="#L821">821</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L822" href="#L822">822</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L823" href="#L823">823</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param node</em>
+<a class="jxr_linenumber" name="L824" href="#L824">824</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L825" href="#L825">825</a> <em class="jxr_javadoccomment">   * NEEDSDOC (createDTMIterator) @return</em>
+<a class="jxr_linenumber" name="L826" href="#L826">826</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L827" href="#L827">827</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMIterator.html">DTMIterator</a> createDTMIterator(<strong class="jxr_keyword">int</strong> node)
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>   {
+<a class="jxr_linenumber" name="L829" href="#L829">829</a> 
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>     <em class="jxr_javadoccomment">/** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */</em>
+<a class="jxr_linenumber" name="L831" href="#L831">831</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>   }
+<a class="jxr_linenumber" name="L833" href="#L833">833</a> 
+<a class="jxr_linenumber" name="L834" href="#L834">834</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">   * NEEDSDOC Method createDTMIterator</em>
+<a class="jxr_linenumber" name="L836" href="#L836">836</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L837" href="#L837">837</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L838" href="#L838">838</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param xpathCompiler</em>
+<a class="jxr_linenumber" name="L839" href="#L839">839</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param pos</em>
+<a class="jxr_linenumber" name="L840" href="#L840">840</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L841" href="#L841">841</a> <em class="jxr_javadoccomment">   * NEEDSDOC (createDTMIterator) @return</em>
+<a class="jxr_linenumber" name="L842" href="#L842">842</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L843" href="#L843">843</a>   <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTMIterator.html">DTMIterator</a> createDTMIterator(<a href="../../../../../../../../java/lang/Object.html">Object</a> xpathCompiler, <strong class="jxr_keyword">int</strong> pos)
+<a class="jxr_linenumber" name="L844" href="#L844">844</a>   {
+<a class="jxr_linenumber" name="L845" href="#L845">845</a> 
+<a class="jxr_linenumber" name="L846" href="#L846">846</a>     <em class="jxr_javadoccomment">/** @todo: implement this com.sun.org.apache.xml.internal.dtm.DTMManager abstract method */</em>
+<a class="jxr_linenumber" name="L847" href="#L847">847</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L848" href="#L848">848</a>   }
+<a class="jxr_linenumber" name="L849" href="#L849">849</a> 
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L851" href="#L851">851</a> <em class="jxr_javadoccomment">   * return the expanded name table.</em>
+<a class="jxr_linenumber" name="L852" href="#L852">852</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L853" href="#L853">853</a> <em class="jxr_javadoccomment">   * NEEDSDOC @param dtm</em>
+<a class="jxr_linenumber" name="L854" href="#L854">854</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L855" href="#L855">855</a> <em class="jxr_javadoccomment">   * NEEDSDOC ($objectName$) @return</em>
+<a class="jxr_linenumber" name="L856" href="#L856">856</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L857" href="#L857">857</a>   <strong class="jxr_keyword">public</strong> <a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/ref/ExpandedNameTable.html">ExpandedNameTable</a> getExpandedNameTable(<a href="../../../../../../../../com/sun/org/apache/xml/internal/dtm/DTM.html">DTM</a> dtm)
+<a class="jxr_linenumber" name="L858" href="#L858">858</a>   {
+<a class="jxr_linenumber" name="L859" href="#L859">859</a>     <strong class="jxr_keyword">return</strong> m_expandedNameTable;
+<a class="jxr_linenumber" name="L860" href="#L860">860</a>   }
+<a class="jxr_linenumber" name="L861" href="#L861">861</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>ORBD xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../apidocs/com/sun/corba/se/impl/activation/ORBD.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * Copyright (c) 1997, 2004, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">package</strong> com.sun.corba.se.impl.activation;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.omg.CORBA.INITIALIZE;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.omg.CORBA.INTERNAL;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.omg.CORBA.CompletionStatus;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.omg.CosNaming.NamingContext;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.omg.PortableServer.POA;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.pept.transport.Acceptor;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.Repository;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.RepositoryPackage.ServerDef;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.Locator;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.LocatorHelper;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.Activator;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.ActivatorHelper;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.activation.ServerAlreadyRegistered;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.legacy.connection.LegacyServerSocketEndPointInfo;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.transport.SocketInfo;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.spi.orb.ORB;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.legacy.connection.SocketFactoryAcceptorImpl;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.naming.cosnaming.TransientNameService;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.naming.pcosnaming.NameService;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.orbutil.ORBConstants;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.orbutil.CorbaResourceUtil;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> com.sun.corba.se.impl.transport.SocketOrChannelAcceptorImpl;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * @author      Rohit Garg</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * @since       JDK1.2</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/ORBD.html">ORBD</a>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> initSvcPort;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> initializeBootNaming(<a href="../../../../../../org/omg/CORBA/ORB.html">ORB</a> orb)
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          <em class="jxr_comment">// create a bootstrap server</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          initSvcPort = orb.getORBData().getORBInitialPort();
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          <a href="../../../../../../com/sun/corba/se/pept/transport/Acceptor.html">Acceptor</a> acceptor;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          <em class="jxr_comment">// REVISIT: see ORBConfigurator. use factory in TransportDefault.</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          <strong class="jxr_keyword">if</strong> (orb.getORBData().getLegacySocketFactory() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>              acceptor =
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                  <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/transport/SocketOrChannelAcceptorImpl.html">SocketOrChannelAcceptorImpl</a>(
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                      orb,
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                      initSvcPort,
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                      LegacyServerSocketEndPointInfo.BOOT_NAMING,
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>                      SocketInfo.IIOP_CLEAR_TEXT);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>              acceptor =
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/legacy/connection/SocketFactoryAcceptorImpl.html">SocketFactoryAcceptorImpl</a>(
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>                      orb,
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>                      initSvcPort,
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>                      LegacyServerSocketEndPointInfo.BOOT_NAMING,
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                      SocketInfo.IIOP_CLEAR_TEXT);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          orb.getCorbaTransportManager().registerAcceptor(acceptor);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../org/omg/CORBA/ORB.html">ORB</a> createORB(<a href="../../../../../../java/lang/String.html">String</a>[] args)
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <a href="../../../../../../java/util/Properties.html">Properties</a> props = System.getProperties();
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <em class="jxr_comment">// For debugging.</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <em class="jxr_comment">//props.put( ORBConstants.DEBUG_PROPERTY, "naming" ) ;</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          <em class="jxr_comment">//props.put( ORBConstants.DEBUG_PROPERTY, "transport,giop,naming" ) ;</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         props.put( ORBConstants.SERVER_ID_PROPERTY, <span class="jxr_string">"1000"</span> ) ;
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         props.put( ORBConstants.PERSISTENT_SERVER_PORT_PROPERTY,
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>             props.getProperty( ORBConstants.ORBD_PORT_PROPERTY,
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>                 Integer.toString(
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>                     ORBConstants.DEFAULT_ACTIVATION_PORT ) ) ) ;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         <em class="jxr_comment">// See Bug 4396928 for more information about why we are initializing</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <em class="jxr_comment">// the ORBClass to PIORB (now ORBImpl, but should check the bugid).</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         props.put(<span class="jxr_string">"org.omg.CORBA.ORBClass"</span>,
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>             <span class="jxr_string">"com.sun.corba.se.impl.orb.ORBImpl"</span>);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">return</strong> (ORB) ORB.init(args, props);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     }
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> run(<a href="../../../../../../java/lang/String.html">String</a>[] args)
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>             <em class="jxr_comment">// parse the args and try setting the values for these</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>             <em class="jxr_comment">// properties</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             processArgs(args);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>             <a href="../../../../../../org/omg/CORBA/ORB.html">ORB</a> orb = createORB(args);
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>             <strong class="jxr_keyword">if</strong> (orb.orbdDebugFlag)
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                 System.out.println( <span class="jxr_string">"ORBD begins initialization."</span> ) ;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>             <strong class="jxr_keyword">boolean</strong> firstRun = createSystemDirs( ORBConstants.DEFAULT_DB_DIR );
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             startActivationObjects(orb);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>             <strong class="jxr_keyword">if</strong> (firstRun) <em class="jxr_comment">// orbd is being run the first time</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                 installOrbServers(getRepository(), getActivator());
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>             <strong class="jxr_keyword">if</strong> (orb.orbdDebugFlag) {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                 System.out.println( <span class="jxr_string">"ORBD is ready."</span> ) ;
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                 System.out.println(<span class="jxr_string">"ORBD serverid: "</span> +
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                         System.getProperty(ORBConstants.SERVER_ID_PROPERTY));
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 System.out.println(<span class="jxr_string">"activation dbdir: "</span> +
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                         System.getProperty(ORBConstants.DB_DIR_PROPERTY));
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                 System.out.println(<span class="jxr_string">"activation port: "</span> +
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                         System.getProperty(ORBConstants.ORBD_PORT_PROPERTY));
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                 <a href="../../../../../../java/lang/String.html">String</a> pollingTime = System.getProperty(
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                     ORBConstants.SERVER_POLLING_TIME);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                 <strong class="jxr_keyword">if</strong>( pollingTime == <strong class="jxr_keyword">null</strong> ) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>                     pollingTime = Integer.toString(
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                         ORBConstants.DEFAULT_SERVER_POLLING_TIME );
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>                 System.out.println(<span class="jxr_string">"activation Server Polling Time: "</span> +
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                         pollingTime + <span class="jxr_string">" milli-seconds "</span>);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                 <a href="../../../../../../java/lang/String.html">String</a> startupDelay = System.getProperty(
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>                     ORBConstants.SERVER_STARTUP_DELAY);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                 <strong class="jxr_keyword">if</strong>( startupDelay == <strong class="jxr_keyword">null</strong> ) {
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                     startupDelay = Integer.toString(
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>                         ORBConstants.DEFAULT_SERVER_STARTUP_DELAY );
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                 }
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>                 System.out.println(<span class="jxr_string">"activation Server Startup Delay: "</span> +
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>                         startupDelay + <span class="jxr_string">" milli-seconds "</span> );
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>             }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <em class="jxr_comment">// The following two lines start the Persistent NameService</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             <a href="../../../../../../com/sun/corba/se/impl/activation/NameServiceStartThread.html">NameServiceStartThread</a> theThread =
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/NameServiceStartThread.html">NameServiceStartThread</a>( orb, dbDir );
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             theThread.start( );
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             orb.run();
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         } <strong class="jxr_keyword">catch</strong>( org.omg.CORBA.COMM_FAILURE cex ) {
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>             System.out.println( CorbaResourceUtil.getText(<span class="jxr_string">"orbd.commfailure"</span>));
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>             System.out.println( cex );
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>             cex.printStackTrace();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         } <strong class="jxr_keyword">catch</strong>( org.omg.CORBA.INTERNAL iex ) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>             System.out.println( CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                 <span class="jxr_string">"orbd.internalexception"</span>));
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>             System.out.println( iex );
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             iex.printStackTrace();
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>         } <strong class="jxr_keyword">catch</strong> (Exception ex) {
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>             System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>                 <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>             System.out.println( ex );
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>             ex.printStackTrace();
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         }
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     }
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> processArgs(<a href="../../../../../../java/lang/String.html">String</a>[] args)
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         <a href="../../../../../../java/util/Properties.html">Properties</a> props = System.getProperties();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=0; i &lt; args.length; i++) {
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">if</strong> (args[i].equals(<span class="jxr_string">"-port"</span>)) {
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>                 <strong class="jxr_keyword">if</strong> ((i+1) &lt; args.length) {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>                     props.put(ORBConstants.ORBD_PORT_PROPERTY, args[++i]);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                     System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                         <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                 }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i].equals(<span class="jxr_string">"-defaultdb"</span>)) {
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                 <strong class="jxr_keyword">if</strong> ((i+1) &lt; args.length) {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>                     props.put(ORBConstants.DB_DIR_PROPERTY, args[++i]);
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>                     System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>                         <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>                 }
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i].equals(<span class="jxr_string">"-serverid"</span>)) {
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>                 <strong class="jxr_keyword">if</strong> ((i+1) &lt; args.length) {
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>                     props.put(ORBConstants.SERVER_ID_PROPERTY, args[++i]);
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>                     System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>                         <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>                 }
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i].equals(<span class="jxr_string">"-serverPollingTime"</span>)) {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 <strong class="jxr_keyword">if</strong> ((i+1) &lt; args.length) {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>                     props.put(ORBConstants.SERVER_POLLING_TIME, args[++i]);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>                     System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>                         <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>                 }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (args[i].equals(<span class="jxr_string">"-serverStartupDelay"</span>)) {
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>                 <strong class="jxr_keyword">if</strong> ((i+1) &lt; args.length) {
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                     props.put(ORBConstants.SERVER_STARTUP_DELAY, args[++i]);
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>                     System.out.println(CorbaResourceUtil.getText(
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>                         <span class="jxr_string">"orbd.usage"</span>, <span class="jxr_string">"orbd"</span>));
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>                 }
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>             }
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         }
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     }
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * Ensure that the Db directory exists. If not, create the Db</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * and the log directory and return true. Otherwise return false.</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> createSystemDirs(<a href="../../../../../../java/lang/String.html">String</a> defaultDbDir)
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         <strong class="jxr_keyword">boolean</strong> dirCreated = false;
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         <a href="../../../../../../java/util/Properties.html">Properties</a> props = System.getProperties();
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         <a href="../../../../../../java/lang/String.html">String</a> fileSep = props.getProperty(<span class="jxr_string">"file.separator"</span>);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <em class="jxr_comment">// determine the ORB db directory</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         dbDir = <strong class="jxr_keyword">new</strong> <a href="../../../../../../java/io/File.html">File</a> (props.getProperty( ORBConstants.DB_DIR_PROPERTY,
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>             props.getProperty(<span class="jxr_string">"user.dir"</span>) + fileSep + defaultDbDir));
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> 
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <em class="jxr_comment">// create the db and the logs directories</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         dbDirName = dbDir.getAbsolutePath();
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         props.put(ORBConstants.DB_DIR_PROPERTY, dbDirName);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         <strong class="jxr_keyword">if</strong> (!dbDir.exists()) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>             dbDir.mkdir();
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>             dirCreated = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         }
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <a href="../../../../../../java/io/File.html">File</a> logDir = <strong class="jxr_keyword">new</strong> <a href="../../../../../../java/io/File.html">File</a> (dbDir, ORBConstants.SERVER_LOG_DIR ) ;
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">if</strong> (!logDir.exists()) logDir.mkdir();
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">return</strong> dirCreated;
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     }
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/io/File.html">File</a> dbDir;
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/io/File.html">File</a> getDbDir()
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     {
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         <strong class="jxr_keyword">return</strong> dbDir;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../java/lang/String.html">String</a> dbDirName;
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/lang/String.html">String</a> getDbDirName()
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         <strong class="jxr_keyword">return</strong> dbDirName;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> startActivationObjects(<a href="../../../../../../org/omg/CORBA/ORB.html">ORB</a> orb) <strong class="jxr_keyword">throws</strong> Exception
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         <em class="jxr_comment">// create Initial Name Service object</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         initializeBootNaming(orb);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <em class="jxr_comment">// create Repository object</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         repository = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/RepositoryImpl.html">RepositoryImpl</a>(orb, dbDir, orb.orbdDebugFlag );
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>         orb.register_initial_reference( ORBConstants.SERVER_REPOSITORY_NAME, repository );
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         <em class="jxr_comment">// create Locator and Activator objects</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         <a href="../../../../../../com/sun/corba/se/impl/activation/ServerManagerImpl.html">ServerManagerImpl</a> serverMgr =
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/ServerManagerImpl.html">ServerManagerImpl</a>( orb,
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>                                    orb.getCorbaTransportManager(),
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                                    repository,
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                                    getDbDirName(),
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                                    orb.orbdDebugFlag );
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> 
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         locator = LocatorHelper.narrow(serverMgr);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         orb.register_initial_reference( ORBConstants.SERVER_LOCATOR_NAME, locator );
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>         activator = ActivatorHelper.narrow(serverMgr);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         orb.register_initial_reference( ORBConstants.SERVER_ACTIVATOR_NAME, activator );
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> 
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         <em class="jxr_comment">// start Name Service</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         <a href="../../../../../../com/sun/corba/se/impl/naming/cosnaming/TransientNameService.html">TransientNameService</a> nameService = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/naming/cosnaming/TransientNameService.html">TransientNameService</a>(orb,
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>             ORBConstants.TRANSIENT_NAME_SERVICE_NAME);
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     }
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> 
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/spi/activation/Locator.html">Locator</a> locator;
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/spi/activation/Locator.html">Locator</a> getLocator()
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     {
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         <strong class="jxr_keyword">return</strong> locator;
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     }
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/spi/activation/Activator.html">Activator</a> activator;
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/spi/activation/Activator.html">Activator</a> getActivator()
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     {
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         <strong class="jxr_keyword">return</strong> activator;
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     }
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/RepositoryImpl.html">RepositoryImpl</a> repository;
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/RepositoryImpl.html">RepositoryImpl</a> getRepository()
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     {
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         <strong class="jxr_keyword">return</strong> repository;
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>     }
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     * Go through the list of ORB Servers and initialize and start</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * them up.</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> installOrbServers(<a href="../../../../../../com/sun/corba/se/impl/activation/RepositoryImpl.html">RepositoryImpl</a> repository,
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>                                      <a href="../../../../../../com/sun/corba/se/spi/activation/Activator.html">Activator</a> activator)
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     {
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         <strong class="jxr_keyword">int</strong> serverId;
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         <a href="../../../../../../java/lang/String.html">String</a>[] server;
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         <a href="../../../../../../com/sun/corba/se/spi/activation/RepositoryPackage/ServerDef.html">ServerDef</a> serverDef;
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=0; i &lt; orbServers.length; i++) {
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>                 server = orbServers[i];
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>                 serverDef = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/spi/activation/RepositoryPackage/ServerDef.html">ServerDef</a>(server[1], server[2],
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>                                           server[3], server[4], server[5] );
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>                 serverId = Integer.valueOf(orbServers[i][0]).intValue();
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>                 repository.registerServer(serverDef, serverId);
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>                 activator.activate(serverId);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> 
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>             } <strong class="jxr_keyword">catch</strong> (Exception ex) {}
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         }
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>     }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(<a href="../../../../../../java/lang/String.html">String</a>[] args) {
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <a href="../../../../../../com/sun/corba/se/impl/activation/ORBD.html">ORBD</a> orbd = <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/corba/se/impl/activation/ORBD.html">ORBD</a>();
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>         orbd.run(args);
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>     }
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> 
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     * List of servers to be auto registered and started by the ORBd.</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     * Each server entry is of the form {id, name, path, args, vmargs}.</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../java/lang/String.html">String</a>[][] orbServers = {
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         {<span class="jxr_string">""</span>}
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>     };
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

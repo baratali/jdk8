@@ -1,0 +1,1415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>SerializerBase xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/com/sun/org/apache/xml/internal/serializer/SerializerBase.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2007-2012, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Copyright 2001-2004 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *     <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> * $Id: SerializerBase.java,v 1.5 2006/04/14 12:09:19 sunithareddy Exp $</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">package</strong> com.sun.org.apache.xml.internal.serializer;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> java.util.Vector;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.SourceLocator;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.Transformer;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.serializer.utils.MsgKey;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.serializer.utils.Utils;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.Attributes;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.ContentHandler;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.Locator;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXException;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXParseException;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.ext.Locator2;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * This class acts as a base class for the XML "serializers"</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * and the stream serializers.</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * It contains a number of common fields and methods.</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @xsl.usage internal</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/SerializerBase.html">SerializerBase</a>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">implements</strong> SerializationHandler, <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/SerializerConstants.html">SerializerConstants</a>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment">     * To fire off the end element trace event</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment">     * @param name Name of element</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireEndElem(<a href="../../../../../../../java/lang/String.html">String</a> name)
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              flushMyWriter();
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>              m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDELEMENT,name, (Attributes)<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     * Report the characters trace event</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     * @param chars  content of characters</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">     * @param start  starting index of characters to output</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">     * @param length  number of characters to output</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireCharEvent(<strong class="jxr_keyword">char</strong>[] chars, <strong class="jxr_keyword">int</strong> start, <strong class="jxr_keyword">int</strong> length)
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>              flushMyWriter();
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>              m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CHARACTERS, chars, start,length);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>          }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     * true if we still need to call startDocumentInternal()</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_needToCallStartDocument = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <em class="jxr_javadoccomment">/** True if a trailing "]]&gt;" still needs to be written to be</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">     * written out. Used to merge adjacent CDATA sections</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_cdataTagOpen = false;
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">     * All the attributes of the current element, collected from</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">     * startPrefixMapping() calls, or addAddtribute() calls, or</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">     * from the SAX attributes in a startElement() call.</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/AttributesImplSerializer.html">AttributesImplSerializer</a> m_attributes = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/AttributesImplSerializer.html">AttributesImplSerializer</a>();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">     * Tells if we're in an EntityRef event.</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_inEntityRef = false;
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <em class="jxr_javadoccomment">/** This flag is set while receiving events from the external DTD */</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_inExternalDTD = false;
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">     * The System ID for the doc type.</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_doctypeSystem;
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     * The public ID for the doc type.</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_doctypePublic;
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * Flag to tell that we need to add the doctype decl, which we can't do</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * until the first element is encountered.</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">boolean</strong> m_needToOutputDocTypeDecl = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     * The character encoding.  Must match the encoding used for the</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * printWriter.</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_encoding = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * Tells if we should write the XML declaration.</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> m_shouldNotWriteXMLHeader = false;
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * The standalone value for the doctype.</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_standalone;
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * True if standalone was specified.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_standaloneWasSpecified = false;
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * Determine if the output is a standalone.</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_isStandalone = false;
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Flag to tell if indenting (pretty-printing) is on.</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_doIndent = false;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * Amount to indent.</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> m_indentAmount = 0;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> 
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * Tells the XML version, for writing out to the XML decl.</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_version = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * The mediatype.  Not used right now.</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../java/lang/String.html">String</a> m_mediatype;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     * The transformer that was around when this output handler was created (if</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * any).</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../javax/xml/transform/Transformer.html">Transformer</a> m_transformer;
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * Pairs of local names and corresponding URIs of CDATA sections. This list</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * comes from the cdata-section-elements attribute. Every second one is a</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * local name, and every other second one is the URI for the local name.</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../java/util/Vector.html">Vector</a> m_cdataSectionElements = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     * Namespace support, that keeps track of currently defined</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">     * prefix/uri mappings. As processed elements come and go, so do</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">     * the associated mappings for that element.</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/NamespaceMappings.html">NamespaceMappings</a> m_prefixMap;
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * Handle for firing generate events.  This interface may be implemented</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * by the referenced transformer object.</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/SerializerTrace.html">SerializerTrace</a> m_tracer;
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../javax/xml/transform/SourceLocator.html">SourceLocator</a> m_sourceLocator;
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     * The writer to send output to. This field is only used in the ToStream</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * serializers, but exists here just so that the fireStartDoc() and</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * other fire... methods can flush this writer when tracing.</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     <strong class="jxr_keyword">protected</strong> java.io.Writer m_writer = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * A reference to "stack frame" corresponding to</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * the current element. Such a frame is pushed at a startElement()</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     * and popped at an endElement(). This frame contains information about</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     * the element, such as its namespace URI.</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/ElemContext.html">ElemContext</a> m_elemContext = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/ElemContext.html">ElemContext</a>();
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">     * A utility buffer for converting Strings passed to</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * character() methods to character arrays.</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * Reusing this buffer means not creating a new character array</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * everytime and it runs faster.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">char</strong>[] m_charsBuff = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[60];
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * A utility buffer for converting Strings passed to</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * attribute methods to character arrays.</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     * Reusing this buffer means not creating a new character array</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     * everytime and it runs faster.</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">char</strong>[] m_attrBuff = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[30];
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> 
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../../../org/xml/sax/Locator.html">Locator</a> m_locator = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> m_needToCallSetDocumentInfo = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     * Receive notification of a comment.</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * @see ExtendedLexicalHandler#comment(String)</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> comment(<a href="../../../../../../../java/lang/String.html">String</a> data) <strong class="jxr_keyword">throws</strong> SAXException
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     {
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> length = data.length();
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         <strong class="jxr_keyword">if</strong> (length &gt; m_charsBuff.length)
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>             m_charsBuff = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[length * 2 + 1];
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         }
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         data.getChars(0, length, m_charsBuff, 0);
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         comment(m_charsBuff, 0, length);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     }
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> 
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * If at runtime, when the qname of the attribute is</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * known, another prefix is specified for the attribute, then we can</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * patch or hack the name with this method. For</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * a qname of the form "ns?:otherprefix:name", this function patches the</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * qname by simply ignoring "otherprefix".</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     * TODO: This method is a HACK! We do not have access to the</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">     * XML file, it sometimes generates a NS prefix of the form "ns?" for</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     * an attribute.</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../java/lang/String.html">String</a> patchName(<a href="../../../../../../../java/lang/String.html">String</a> qname)
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> lastColon = qname.lastIndexOf(':');
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         <strong class="jxr_keyword">if</strong> (lastColon &gt; 0) {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> firstColon = qname.indexOf(':');
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> prefix = qname.substring(0, firstColon);
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> localName = qname.substring(lastColon + 1);
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         <em class="jxr_comment">// If uri is "" then ignore prefix</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> uri = m_prefixMap.lookupNamespace(prefix);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>             <strong class="jxr_keyword">if</strong> (uri != <strong class="jxr_keyword">null</strong> &amp;&amp; uri.length() == 0) {
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>                 <strong class="jxr_keyword">return</strong> localName;
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>             }
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (firstColon != lastColon) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                 <strong class="jxr_keyword">return</strong> prefix + ':' + localName;
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         }
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         <strong class="jxr_keyword">return</strong> qname;
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     }
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     * Returns the local name of a qualified name. If the name has no prefix,</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     * then it works as the identity (SAX2).</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * @param qname the qualified name</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     * @return the name, but excluding any prefix and colon.</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../../java/lang/String.html">String</a> getLocalName(<a href="../../../../../../../java/lang/String.html">String</a> qname)
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> col = qname.lastIndexOf(':');
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         <strong class="jxr_keyword">return</strong> (col &gt; 0) ? qname.substring(col + 1) : qname;
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     }
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * Receive an object for locating the origin of SAX document events.</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * @param locator An object that can return the location of any SAX document</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * event.</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * Receive an object for locating the origin of SAX document events.</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * &lt;p&gt;SAX parsers are strongly encouraged (though not absolutely</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * required) to supply a locator: if it does so, it must supply</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * the locator to the application by invoking this method before</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     * invoking any of the other methods in the DocumentHandler</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     * interface.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The locator allows the application to determine the end</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     * position of any document-related event, even if the parser is</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * not reporting an error.  Typically, the application will</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     * use this information for reporting its own errors (such as</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     * character content that does not match an application's</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment">     * business rules).  The information returned by the locator</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     * is probably not sufficient for use with a search engine.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Note that the locator will return correct information only</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * during the invocation of the events in this interface.  The</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     * application should not attempt to use it at any other time.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDocumentLocator(<a href="../../../../../../../org/xml/sax/Locator.html">Locator</a> locator)
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         m_locator = locator;
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     }
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     * Adds the given attribute to the set of collected attributes , but only if</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     * there is a currently open element.</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     * An element is currently open if a startElement() notification has</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     * occured but the start of the element has not yet been written to the</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     * output.  In the stream case this means that we have not yet been forced</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     * to close the elements opening tag by another notification, such as a</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">     * character notification.</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * @param uri the URI of the attribute</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     * @param localName the local name of the attribute</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">     * @param rawName    the qualified name of the attribute</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">     * @param type the type of the attribute (probably CDATA)</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     * @param value the value of the attribute</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     * @param XSLAttribute true if this attribute is coming from an xsl:attriute element</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#addAttribute(String, String, String, String, String)</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addAttribute(
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <a href="../../../../../../../java/lang/String.html">String</a> uri,
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>         <a href="../../../../../../../java/lang/String.html">String</a> localName,
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>         <a href="../../../../../../../java/lang/String.html">String</a> rawName,
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         <a href="../../../../../../../java/lang/String.html">String</a> type,
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <a href="../../../../../../../java/lang/String.html">String</a> value,
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         <strong class="jxr_keyword">boolean</strong> XSLAttribute)
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../org/xml/sax/SAXException.html">SAXException</a>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>     {
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         <strong class="jxr_keyword">if</strong> (m_elemContext.m_startTagOpen)
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         {
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>             addAttributeAlways(uri, localName, rawName, type, value, XSLAttribute);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         }
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>     }
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> 
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     * Adds the given attribute to the set of attributes, even if there is</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     * no currently open element. This is useful if a SAX startPrefixMapping()</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     * should need to add an attribute before the element name is seen.</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     * @param uri the URI of the attribute</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * @param localName the local name of the attribute</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     * @param rawName   the qualified name of the attribute</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     * @param type the type of the attribute (probably CDATA)</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     * @param value the value of the attribute</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     * @param XSLAttribute true if this attribute is coming from an xsl:attribute element</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     * @return true if the attribute was added,</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">     * false if an existing value was replaced.</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> addAttributeAlways(
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <a href="../../../../../../../java/lang/String.html">String</a> uri,
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <a href="../../../../../../../java/lang/String.html">String</a> localName,
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <a href="../../../../../../../java/lang/String.html">String</a> rawName,
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <a href="../../../../../../../java/lang/String.html">String</a> type,
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <a href="../../../../../../../java/lang/String.html">String</a> value,
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <strong class="jxr_keyword">boolean</strong> XSLAttribute)
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>     {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         <strong class="jxr_keyword">boolean</strong> was_added;
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_comment">//            final int index =</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_comment">//                (localName == null || uri == null) ?</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_comment">//                m_attributes.getIndex(rawName):m_attributes.getIndex(uri, localName);</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>             <strong class="jxr_keyword">int</strong> index;
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_comment">//            if (localName == null || uri == null){</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_comment">//                index = m_attributes.getIndex(rawName);</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_comment">//            }</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_comment">//            else {</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_comment">//                index = m_attributes.getIndex(uri, localName);</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_comment">//            }</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> 
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             <strong class="jxr_keyword">if</strong> (localName == <strong class="jxr_keyword">null</strong> || uri == <strong class="jxr_keyword">null</strong> || uri.length() == 0)
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>                 index = m_attributes.getIndex(rawName);
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>                 index = m_attributes.getIndex(uri,localName);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>             }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>             <strong class="jxr_keyword">if</strong> (index &gt;= 0)
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>             {
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>                 <em class="jxr_comment">/* We've seen the attribute before.</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_comment">                 * We may have a null uri or localName, but all</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> <em class="jxr_comment">                 * we really want to re-set is the value anyway.</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_comment">                 */</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>                 m_attributes.setValue(index,value);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>                 was_added = false;
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>             }
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>             {
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>                 <em class="jxr_comment">// the attribute doesn't exist yet, create it</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>                 m_attributes.addAttribute(uri, localName, rawName, type, value);
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>                 was_added = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>             }
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>             <strong class="jxr_keyword">return</strong> was_added;
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> 
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>     }
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">     *  Adds  the given attribute to the set of collected attributes,</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">     * but only if there is a currently open element.</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     * @param name the attribute's qualified name</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">     * @param value the value of the attribute</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addAttribute(<a href="../../../../../../../java/lang/String.html">String</a> name, <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> value)
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>     {
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         <strong class="jxr_keyword">if</strong> (m_elemContext.m_startTagOpen)
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         {
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> patchedName = patchName(name);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> localName = getLocalName(patchedName);
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> uri = getNamespaceURI(patchedName, false);
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> 
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>             addAttributeAlways(uri,localName, patchedName, <span class="jxr_string">"CDATA"</span>, value, false);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>          }
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>     }
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> 
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     * Adds the given xsl:attribute to the set of collected attributes,</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">     * but only if there is a currently open element.</em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     * @param name the attribute's qualified name (prefix:localName)</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * @param value the value of the attribute</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     * @param uri the URI that the prefix of the name points to</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addXSLAttribute(<a href="../../../../../../../java/lang/String.html">String</a> name, <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> value, <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> uri)
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>     {
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <strong class="jxr_keyword">if</strong> (m_elemContext.m_startTagOpen)
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         {
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> patchedName = patchName(name);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> localName = getLocalName(patchedName);
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> 
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             addAttributeAlways(uri,localName, patchedName, <span class="jxr_string">"CDATA"</span>, value, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>          }
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>     }
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> 
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">     * Add the given attributes to the currently collected ones. These</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     * attributes are always added, regardless of whether on not an element</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     * is currently open.</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     * @param atts List of attributes to add to this list</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addAttributes(<a href="../../../../../../../org/xml/sax/Attributes.html">Attributes</a> atts) <strong class="jxr_keyword">throws</strong> SAXException
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>     {
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> 
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         <strong class="jxr_keyword">int</strong> nAtts = atts.getLength();
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; nAtts; i++)
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         {
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>             <a href="../../../../../../../java/lang/String.html">String</a> uri = atts.getURI(i);
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> 
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> == uri)
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>                 uri = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> 
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>             addAttributeAlways(
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                 uri,
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>                 atts.getLocalName(i),
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>                 atts.getQName(i),
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>                 atts.getType(i),
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>                 atts.getValue(i),
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>                 false);
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> 
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>         }
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>     }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">     * Return a {@link ContentHandler} interface into this serializer.</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     * If the serializer does not support the {@link ContentHandler}</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">     * interface, it should return null.</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">     * @return A {@link ContentHandler} interface into this serializer,</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">     *  or null if the serializer is not SAX 2 capable</em>
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">     * @throws IOException An I/O exception occured</em>
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../org/xml/sax/ContentHandler.html">ContentHandler</a> asContentHandler() <strong class="jxr_keyword">throws</strong> IOException
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>     {
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     }
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> 
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> <em class="jxr_javadoccomment">     * Report the end of an entity.</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> <em class="jxr_javadoccomment">     * @param name The name of the entity that is ending.</em>
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">     * @throws org.xml.sax.SAXException The application may raise an exception.</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     * @see #startEntity</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> endEntity(<a href="../../../../../../../java/lang/String.html">String</a> name) <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>     {
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>         <strong class="jxr_keyword">if</strong> (name.equals(<span class="jxr_string">"[dtd]"</span>))
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>             m_inExternalDTD = false;
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>         m_inEntityRef = false;
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> 
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>             <strong class="jxr_keyword">this</strong>.fireEndEntity(name);
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>     }
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> 
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">     * Flush and close the underlying java.io.Writer. This method applies to</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">     * ToStream serializers, not ToSAXHandler serializers.</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">     * @see ToStream</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close()
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>     {
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>         <em class="jxr_comment">// do nothing (base behavior)</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>     }
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> 
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> <em class="jxr_javadoccomment">     * Initialize global variables</em>
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> initCDATA()
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>     {
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>         <em class="jxr_comment">// CDATA stack</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>         <em class="jxr_comment">//        _cdataStack = new Stack();</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>         <em class="jxr_comment">//        _cdataStack.push(new Integer(-1)); // push dummy value</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>     }
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> <em class="jxr_javadoccomment">     * Returns the character encoding to be used in the output document.</em>
+<a class="jxr_linenumber" name="L537" href="#L537">537</a> <em class="jxr_javadoccomment">     * @return the character encoding to be used in the output document.</em>
+<a class="jxr_linenumber" name="L538" href="#L538">538</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getEncoding()
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>     {
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>         <strong class="jxr_keyword">return</strong> m_encoding;
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>     }
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> 
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L545" href="#L545">545</a> <em class="jxr_javadoccomment">     * Sets the character encoding coming from the xsl:output encoding stylesheet attribute.</em>
+<a class="jxr_linenumber" name="L546" href="#L546">546</a> <em class="jxr_javadoccomment">     * @param m_encoding the character encoding</em>
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setEncoding(<a href="../../../../../../../java/lang/String.html">String</a> m_encoding)
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>     {
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         <strong class="jxr_keyword">this</strong>.m_encoding = m_encoding;
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>     }
+<a class="jxr_linenumber" name="L552" href="#L552">552</a> 
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> <em class="jxr_javadoccomment">     * Sets the value coming from the xsl:output omit-xml-declaration stylesheet attribute</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> <em class="jxr_javadoccomment">     * @param b true if the XML declaration is to be omitted from the output</em>
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> <em class="jxr_javadoccomment">     * document.</em>
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setOmitXMLDeclaration(<strong class="jxr_keyword">boolean</strong> b)
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>     {
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>         <strong class="jxr_keyword">this</strong>.m_shouldNotWriteXMLHeader = b;
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>     }
+<a class="jxr_linenumber" name="L562" href="#L562">562</a> 
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> 
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L565" href="#L565">565</a> <em class="jxr_javadoccomment">     * @return true if the XML declaration is to be omitted from the output</em>
+<a class="jxr_linenumber" name="L566" href="#L566">566</a> <em class="jxr_javadoccomment">     * document.</em>
+<a class="jxr_linenumber" name="L567" href="#L567">567</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> getOmitXMLDeclaration()
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>     {
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>         <strong class="jxr_keyword">return</strong> m_shouldNotWriteXMLHeader;
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>     }
+<a class="jxr_linenumber" name="L572" href="#L572">572</a> 
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L574" href="#L574">574</a> <em class="jxr_javadoccomment">     * Returns the previously set value of the value to be used as the public</em>
+<a class="jxr_linenumber" name="L575" href="#L575">575</a> <em class="jxr_javadoccomment">     * identifier in the document type declaration (DTD).</em>
+<a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L577" href="#L577">577</a> <em class="jxr_javadoccomment">     *@return the public identifier to be used in the DOCTYPE declaration in the</em>
+<a class="jxr_linenumber" name="L578" href="#L578">578</a> <em class="jxr_javadoccomment">     * output document.</em>
+<a class="jxr_linenumber" name="L579" href="#L579">579</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getDoctypePublic()
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>     {
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>         <strong class="jxr_keyword">return</strong> m_doctypePublic;
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>     }
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> 
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>     <em class="jxr_javadoccomment">/** Set the value coming from the xsl:output doctype-public stylesheet attribute.</em>
+<a class="jxr_linenumber" name="L586" href="#L586">586</a> <em class="jxr_javadoccomment">      * @param doctypePublic the public identifier to be used in the DOCTYPE</em>
+<a class="jxr_linenumber" name="L587" href="#L587">587</a> <em class="jxr_javadoccomment">      * declaration in the output document.</em>
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">      */</em>
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDoctypePublic(<a href="../../../../../../../java/lang/String.html">String</a> doctypePublic)
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>     {
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>         <strong class="jxr_keyword">this</strong>.m_doctypePublic = doctypePublic;
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>     }
+<a class="jxr_linenumber" name="L593" href="#L593">593</a> 
+<a class="jxr_linenumber" name="L594" href="#L594">594</a> 
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">     * Returns the previously set value of the value to be used</em>
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">     * as the system identifier in the document type declaration (DTD).</em>
+<a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">         * @return the system identifier to be used in the DOCTYPE declaration in</em>
+<a class="jxr_linenumber" name="L599" href="#L599">599</a> <em class="jxr_javadoccomment">         * the output document.</em>
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getDoctypeSystem()
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     {
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">return</strong> m_doctypeSystem;
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>     }
+<a class="jxr_linenumber" name="L606" href="#L606">606</a> 
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>     <em class="jxr_javadoccomment">/** Set the value coming from the xsl:output doctype-system stylesheet attribute.</em>
+<a class="jxr_linenumber" name="L608" href="#L608">608</a> <em class="jxr_javadoccomment">      * @param doctypeSystem the system identifier to be used in the DOCTYPE</em>
+<a class="jxr_linenumber" name="L609" href="#L609">609</a> <em class="jxr_javadoccomment">      * declaration in the output document.</em>
+<a class="jxr_linenumber" name="L610" href="#L610">610</a> <em class="jxr_javadoccomment">      */</em>
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDoctypeSystem(<a href="../../../../../../../java/lang/String.html">String</a> doctypeSystem)
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>     {
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         <strong class="jxr_keyword">this</strong>.m_doctypeSystem = doctypeSystem;
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>     }
+<a class="jxr_linenumber" name="L615" href="#L615">615</a> 
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>     <em class="jxr_javadoccomment">/** Set the value coming from the xsl:output doctype-public and doctype-system stylesheet properties</em>
+<a class="jxr_linenumber" name="L617" href="#L617">617</a> <em class="jxr_javadoccomment">     * @param doctypeSystem the system identifier to be used in the DOCTYPE</em>
+<a class="jxr_linenumber" name="L618" href="#L618">618</a> <em class="jxr_javadoccomment">     * declaration in the output document.</em>
+<a class="jxr_linenumber" name="L619" href="#L619">619</a> <em class="jxr_javadoccomment">     * @param doctypePublic the public identifier to be used in the DOCTYPE</em>
+<a class="jxr_linenumber" name="L620" href="#L620">620</a> <em class="jxr_javadoccomment">     * declaration in the output document.</em>
+<a class="jxr_linenumber" name="L621" href="#L621">621</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDoctype(<a href="../../../../../../../java/lang/String.html">String</a> doctypeSystem, <a href="../../../../../../../java/lang/String.html">String</a> doctypePublic)
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>     {
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>         <strong class="jxr_keyword">this</strong>.m_doctypeSystem = doctypeSystem;
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>         <strong class="jxr_keyword">this</strong>.m_doctypePublic = doctypePublic;
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>     }
+<a class="jxr_linenumber" name="L627" href="#L627">627</a> 
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L629" href="#L629">629</a> <em class="jxr_javadoccomment">     * Sets the value coming from the xsl:output standalone stylesheet attribute.</em>
+<a class="jxr_linenumber" name="L630" href="#L630">630</a> <em class="jxr_javadoccomment">     * @param standalone a value of "yes" indicates that the</em>
+<a class="jxr_linenumber" name="L631" href="#L631">631</a> <em class="jxr_javadoccomment">     * &lt;code&gt;standalone&lt;/code&gt; delaration is to be included in the output</em>
+<a class="jxr_linenumber" name="L632" href="#L632">632</a> <em class="jxr_javadoccomment">     * document. This method remembers if the value was explicitly set using</em>
+<a class="jxr_linenumber" name="L633" href="#L633">633</a> <em class="jxr_javadoccomment">     * this method, verses if the value is the default value.</em>
+<a class="jxr_linenumber" name="L634" href="#L634">634</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setStandalone(<a href="../../../../../../../java/lang/String.html">String</a> standalone)
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     {
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>         <strong class="jxr_keyword">if</strong> (standalone != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>         {
+<a class="jxr_linenumber" name="L639" href="#L639">639</a>             m_standaloneWasSpecified = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>             setStandaloneInternal(standalone);
+<a class="jxr_linenumber" name="L641" href="#L641">641</a>         }
+<a class="jxr_linenumber" name="L642" href="#L642">642</a>     }
+<a class="jxr_linenumber" name="L643" href="#L643">643</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     * Sets the XSL standalone attribute, but does not remember if this is a</em>
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * default or explicite setting.</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * @param standalone "yes" | "no"</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> setStandaloneInternal(<a href="../../../../../../../java/lang/String.html">String</a> standalone)
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>     {
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"yes"</span>.equals(standalone))
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>             m_standalone = <span class="jxr_string">"yes"</span>;
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>         <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>             m_standalone = <span class="jxr_string">"no"</span>;
+<a class="jxr_linenumber" name="L654" href="#L654">654</a> 
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>     }
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> 
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a> <em class="jxr_javadoccomment">     * Gets the XSL standalone attribute</em>
+<a class="jxr_linenumber" name="L659" href="#L659">659</a> <em class="jxr_javadoccomment">     * @return a value of "yes" if the &lt;code&gt;standalone&lt;/code&gt; delaration is to</em>
+<a class="jxr_linenumber" name="L660" href="#L660">660</a> <em class="jxr_javadoccomment">     * be included in the output document.</em>
+<a class="jxr_linenumber" name="L661" href="#L661">661</a> <em class="jxr_javadoccomment">     *  @see XSLOutputAttributes#getStandalone()</em>
+<a class="jxr_linenumber" name="L662" href="#L662">662</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getStandalone()
+<a class="jxr_linenumber" name="L664" href="#L664">664</a>     {
+<a class="jxr_linenumber" name="L665" href="#L665">665</a>         <strong class="jxr_keyword">return</strong> m_standalone;
+<a class="jxr_linenumber" name="L666" href="#L666">666</a>     }
+<a class="jxr_linenumber" name="L667" href="#L667">667</a> 
+<a class="jxr_linenumber" name="L668" href="#L668">668</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L669" href="#L669">669</a> <em class="jxr_javadoccomment">     * @return true if the output document should be indented to visually</em>
+<a class="jxr_linenumber" name="L670" href="#L670">670</a> <em class="jxr_javadoccomment">     * indicate its structure.</em>
+<a class="jxr_linenumber" name="L671" href="#L671">671</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L672" href="#L672">672</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> getIndent()
+<a class="jxr_linenumber" name="L673" href="#L673">673</a>     {
+<a class="jxr_linenumber" name="L674" href="#L674">674</a>         <strong class="jxr_keyword">return</strong> m_doIndent;
+<a class="jxr_linenumber" name="L675" href="#L675">675</a>     }
+<a class="jxr_linenumber" name="L676" href="#L676">676</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L677" href="#L677">677</a> <em class="jxr_javadoccomment">     * Gets the mediatype the media-type or MIME type associated with the output</em>
+<a class="jxr_linenumber" name="L678" href="#L678">678</a> <em class="jxr_javadoccomment">     * document.</em>
+<a class="jxr_linenumber" name="L679" href="#L679">679</a> <em class="jxr_javadoccomment">     * @return the mediatype the media-type or MIME type associated with the</em>
+<a class="jxr_linenumber" name="L680" href="#L680">680</a> <em class="jxr_javadoccomment">     * output document.</em>
+<a class="jxr_linenumber" name="L681" href="#L681">681</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getMediaType()
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>     {
+<a class="jxr_linenumber" name="L684" href="#L684">684</a>         <strong class="jxr_keyword">return</strong> m_mediatype;
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>     }
+<a class="jxr_linenumber" name="L686" href="#L686">686</a> 
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L688" href="#L688">688</a> <em class="jxr_javadoccomment">     * Gets the version of the output format.</em>
+<a class="jxr_linenumber" name="L689" href="#L689">689</a> <em class="jxr_javadoccomment">     * @return the version of the output format.</em>
+<a class="jxr_linenumber" name="L690" href="#L690">690</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getVersion()
+<a class="jxr_linenumber" name="L692" href="#L692">692</a>     {
+<a class="jxr_linenumber" name="L693" href="#L693">693</a>         <strong class="jxr_keyword">return</strong> m_version;
+<a class="jxr_linenumber" name="L694" href="#L694">694</a>     }
+<a class="jxr_linenumber" name="L695" href="#L695">695</a> 
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a> <em class="jxr_javadoccomment">     * Sets the value coming from the xsl:output version attribute.</em>
+<a class="jxr_linenumber" name="L698" href="#L698">698</a> <em class="jxr_javadoccomment">     * @param version the version of the output format.</em>
+<a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">     * @see SerializationHandler#setVersion(String)</em>
+<a class="jxr_linenumber" name="L700" href="#L700">700</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setVersion(<a href="../../../../../../../java/lang/String.html">String</a> version)
+<a class="jxr_linenumber" name="L702" href="#L702">702</a>     {
+<a class="jxr_linenumber" name="L703" href="#L703">703</a>         m_version = version;
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>     }
+<a class="jxr_linenumber" name="L705" href="#L705">705</a> 
+<a class="jxr_linenumber" name="L706" href="#L706">706</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L707" href="#L707">707</a> <em class="jxr_javadoccomment">     * Sets the value coming from the xsl:output media-type stylesheet attribute.</em>
+<a class="jxr_linenumber" name="L708" href="#L708">708</a> <em class="jxr_javadoccomment">     * @param mediaType the non-null media-type or MIME type associated with the</em>
+<a class="jxr_linenumber" name="L709" href="#L709">709</a> <em class="jxr_javadoccomment">     * output document.</em>
+<a class="jxr_linenumber" name="L710" href="#L710">710</a> <em class="jxr_javadoccomment">     * @see javax.xml.transform.OutputKeys#MEDIA_TYPE</em>
+<a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">     * @see SerializationHandler#setMediaType(String)</em>
+<a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setMediaType(<a href="../../../../../../../java/lang/String.html">String</a> mediaType)
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>     {
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>         m_mediatype = mediaType;
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>     }
+<a class="jxr_linenumber" name="L717" href="#L717">717</a> 
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L719" href="#L719">719</a> <em class="jxr_javadoccomment">     * @return the number of spaces to indent for each indentation level.</em>
+<a class="jxr_linenumber" name="L720" href="#L720">720</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getIndentAmount()
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>     {
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>         <strong class="jxr_keyword">return</strong> m_indentAmount;
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>     }
+<a class="jxr_linenumber" name="L725" href="#L725">725</a> 
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L727" href="#L727">727</a> <em class="jxr_javadoccomment">     * Sets the indentation amount.</em>
+<a class="jxr_linenumber" name="L728" href="#L728">728</a> <em class="jxr_javadoccomment">     * @param m_indentAmount The m_indentAmount to set</em>
+<a class="jxr_linenumber" name="L729" href="#L729">729</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L730" href="#L730">730</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setIndentAmount(<strong class="jxr_keyword">int</strong> m_indentAmount)
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>     {
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>         <strong class="jxr_keyword">this</strong>.m_indentAmount = m_indentAmount;
+<a class="jxr_linenumber" name="L733" href="#L733">733</a>     }
+<a class="jxr_linenumber" name="L734" href="#L734">734</a> 
+<a class="jxr_linenumber" name="L735" href="#L735">735</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L736" href="#L736">736</a> <em class="jxr_javadoccomment">     * Sets the value coming from the xsl:output indent stylesheet</em>
+<a class="jxr_linenumber" name="L737" href="#L737">737</a> <em class="jxr_javadoccomment">     * attribute.</em>
+<a class="jxr_linenumber" name="L738" href="#L738">738</a> <em class="jxr_javadoccomment">     * @param doIndent true if the output document should be indented to</em>
+<a class="jxr_linenumber" name="L739" href="#L739">739</a> <em class="jxr_javadoccomment">     * visually indicate its structure.</em>
+<a class="jxr_linenumber" name="L740" href="#L740">740</a> <em class="jxr_javadoccomment">     * @see XSLOutputAttributes#setIndent(boolean)</em>
+<a class="jxr_linenumber" name="L741" href="#L741">741</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L742" href="#L742">742</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setIndent(<strong class="jxr_keyword">boolean</strong> doIndent)
+<a class="jxr_linenumber" name="L743" href="#L743">743</a>     {
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>         m_doIndent = doIndent;
+<a class="jxr_linenumber" name="L745" href="#L745">745</a>     }
+<a class="jxr_linenumber" name="L746" href="#L746">746</a> 
+<a class="jxr_linenumber" name="L747" href="#L747">747</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">     * Sets the isStandalone property</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">     * @param isStandalone true if the ORACLE_IS_STANDALONE is set to yes</em>
+<a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">     * @see OutputPropertiesFactory ORACLE_IS_STANDALONE</em>
+<a class="jxr_linenumber" name="L751" href="#L751">751</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setIsStandalone(<strong class="jxr_keyword">boolean</strong> isStandalone)
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>     {
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>        m_isStandalone = isStandalone;
+<a class="jxr_linenumber" name="L755" href="#L755">755</a>     }
+<a class="jxr_linenumber" name="L756" href="#L756">756</a> 
+<a class="jxr_linenumber" name="L757" href="#L757">757</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">     * This method is used when a prefix/uri namespace mapping</em>
+<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     * is indicated after the element was started with a</em>
+<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">     * startElement() and before and endElement().</em>
+<a class="jxr_linenumber" name="L761" href="#L761">761</a> <em class="jxr_javadoccomment">     * startPrefixMapping(prefix,uri) would be used before the</em>
+<a class="jxr_linenumber" name="L762" href="#L762">762</a> <em class="jxr_javadoccomment">     * startElement() call.</em>
+<a class="jxr_linenumber" name="L763" href="#L763">763</a> <em class="jxr_javadoccomment">     * @param uri the URI of the namespace</em>
+<a class="jxr_linenumber" name="L764" href="#L764">764</a> <em class="jxr_javadoccomment">     * @param prefix the prefix associated with the given URI.</em>
+<a class="jxr_linenumber" name="L765" href="#L765">765</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L766" href="#L766">766</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#namespaceAfterStartElement(String, String)</em>
+<a class="jxr_linenumber" name="L767" href="#L767">767</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> namespaceAfterStartElement(<a href="../../../../../../../java/lang/String.html">String</a> uri, <a href="../../../../../../../java/lang/String.html">String</a> prefix)
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../org/xml/sax/SAXException.html">SAXException</a>
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>     {
+<a class="jxr_linenumber" name="L771" href="#L771">771</a>         <em class="jxr_comment">// default behavior is to do nothing</em>
+<a class="jxr_linenumber" name="L772" href="#L772">772</a>     }
+<a class="jxr_linenumber" name="L773" href="#L773">773</a> 
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L775" href="#L775">775</a> <em class="jxr_javadoccomment">     * Return a {@link DOMSerializer} interface into this serializer. If the</em>
+<a class="jxr_linenumber" name="L776" href="#L776">776</a> <em class="jxr_javadoccomment">     * serializer does not support the {@link DOMSerializer} interface, it should</em>
+<a class="jxr_linenumber" name="L777" href="#L777">777</a> <em class="jxr_javadoccomment">     * return null.</em>
+<a class="jxr_linenumber" name="L778" href="#L778">778</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L779" href="#L779">779</a> <em class="jxr_javadoccomment">     * @return A {@link DOMSerializer} interface into this serializer,  or null</em>
+<a class="jxr_linenumber" name="L780" href="#L780">780</a> <em class="jxr_javadoccomment">     * if the serializer is not DOM capable</em>
+<a class="jxr_linenumber" name="L781" href="#L781">781</a> <em class="jxr_javadoccomment">     * @throws IOException An I/O exception occured</em>
+<a class="jxr_linenumber" name="L782" href="#L782">782</a> <em class="jxr_javadoccomment">     * @see Serializer#asDOMSerializer()</em>
+<a class="jxr_linenumber" name="L783" href="#L783">783</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L784" href="#L784">784</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/DOMSerializer.html">DOMSerializer</a> asDOMSerializer() <strong class="jxr_keyword">throws</strong> IOException
+<a class="jxr_linenumber" name="L785" href="#L785">785</a>     {
+<a class="jxr_linenumber" name="L786" href="#L786">786</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L787" href="#L787">787</a>     }
+<a class="jxr_linenumber" name="L788" href="#L788">788</a> 
+<a class="jxr_linenumber" name="L789" href="#L789">789</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">     * Push a boolean state based on if the name of the current element</em>
+<a class="jxr_linenumber" name="L791" href="#L791">791</a> <em class="jxr_javadoccomment">     * is found in the list of qnames.  A state is only pushed if</em>
+<a class="jxr_linenumber" name="L792" href="#L792">792</a> <em class="jxr_javadoccomment">     * there were some cdata-section-names were specified.</em>
+<a class="jxr_linenumber" name="L793" href="#L793">793</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L794" href="#L794">794</a> <em class="jxr_javadoccomment">     * Hidden parameters are the vector of qualified elements specified in</em>
+<a class="jxr_linenumber" name="L795" href="#L795">795</a> <em class="jxr_javadoccomment">     * cdata-section-names attribute, and the m_cdataSectionStates stack</em>
+<a class="jxr_linenumber" name="L796" href="#L796">796</a> <em class="jxr_javadoccomment">     * onto which whether the current element is in the list is pushed (true or</em>
+<a class="jxr_linenumber" name="L797" href="#L797">797</a> <em class="jxr_javadoccomment">     * false). Other hidden parameters are the current elements namespaceURI,</em>
+<a class="jxr_linenumber" name="L798" href="#L798">798</a> <em class="jxr_javadoccomment">     * localName and qName</em>
+<a class="jxr_linenumber" name="L799" href="#L799">799</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">boolean</strong> isCdataSection()
+<a class="jxr_linenumber" name="L801" href="#L801">801</a>     {
+<a class="jxr_linenumber" name="L802" href="#L802">802</a> 
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>         <strong class="jxr_keyword">boolean</strong> b = false;
+<a class="jxr_linenumber" name="L804" href="#L804">804</a> 
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">null</strong> != m_cdataSectionElements)
+<a class="jxr_linenumber" name="L806" href="#L806">806</a>         {
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>             <strong class="jxr_keyword">if</strong> (m_elemContext.m_elementLocalName == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>                 m_elemContext.m_elementLocalName =
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>                     getLocalName(m_elemContext.m_elementName);
+<a class="jxr_linenumber" name="L810" href="#L810">810</a>             <strong class="jxr_keyword">if</strong> (m_elemContext.m_elementURI == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L811" href="#L811">811</a>             {
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>                 <a href="../../../../../../../java/lang/String.html">String</a> prefix = getPrefixPart(m_elemContext.m_elementName);
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>                 <strong class="jxr_keyword">if</strong> (prefix != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>                     m_elemContext.m_elementURI =
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>                         m_prefixMap.lookupNamespace(prefix);
+<a class="jxr_linenumber" name="L816" href="#L816">816</a> 
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>             }
+<a class="jxr_linenumber" name="L818" href="#L818">818</a> 
+<a class="jxr_linenumber" name="L819" href="#L819">819</a>             <strong class="jxr_keyword">if</strong> ((<strong class="jxr_keyword">null</strong> != m_elemContext.m_elementURI)
+<a class="jxr_linenumber" name="L820" href="#L820">820</a>                 &amp;&amp; m_elemContext.m_elementURI.length() == 0)
+<a class="jxr_linenumber" name="L821" href="#L821">821</a>                 m_elemContext.m_elementURI = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L822" href="#L822">822</a> 
+<a class="jxr_linenumber" name="L823" href="#L823">823</a>             <strong class="jxr_keyword">int</strong> nElems = m_cdataSectionElements.size();
+<a class="jxr_linenumber" name="L824" href="#L824">824</a> 
+<a class="jxr_linenumber" name="L825" href="#L825">825</a>             <em class="jxr_comment">// loop through 2 at a time, as these are pairs of URI and localName</em>
+<a class="jxr_linenumber" name="L826" href="#L826">826</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; nElems; i += 2)
+<a class="jxr_linenumber" name="L827" href="#L827">827</a>             {
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>                 <a href="../../../../../../../java/lang/String.html">String</a> uri = (String) m_cdataSectionElements.elementAt(i);
+<a class="jxr_linenumber" name="L829" href="#L829">829</a>                 <a href="../../../../../../../java/lang/String.html">String</a> loc = (String) m_cdataSectionElements.elementAt(i + 1);
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>                 <strong class="jxr_keyword">if</strong> (loc.equals(m_elemContext.m_elementLocalName)
+<a class="jxr_linenumber" name="L831" href="#L831">831</a>                     &amp;&amp; subPartMatch(m_elemContext.m_elementURI, uri))
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>                 {
+<a class="jxr_linenumber" name="L833" href="#L833">833</a>                     b = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L834" href="#L834">834</a> 
+<a class="jxr_linenumber" name="L835" href="#L835">835</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L836" href="#L836">836</a>                 }
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>             }
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>         }
+<a class="jxr_linenumber" name="L839" href="#L839">839</a>         <strong class="jxr_keyword">return</strong> b;
+<a class="jxr_linenumber" name="L840" href="#L840">840</a>     }
+<a class="jxr_linenumber" name="L841" href="#L841">841</a> 
+<a class="jxr_linenumber" name="L842" href="#L842">842</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L843" href="#L843">843</a> <em class="jxr_javadoccomment">     * Tell if two strings are equal, without worry if the first string is null.</em>
+<a class="jxr_linenumber" name="L844" href="#L844">844</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L845" href="#L845">845</a> <em class="jxr_javadoccomment">     * @param p String reference, which may be null.</em>
+<a class="jxr_linenumber" name="L846" href="#L846">846</a> <em class="jxr_javadoccomment">     * @param t String reference, which may be null.</em>
+<a class="jxr_linenumber" name="L847" href="#L847">847</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L848" href="#L848">848</a> <em class="jxr_javadoccomment">     * @return true if strings are equal.</em>
+<a class="jxr_linenumber" name="L849" href="#L849">849</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> subPartMatch(<a href="../../../../../../../java/lang/String.html">String</a> p, <a href="../../../../../../../java/lang/String.html">String</a> t)
+<a class="jxr_linenumber" name="L851" href="#L851">851</a>     {
+<a class="jxr_linenumber" name="L852" href="#L852">852</a>         <strong class="jxr_keyword">return</strong> (p == t) || ((<strong class="jxr_keyword">null</strong> != p) &amp;&amp; (p.equals(t)));
+<a class="jxr_linenumber" name="L853" href="#L853">853</a>     }
+<a class="jxr_linenumber" name="L854" href="#L854">854</a> 
+<a class="jxr_linenumber" name="L855" href="#L855">855</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L856" href="#L856">856</a> <em class="jxr_javadoccomment">     * Returns the local name of a qualified name.</em>
+<a class="jxr_linenumber" name="L857" href="#L857">857</a> <em class="jxr_javadoccomment">     * If the name has no prefix,</em>
+<a class="jxr_linenumber" name="L858" href="#L858">858</a> <em class="jxr_javadoccomment">     * then it works as the identity (SAX2).</em>
+<a class="jxr_linenumber" name="L859" href="#L859">859</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L860" href="#L860">860</a> <em class="jxr_javadoccomment">     * @param qname a qualified name</em>
+<a class="jxr_linenumber" name="L861" href="#L861">861</a> <em class="jxr_javadoccomment">     * @return returns the prefix of the qualified name,</em>
+<a class="jxr_linenumber" name="L862" href="#L862">862</a> <em class="jxr_javadoccomment">     * or null if there is no prefix.</em>
+<a class="jxr_linenumber" name="L863" href="#L863">863</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> getPrefixPart(<a href="../../../../../../../java/lang/String.html">String</a> qname)
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>     {
+<a class="jxr_linenumber" name="L866" href="#L866">866</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> col = qname.indexOf(':');
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>         <strong class="jxr_keyword">return</strong> (col &gt; 0) ? qname.substring(0, col) : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>         <em class="jxr_comment">//return (col &gt; 0) ? qname.substring(0,col) : "";</em>
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>     }
+<a class="jxr_linenumber" name="L870" href="#L870">870</a> 
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L872" href="#L872">872</a> <em class="jxr_javadoccomment">     * Some users of the serializer may need the current namespace mappings</em>
+<a class="jxr_linenumber" name="L873" href="#L873">873</a> <em class="jxr_javadoccomment">     * @return the current namespace mappings (prefix/uri)</em>
+<a class="jxr_linenumber" name="L874" href="#L874">874</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#getNamespaceMappings()</em>
+<a class="jxr_linenumber" name="L875" href="#L875">875</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/NamespaceMappings.html">NamespaceMappings</a> getNamespaceMappings()
+<a class="jxr_linenumber" name="L877" href="#L877">877</a>     {
+<a class="jxr_linenumber" name="L878" href="#L878">878</a>         <strong class="jxr_keyword">return</strong> m_prefixMap;
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>     }
+<a class="jxr_linenumber" name="L880" href="#L880">880</a> 
+<a class="jxr_linenumber" name="L881" href="#L881">881</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L882" href="#L882">882</a> <em class="jxr_javadoccomment">     * Returns the prefix currently pointing to the given URI (if any).</em>
+<a class="jxr_linenumber" name="L883" href="#L883">883</a> <em class="jxr_javadoccomment">     * @param namespaceURI the uri of the namespace in question</em>
+<a class="jxr_linenumber" name="L884" href="#L884">884</a> <em class="jxr_javadoccomment">     * @return a prefix pointing to the given URI (if any).</em>
+<a class="jxr_linenumber" name="L885" href="#L885">885</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#getPrefix(String)</em>
+<a class="jxr_linenumber" name="L886" href="#L886">886</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getPrefix(<a href="../../../../../../../java/lang/String.html">String</a> namespaceURI)
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>     {
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>         <a href="../../../../../../../java/lang/String.html">String</a> prefix = m_prefixMap.lookupPrefix(namespaceURI);
+<a class="jxr_linenumber" name="L890" href="#L890">890</a>         <strong class="jxr_keyword">return</strong> prefix;
+<a class="jxr_linenumber" name="L891" href="#L891">891</a>     }
+<a class="jxr_linenumber" name="L892" href="#L892">892</a> 
+<a class="jxr_linenumber" name="L893" href="#L893">893</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L894" href="#L894">894</a> <em class="jxr_javadoccomment">     * Returns the URI of an element or attribute. Note that default namespaces</em>
+<a class="jxr_linenumber" name="L895" href="#L895">895</a> <em class="jxr_javadoccomment">     * do not apply directly to attributes.</em>
+<a class="jxr_linenumber" name="L896" href="#L896">896</a> <em class="jxr_javadoccomment">     * @param qname a qualified name</em>
+<a class="jxr_linenumber" name="L897" href="#L897">897</a> <em class="jxr_javadoccomment">     * @param isElement true if the qualified name is the name of</em>
+<a class="jxr_linenumber" name="L898" href="#L898">898</a> <em class="jxr_javadoccomment">     * an element.</em>
+<a class="jxr_linenumber" name="L899" href="#L899">899</a> <em class="jxr_javadoccomment">     * @return returns the namespace URI associated with the qualified name.</em>
+<a class="jxr_linenumber" name="L900" href="#L900">900</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L901" href="#L901">901</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getNamespaceURI(<a href="../../../../../../../java/lang/String.html">String</a> qname, <strong class="jxr_keyword">boolean</strong> isElement)
+<a class="jxr_linenumber" name="L902" href="#L902">902</a>     {
+<a class="jxr_linenumber" name="L903" href="#L903">903</a>         <a href="../../../../../../../java/lang/String.html">String</a> uri = EMPTYSTRING;
+<a class="jxr_linenumber" name="L904" href="#L904">904</a>         <strong class="jxr_keyword">int</strong> col = qname.lastIndexOf(':');
+<a class="jxr_linenumber" name="L905" href="#L905">905</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../../../java/lang/String.html">String</a> prefix = (col &gt; 0) ? qname.substring(0, col) : EMPTYSTRING;
+<a class="jxr_linenumber" name="L906" href="#L906">906</a> 
+<a class="jxr_linenumber" name="L907" href="#L907">907</a>         <strong class="jxr_keyword">if</strong> (!EMPTYSTRING.equals(prefix) || isElement)
+<a class="jxr_linenumber" name="L908" href="#L908">908</a>         {
+<a class="jxr_linenumber" name="L909" href="#L909">909</a>             <strong class="jxr_keyword">if</strong> (m_prefixMap != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>             {
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>                 uri = m_prefixMap.lookupNamespace(prefix);
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>                 <strong class="jxr_keyword">if</strong> (uri == <strong class="jxr_keyword">null</strong> &amp;&amp; !prefix.equals(XMLNS_PREFIX))
+<a class="jxr_linenumber" name="L913" href="#L913">913</a>                 {
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../java/lang/RuntimeException.html">RuntimeException</a>(
+<a class="jxr_linenumber" name="L915" href="#L915">915</a>                         Utils.messages.createMessage(
+<a class="jxr_linenumber" name="L916" href="#L916">916</a>                             MsgKey.ER_NAMESPACE_PREFIX,
+<a class="jxr_linenumber" name="L917" href="#L917">917</a>                             <strong class="jxr_keyword">new</strong> <a href="../../../../../../../java/lang/Object.html">Object</a>[] { qname.substring(0, col) }  ));
+<a class="jxr_linenumber" name="L918" href="#L918">918</a>                 }
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>             }
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>         }
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>         <strong class="jxr_keyword">return</strong> uri;
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>     }
+<a class="jxr_linenumber" name="L923" href="#L923">923</a> 
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L925" href="#L925">925</a> <em class="jxr_javadoccomment">     * Returns the URI of prefix (if any)</em>
+<a class="jxr_linenumber" name="L926" href="#L926">926</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L927" href="#L927">927</a> <em class="jxr_javadoccomment">         * @param prefix the prefix whose URI is searched for</em>
+<a class="jxr_linenumber" name="L928" href="#L928">928</a> <em class="jxr_javadoccomment">     * @return the namespace URI currently associated with the</em>
+<a class="jxr_linenumber" name="L929" href="#L929">929</a> <em class="jxr_javadoccomment">     * prefix, null if the prefix is undefined.</em>
+<a class="jxr_linenumber" name="L930" href="#L930">930</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../java/lang/String.html">String</a> getNamespaceURIFromPrefix(<a href="../../../../../../../java/lang/String.html">String</a> prefix)
+<a class="jxr_linenumber" name="L932" href="#L932">932</a>     {
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>         <a href="../../../../../../../java/lang/String.html">String</a> uri = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>         <strong class="jxr_keyword">if</strong> (m_prefixMap != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L935" href="#L935">935</a>             uri = m_prefixMap.lookupNamespace(prefix);
+<a class="jxr_linenumber" name="L936" href="#L936">936</a>         <strong class="jxr_keyword">return</strong> uri;
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>     }
+<a class="jxr_linenumber" name="L938" href="#L938">938</a> 
+<a class="jxr_linenumber" name="L939" href="#L939">939</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L940" href="#L940">940</a> <em class="jxr_javadoccomment">     * Entity reference event.</em>
+<a class="jxr_linenumber" name="L941" href="#L941">941</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L942" href="#L942">942</a> <em class="jxr_javadoccomment">     * @param name Name of entity</em>
+<a class="jxr_linenumber" name="L943" href="#L943">943</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L944" href="#L944">944</a> <em class="jxr_javadoccomment">     * @throws org.xml.sax.SAXException</em>
+<a class="jxr_linenumber" name="L945" href="#L945">945</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> entityReference(<a href="../../../../../../../java/lang/String.html">String</a> name) <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>     {
+<a class="jxr_linenumber" name="L948" href="#L948">948</a> 
+<a class="jxr_linenumber" name="L949" href="#L949">949</a>         flushPending();
+<a class="jxr_linenumber" name="L950" href="#L950">950</a> 
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>         startEntity(name);
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>         endEntity(name);
+<a class="jxr_linenumber" name="L953" href="#L953">953</a> 
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>                     fireEntityReference(name);
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>     }
+<a class="jxr_linenumber" name="L957" href="#L957">957</a> 
+<a class="jxr_linenumber" name="L958" href="#L958">958</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L959" href="#L959">959</a> <em class="jxr_javadoccomment">     * Sets the transformer associated with this serializer</em>
+<a class="jxr_linenumber" name="L960" href="#L960">960</a> <em class="jxr_javadoccomment">     * @param t the transformer associated with this serializer.</em>
+<a class="jxr_linenumber" name="L961" href="#L961">961</a> <em class="jxr_javadoccomment">     * @see SerializationHandler#setTransformer(Transformer)</em>
+<a class="jxr_linenumber" name="L962" href="#L962">962</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setTransformer(<a href="../../../../../../../javax/xml/transform/Transformer.html">Transformer</a> t)
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>     {
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>         m_transformer = t;
+<a class="jxr_linenumber" name="L966" href="#L966">966</a> 
+<a class="jxr_linenumber" name="L967" href="#L967">967</a>         <em class="jxr_comment">// If this transformer object implements the SerializerTrace interface</em>
+<a class="jxr_linenumber" name="L968" href="#L968">968</a>         <em class="jxr_comment">// then assign m_tracer to the transformer object so it can be used</em>
+<a class="jxr_linenumber" name="L969" href="#L969">969</a>         <em class="jxr_comment">// to fire trace events.</em>
+<a class="jxr_linenumber" name="L970" href="#L970">970</a>         <strong class="jxr_keyword">if</strong> ((m_transformer instanceof SerializerTrace) &amp;&amp;
+<a class="jxr_linenumber" name="L971" href="#L971">971</a>             (((<a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/SerializerTrace.html">SerializerTrace</a>) m_transformer).hasTraceListeners())) {
+<a class="jxr_linenumber" name="L972" href="#L972">972</a>            m_tracer = (SerializerTrace) m_transformer;
+<a class="jxr_linenumber" name="L973" href="#L973">973</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L974" href="#L974">974</a>            m_tracer = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L975" href="#L975">975</a>         }
+<a class="jxr_linenumber" name="L976" href="#L976">976</a>     }
+<a class="jxr_linenumber" name="L977" href="#L977">977</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L978" href="#L978">978</a> <em class="jxr_javadoccomment">     * Gets the transformer associated with this serializer</em>
+<a class="jxr_linenumber" name="L979" href="#L979">979</a> <em class="jxr_javadoccomment">     * @return returns the transformer associated with this serializer.</em>
+<a class="jxr_linenumber" name="L980" href="#L980">980</a> <em class="jxr_javadoccomment">     * @see SerializationHandler#getTransformer()</em>
+<a class="jxr_linenumber" name="L981" href="#L981">981</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L982" href="#L982">982</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../javax/xml/transform/Transformer.html">Transformer</a> getTransformer()
+<a class="jxr_linenumber" name="L983" href="#L983">983</a>     {
+<a class="jxr_linenumber" name="L984" href="#L984">984</a>         <strong class="jxr_keyword">return</strong> m_transformer;
+<a class="jxr_linenumber" name="L985" href="#L985">985</a>     }
+<a class="jxr_linenumber" name="L986" href="#L986">986</a> 
+<a class="jxr_linenumber" name="L987" href="#L987">987</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L988" href="#L988">988</a> <em class="jxr_javadoccomment">     * This method gets the nodes value as a String and uses that String as if</em>
+<a class="jxr_linenumber" name="L989" href="#L989">989</a> <em class="jxr_javadoccomment">     * it were an input character notification.</em>
+<a class="jxr_linenumber" name="L990" href="#L990">990</a> <em class="jxr_javadoccomment">     * @param node the Node to serialize</em>
+<a class="jxr_linenumber" name="L991" href="#L991">991</a> <em class="jxr_javadoccomment">     * @throws org.xml.sax.SAXException</em>
+<a class="jxr_linenumber" name="L992" href="#L992">992</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> characters(org.w3c.dom.Node node)
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L995" href="#L995">995</a>     {
+<a class="jxr_linenumber" name="L996" href="#L996">996</a>         flushPending();
+<a class="jxr_linenumber" name="L997" href="#L997">997</a>         <a href="../../../../../../../java/lang/String.html">String</a> data = node.getNodeValue();
+<a class="jxr_linenumber" name="L998" href="#L998">998</a>         <strong class="jxr_keyword">if</strong> (data != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L999" href="#L999">999</a>         {
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> length = data.length();
+<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>             <strong class="jxr_keyword">if</strong> (length &gt; m_charsBuff.length)
+<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>             {
+<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a>                 m_charsBuff = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[length * 2 + 1];
+<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a>             }
+<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a>             data.getChars(0, length, m_charsBuff, 0);
+<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a>             characters(m_charsBuff, 0, length);
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>         }
+<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a>     }
+<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a> 
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a> 
+<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a> <em class="jxr_javadoccomment">     * @see org.xml.sax.ErrorHandler#error(SAXParseException)</em>
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> error(<a href="../../../../../../../org/xml/sax/SAXParseException.html">SAXParseException</a> exc) <strong class="jxr_keyword">throws</strong> SAXException {
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>     }
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a> 
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a> <em class="jxr_javadoccomment">     * @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)</em>
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fatalError(<a href="../../../../../../../org/xml/sax/SAXParseException.html">SAXParseException</a> exc) <strong class="jxr_keyword">throws</strong> SAXException {
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a> 
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>       m_elemContext.m_startTagOpen = false;
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a> 
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>     }
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a> 
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a> <em class="jxr_javadoccomment">     * @see org.xml.sax.ErrorHandler#warning(SAXParseException)</em>
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> warning(<a href="../../../../../../../org/xml/sax/SAXParseException.html">SAXParseException</a> exc) <strong class="jxr_keyword">throws</strong> SAXException
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a>     {
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a>     }
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a> 
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a> <em class="jxr_javadoccomment">     * To fire off start entity trace event</em>
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a> <em class="jxr_javadoccomment">     * @param name Name of entity</em>
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireStartEntity(<a href="../../../../../../../java/lang/String.html">String</a> name)
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a>     {
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>         {
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENTITYREF, name);
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>         }
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>     }
+<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a> 
+<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a> <em class="jxr_javadoccomment">     * Report the characters event</em>
+<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a> <em class="jxr_javadoccomment">     * @param chars  content of characters</em>
+<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a> <em class="jxr_javadoccomment">     * @param start  starting index of characters to output</em>
+<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a> <em class="jxr_javadoccomment">     * @param length  number of characters to output</em>
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a> <em class="jxr_comment">//    protected void fireCharEvent(char[] chars, int start, int length)</em>
+<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a> <em class="jxr_comment">//        throws org.xml.sax.SAXException</em>
+<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a> <em class="jxr_comment">//    {</em>
+<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a> <em class="jxr_comment">//        if (m_tracer != null)</em>
+<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a> <em class="jxr_comment">//            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CHARACTERS, chars, start,length);</em>
+<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a> <em class="jxr_comment">//    }</em>
+<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a> <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a> 
+<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a> <em class="jxr_javadoccomment">     * This method is only used internally when flushing the writer from the</em>
+<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a> <em class="jxr_javadoccomment">     * various fire...() trace events.  Due to the writer being wrapped with</em>
+<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> <em class="jxr_javadoccomment">     * SerializerTraceWriter it may cause the flush of these trace events:</em>
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a> <em class="jxr_javadoccomment">     * EVENTTYPE_OUTPUT_PSEUDO_CHARACTERS</em>
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> <em class="jxr_javadoccomment">     * EVENTTYPE_OUTPUT_CHARACTERS</em>
+<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> <em class="jxr_javadoccomment">     * which trace the output written to the output stream.</em>
+<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> flushMyWriter()
+<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>     {
+<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>         <strong class="jxr_keyword">if</strong> (m_writer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>         {
+<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a>             <strong class="jxr_keyword">try</strong>
+<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a>             {
+<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a>                 m_writer.flush();
+<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a>             }
+<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a>             <strong class="jxr_keyword">catch</strong>(<a href="../../../../../../../java/io/IOException.html">IOException</a> ioe)
+<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a>             {
+<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a> 
+<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a>             }
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>         }
+<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a>     }
+<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a> <em class="jxr_javadoccomment">     * Report the CDATA trace event</em>
+<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a> <em class="jxr_javadoccomment">     * @param chars  content of CDATA</em>
+<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a> <em class="jxr_javadoccomment">     * @param start  starting index of characters to output</em>
+<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> <em class="jxr_javadoccomment">     * @param length  number of characters to output</em>
+<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireCDATAEvent(<strong class="jxr_keyword">char</strong>[] chars, <strong class="jxr_keyword">int</strong> start, <strong class="jxr_keyword">int</strong> length)
+<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>     {
+<a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>                 <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>         {
+<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1096" href="#L1096">1096</a>                         m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_CDATA, chars, start,length);
+<a class="jxr_linenumber" name="L1097" href="#L1097">1097</a>         }
+<a class="jxr_linenumber" name="L1098" href="#L1098">1098</a>     }
+<a class="jxr_linenumber" name="L1099" href="#L1099">1099</a> 
+<a class="jxr_linenumber" name="L1100" href="#L1100">1100</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1101" href="#L1101">1101</a> <em class="jxr_javadoccomment">     * Report the comment trace event</em>
+<a class="jxr_linenumber" name="L1102" href="#L1102">1102</a> <em class="jxr_javadoccomment">     * @param chars  content of comment</em>
+<a class="jxr_linenumber" name="L1103" href="#L1103">1103</a> <em class="jxr_javadoccomment">     * @param start  starting index of comment to output</em>
+<a class="jxr_linenumber" name="L1104" href="#L1104">1104</a> <em class="jxr_javadoccomment">     * @param length  number of characters to output</em>
+<a class="jxr_linenumber" name="L1105" href="#L1105">1105</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1106" href="#L1106">1106</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireCommentEvent(<strong class="jxr_keyword">char</strong>[] chars, <strong class="jxr_keyword">int</strong> start, <strong class="jxr_keyword">int</strong> length)
+<a class="jxr_linenumber" name="L1107" href="#L1107">1107</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1108" href="#L1108">1108</a>     {
+<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a>                 <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1110" href="#L1110">1110</a>         {
+<a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1112" href="#L1112">1112</a>                         m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_COMMENT, <strong class="jxr_keyword">new</strong> <a href="../../../../../../../java/lang/String.html">String</a>(chars, start, length));
+<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a>         }
+<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a>     }
+<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a> 
+<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a> 
+<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a> <em class="jxr_javadoccomment">     * To fire off end entity trace event</em>
+<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a> <em class="jxr_javadoccomment">     * @param name Name of entity</em>
+<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fireEndEntity(<a href="../../../../../../../java/lang/String.html">String</a> name)
+<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a>     {
+<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a>         <em class="jxr_comment">// we do not need to handle this.</em>
+<a class="jxr_linenumber" name="L1127" href="#L1127">1127</a>     }
+<a class="jxr_linenumber" name="L1128" href="#L1128">1128</a> 
+<a class="jxr_linenumber" name="L1129" href="#L1129">1129</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1130" href="#L1130">1130</a> <em class="jxr_javadoccomment">     * To fire off start document trace  event</em>
+<a class="jxr_linenumber" name="L1131" href="#L1131">1131</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1132" href="#L1132">1132</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireStartDoc()
+<a class="jxr_linenumber" name="L1133" href="#L1133">1133</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1134" href="#L1134">1134</a>     {
+<a class="jxr_linenumber" name="L1135" href="#L1135">1135</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1136" href="#L1136">1136</a>         {
+<a class="jxr_linenumber" name="L1137" href="#L1137">1137</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1138" href="#L1138">1138</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_STARTDOCUMENT);
+<a class="jxr_linenumber" name="L1139" href="#L1139">1139</a>         }
+<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>     }
+<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a> 
+<a class="jxr_linenumber" name="L1142" href="#L1142">1142</a> 
+<a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1144" href="#L1144">1144</a> <em class="jxr_javadoccomment">     * To fire off end document trace event</em>
+<a class="jxr_linenumber" name="L1145" href="#L1145">1145</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1146" href="#L1146">1146</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireEndDoc()
+<a class="jxr_linenumber" name="L1147" href="#L1147">1147</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1148" href="#L1148">1148</a>     {
+<a class="jxr_linenumber" name="L1149" href="#L1149">1149</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1150" href="#L1150">1150</a>         {
+<a class="jxr_linenumber" name="L1151" href="#L1151">1151</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1152" href="#L1152">1152</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDDOCUMENT);
+<a class="jxr_linenumber" name="L1153" href="#L1153">1153</a>         }
+<a class="jxr_linenumber" name="L1154" href="#L1154">1154</a>     }
+<a class="jxr_linenumber" name="L1155" href="#L1155">1155</a> 
+<a class="jxr_linenumber" name="L1156" href="#L1156">1156</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1157" href="#L1157">1157</a> <em class="jxr_javadoccomment">     * Report the start element trace event. This trace method needs to be</em>
+<a class="jxr_linenumber" name="L1158" href="#L1158">1158</a> <em class="jxr_javadoccomment">     * called just before the attributes are cleared.</em>
+<a class="jxr_linenumber" name="L1159" href="#L1159">1159</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1160" href="#L1160">1160</a> <em class="jxr_javadoccomment">     * @param elemName the qualified name of the element</em>
+<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1163" href="#L1163">1163</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireStartElem(<a href="../../../../../../../java/lang/String.html">String</a> elemName)
+<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1165" href="#L1165">1165</a>     {
+<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a>         {
+<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_STARTELEMENT,
+<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a>                 elemName, m_attributes);
+<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a>         }
+<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a>     }
+<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a> 
+<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a> 
+<a class="jxr_linenumber" name="L1175" href="#L1175">1175</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1176" href="#L1176">1176</a> <em class="jxr_javadoccomment">     * To fire off the end element event</em>
+<a class="jxr_linenumber" name="L1177" href="#L1177">1177</a> <em class="jxr_javadoccomment">     * @param name Name of element</em>
+<a class="jxr_linenumber" name="L1178" href="#L1178">1178</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1179" href="#L1179">1179</a> <em class="jxr_comment">//    protected void fireEndElem(String name)</em>
+<a class="jxr_linenumber" name="L1180" href="#L1180">1180</a> <em class="jxr_comment">//        throws org.xml.sax.SAXException</em>
+<a class="jxr_linenumber" name="L1181" href="#L1181">1181</a> <em class="jxr_comment">//    {</em>
+<a class="jxr_linenumber" name="L1182" href="#L1182">1182</a> <em class="jxr_comment">//        if (m_tracer != null)</em>
+<a class="jxr_linenumber" name="L1183" href="#L1183">1183</a> <em class="jxr_comment">//            m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENDELEMENT,name, (Attributes)null);</em>
+<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a> <em class="jxr_comment">//    }</em>
+<a class="jxr_linenumber" name="L1185" href="#L1185">1185</a> 
+<a class="jxr_linenumber" name="L1186" href="#L1186">1186</a> 
+<a class="jxr_linenumber" name="L1187" href="#L1187">1187</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1188" href="#L1188">1188</a> <em class="jxr_javadoccomment">     * To fire off the PI trace event</em>
+<a class="jxr_linenumber" name="L1189" href="#L1189">1189</a> <em class="jxr_javadoccomment">     * @param name Name of PI</em>
+<a class="jxr_linenumber" name="L1190" href="#L1190">1190</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1191" href="#L1191">1191</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireEscapingEvent(<a href="../../../../../../../java/lang/String.html">String</a> name, <a href="../../../../../../../java/lang/String.html">String</a> data)
+<a class="jxr_linenumber" name="L1192" href="#L1192">1192</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1193" href="#L1193">1193</a>     {
+<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a> 
+<a class="jxr_linenumber" name="L1195" href="#L1195">1195</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1196" href="#L1196">1196</a>         {
+<a class="jxr_linenumber" name="L1197" href="#L1197">1197</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1198" href="#L1198">1198</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_PI,name, data);
+<a class="jxr_linenumber" name="L1199" href="#L1199">1199</a>         }
+<a class="jxr_linenumber" name="L1200" href="#L1200">1200</a>     }
+<a class="jxr_linenumber" name="L1201" href="#L1201">1201</a> 
+<a class="jxr_linenumber" name="L1202" href="#L1202">1202</a> 
+<a class="jxr_linenumber" name="L1203" href="#L1203">1203</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1204" href="#L1204">1204</a> <em class="jxr_javadoccomment">     * To fire off the entity reference trace event</em>
+<a class="jxr_linenumber" name="L1205" href="#L1205">1205</a> <em class="jxr_javadoccomment">     * @param name Name of entity reference</em>
+<a class="jxr_linenumber" name="L1206" href="#L1206">1206</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1207" href="#L1207">1207</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> fireEntityReference(<a href="../../../../../../../java/lang/String.html">String</a> name)
+<a class="jxr_linenumber" name="L1208" href="#L1208">1208</a>         <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1209" href="#L1209">1209</a>     {
+<a class="jxr_linenumber" name="L1210" href="#L1210">1210</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1211" href="#L1211">1211</a>         {
+<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a>             flushMyWriter();
+<a class="jxr_linenumber" name="L1213" href="#L1213">1213</a>             m_tracer.fireGenerateEvent(SerializerTrace.EVENTTYPE_ENTITYREF,name, (Attributes)<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L1214" href="#L1214">1214</a>         }
+<a class="jxr_linenumber" name="L1215" href="#L1215">1215</a>     }
+<a class="jxr_linenumber" name="L1216" href="#L1216">1216</a> 
+<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1218" href="#L1218">1218</a> <em class="jxr_javadoccomment">     * Receive notification of the beginning of a document.</em>
+<a class="jxr_linenumber" name="L1219" href="#L1219">1219</a> <em class="jxr_javadoccomment">     * This method is never a self generated call,</em>
+<a class="jxr_linenumber" name="L1220" href="#L1220">1220</a> <em class="jxr_javadoccomment">     * but only called externally.</em>
+<a class="jxr_linenumber" name="L1221" href="#L1221">1221</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1222" href="#L1222">1222</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The SAX parser will invoke this method only once, before any</em>
+<a class="jxr_linenumber" name="L1223" href="#L1223">1223</a> <em class="jxr_javadoccomment">     * other methods in this interface or in DTDHandler (except for</em>
+<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a> <em class="jxr_javadoccomment">     * setDocumentLocator).&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L1225" href="#L1225">1225</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1226" href="#L1226">1226</a> <em class="jxr_javadoccomment">     * @throws org.xml.sax.SAXException Any SAX exception, possibly</em>
+<a class="jxr_linenumber" name="L1227" href="#L1227">1227</a> <em class="jxr_javadoccomment">     *            wrapping another exception.</em>
+<a class="jxr_linenumber" name="L1228" href="#L1228">1228</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1229" href="#L1229">1229</a> <em class="jxr_javadoccomment">     * @throws org.xml.sax.SAXException</em>
+<a class="jxr_linenumber" name="L1230" href="#L1230">1230</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1231" href="#L1231">1231</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> startDocument() <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1232" href="#L1232">1232</a>     {
+<a class="jxr_linenumber" name="L1233" href="#L1233">1233</a> 
+<a class="jxr_linenumber" name="L1234" href="#L1234">1234</a>         <em class="jxr_comment">// if we do get called with startDocument(), handle it right away</em>
+<a class="jxr_linenumber" name="L1235" href="#L1235">1235</a>         startDocumentInternal();
+<a class="jxr_linenumber" name="L1236" href="#L1236">1236</a>         m_needToCallStartDocument = false;
+<a class="jxr_linenumber" name="L1237" href="#L1237">1237</a>         <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L1238" href="#L1238">1238</a>     }
+<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a> 
+<a class="jxr_linenumber" name="L1240" href="#L1240">1240</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1241" href="#L1241">1241</a> <em class="jxr_javadoccomment">     * This method handles what needs to be done at a startDocument() call,</em>
+<a class="jxr_linenumber" name="L1242" href="#L1242">1242</a> <em class="jxr_javadoccomment">     * whether from an external caller, or internally called in the</em>
+<a class="jxr_linenumber" name="L1243" href="#L1243">1243</a> <em class="jxr_javadoccomment">     * serializer.  For historical reasons the serializer is flexible to</em>
+<a class="jxr_linenumber" name="L1244" href="#L1244">1244</a> <em class="jxr_javadoccomment">     * startDocument() not always being called.</em>
+<a class="jxr_linenumber" name="L1245" href="#L1245">1245</a> <em class="jxr_javadoccomment">     * Even if no external call is</em>
+<a class="jxr_linenumber" name="L1246" href="#L1246">1246</a> <em class="jxr_javadoccomment">     * made into startDocument() this method will always be called as a self</em>
+<a class="jxr_linenumber" name="L1247" href="#L1247">1247</a> <em class="jxr_javadoccomment">     * generated internal startDocument, it handles what needs to be done at a</em>
+<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a> <em class="jxr_javadoccomment">     * startDocument() call.</em>
+<a class="jxr_linenumber" name="L1249" href="#L1249">1249</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1250" href="#L1250">1250</a> <em class="jxr_javadoccomment">     * This method exists just to make sure that startDocument() is only ever</em>
+<a class="jxr_linenumber" name="L1251" href="#L1251">1251</a> <em class="jxr_javadoccomment">     * called from an external caller, which in principle is just a matter of</em>
+<a class="jxr_linenumber" name="L1252" href="#L1252">1252</a> <em class="jxr_javadoccomment">     * style.</em>
+<a class="jxr_linenumber" name="L1253" href="#L1253">1253</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1254" href="#L1254">1254</a> <em class="jxr_javadoccomment">     * @throws SAXException</em>
+<a class="jxr_linenumber" name="L1255" href="#L1255">1255</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> startDocumentInternal() <strong class="jxr_keyword">throws</strong> org.xml.sax.SAXException
+<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a>     {
+<a class="jxr_linenumber" name="L1258" href="#L1258">1258</a>         <strong class="jxr_keyword">if</strong> (m_tracer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1259" href="#L1259">1259</a>             <strong class="jxr_keyword">this</strong>.fireStartDoc();
+<a class="jxr_linenumber" name="L1260" href="#L1260">1260</a> 
+<a class="jxr_linenumber" name="L1261" href="#L1261">1261</a>     }
+<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a> 
+<a class="jxr_linenumber" name="L1263" href="#L1263">1263</a>     <em class="jxr_comment">/* This method extracts version and encoding information from SAX events.</em>
+<a class="jxr_linenumber" name="L1264" href="#L1264">1264</a> <em class="jxr_comment">     */</em>
+<a class="jxr_linenumber" name="L1265" href="#L1265">1265</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> setDocumentInfo() {
+<a class="jxr_linenumber" name="L1266" href="#L1266">1266</a>         <strong class="jxr_keyword">if</strong> (m_locator == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1267" href="#L1267">1267</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L1268" href="#L1268">1268</a>         <strong class="jxr_keyword">try</strong>{
+<a class="jxr_linenumber" name="L1269" href="#L1269">1269</a>             <a href="../../../../../../../java/lang/String.html">String</a> strVersion = ((Locator2)m_locator).getXMLVersion();
+<a class="jxr_linenumber" name="L1270" href="#L1270">1270</a>             <strong class="jxr_keyword">if</strong> (strVersion != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1271" href="#L1271">1271</a>                 setVersion(strVersion);
+<a class="jxr_linenumber" name="L1272" href="#L1272">1272</a>             <em class="jxr_comment">/*String strEncoding = ((Locator2)m_locator).getEncoding();</em>
+<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a> <em class="jxr_comment">            if (strEncoding != null)</em>
+<a class="jxr_linenumber" name="L1274" href="#L1274">1274</a> <em class="jxr_comment">                setEncoding(strEncoding); */</em>
+<a class="jxr_linenumber" name="L1275" href="#L1275">1275</a> 
+<a class="jxr_linenumber" name="L1276" href="#L1276">1276</a>         }<strong class="jxr_keyword">catch</strong>(<a href="../../../../../../../java/lang/ClassCastException.html">ClassCastException</a> e){}
+<a class="jxr_linenumber" name="L1277" href="#L1277">1277</a>     }
+<a class="jxr_linenumber" name="L1278" href="#L1278">1278</a> 
+<a class="jxr_linenumber" name="L1279" href="#L1279">1279</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1280" href="#L1280">1280</a> <em class="jxr_javadoccomment">     * This method is used to set the source locator, which might be used to</em>
+<a class="jxr_linenumber" name="L1281" href="#L1281">1281</a> <em class="jxr_javadoccomment">     * generated an error message.</em>
+<a class="jxr_linenumber" name="L1282" href="#L1282">1282</a> <em class="jxr_javadoccomment">     * @param locator the source locator</em>
+<a class="jxr_linenumber" name="L1283" href="#L1283">1283</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1284" href="#L1284">1284</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#setSourceLocator(javax.xml.transform.SourceLocator)</em>
+<a class="jxr_linenumber" name="L1285" href="#L1285">1285</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1286" href="#L1286">1286</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSourceLocator(<a href="../../../../../../../javax/xml/transform/SourceLocator.html">SourceLocator</a> locator)
+<a class="jxr_linenumber" name="L1287" href="#L1287">1287</a>     {
+<a class="jxr_linenumber" name="L1288" href="#L1288">1288</a>         m_sourceLocator = locator;
+<a class="jxr_linenumber" name="L1289" href="#L1289">1289</a>     }
+<a class="jxr_linenumber" name="L1290" href="#L1290">1290</a> 
+<a class="jxr_linenumber" name="L1291" href="#L1291">1291</a> 
+<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1293" href="#L1293">1293</a> <em class="jxr_javadoccomment">     * Used only by TransformerSnapshotImpl to restore the serialization</em>
+<a class="jxr_linenumber" name="L1294" href="#L1294">1294</a> <em class="jxr_javadoccomment">     * to a previous state.</em>
+<a class="jxr_linenumber" name="L1295" href="#L1295">1295</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1296" href="#L1296">1296</a> <em class="jxr_javadoccomment">     * @param mappings NamespaceMappings</em>
+<a class="jxr_linenumber" name="L1297" href="#L1297">1297</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1298" href="#L1298">1298</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setNamespaceMappings(<a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/NamespaceMappings.html">NamespaceMappings</a> mappings) {
+<a class="jxr_linenumber" name="L1299" href="#L1299">1299</a>         m_prefixMap = mappings;
+<a class="jxr_linenumber" name="L1300" href="#L1300">1300</a>     }
+<a class="jxr_linenumber" name="L1301" href="#L1301">1301</a> 
+<a class="jxr_linenumber" name="L1302" href="#L1302">1302</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> reset()
+<a class="jxr_linenumber" name="L1303" href="#L1303">1303</a>     {
+<a class="jxr_linenumber" name="L1304" href="#L1304">1304</a>         resetSerializerBase();
+<a class="jxr_linenumber" name="L1305" href="#L1305">1305</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L1306" href="#L1306">1306</a>     }
+<a class="jxr_linenumber" name="L1307" href="#L1307">1307</a> 
+<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1309" href="#L1309">1309</a> <em class="jxr_javadoccomment">     * Reset all of the fields owned by SerializerBase</em>
+<a class="jxr_linenumber" name="L1310" href="#L1310">1310</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1311" href="#L1311">1311</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1312" href="#L1312">1312</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> resetSerializerBase()
+<a class="jxr_linenumber" name="L1313" href="#L1313">1313</a>     {
+<a class="jxr_linenumber" name="L1314" href="#L1314">1314</a>         <strong class="jxr_keyword">this</strong>.m_attributes.clear();
+<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a>         <strong class="jxr_keyword">this</strong>.m_cdataSectionElements = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1316" href="#L1316">1316</a>         <strong class="jxr_keyword">this</strong>.m_elemContext = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xml/internal/serializer/ElemContext.html">ElemContext</a>();
+<a class="jxr_linenumber" name="L1317" href="#L1317">1317</a>         <strong class="jxr_keyword">this</strong>.m_doctypePublic = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1318" href="#L1318">1318</a>         <strong class="jxr_keyword">this</strong>.m_doctypeSystem = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1319" href="#L1319">1319</a>         <strong class="jxr_keyword">this</strong>.m_doIndent = false;
+<a class="jxr_linenumber" name="L1320" href="#L1320">1320</a>         <strong class="jxr_keyword">this</strong>.m_encoding = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a>         <strong class="jxr_keyword">this</strong>.m_indentAmount = 0;
+<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a>         <strong class="jxr_keyword">this</strong>.m_inEntityRef = false;
+<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a>         <strong class="jxr_keyword">this</strong>.m_inExternalDTD = false;
+<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>         <strong class="jxr_keyword">this</strong>.m_mediatype = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a>         <strong class="jxr_keyword">this</strong>.m_needToCallStartDocument = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a>         <strong class="jxr_keyword">this</strong>.m_needToOutputDocTypeDecl = false;
+<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.m_prefixMap != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a>             <strong class="jxr_keyword">this</strong>.m_prefixMap.reset();
+<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a>         <strong class="jxr_keyword">this</strong>.m_shouldNotWriteXMLHeader = false;
+<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a>         <strong class="jxr_keyword">this</strong>.m_sourceLocator = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a>         <strong class="jxr_keyword">this</strong>.m_standalone = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a>         <strong class="jxr_keyword">this</strong>.m_standaloneWasSpecified = false;
+<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a>         <strong class="jxr_keyword">this</strong>.m_tracer = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a>         <strong class="jxr_keyword">this</strong>.m_transformer = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a>         <strong class="jxr_keyword">this</strong>.m_version = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a>         <em class="jxr_comment">// don't set writer to null, so that it might be re-used</em>
+<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a>         <em class="jxr_comment">//this.m_writer = null;</em>
+<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a>     }
+<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a> 
+<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a> <em class="jxr_javadoccomment">     * Returns true if the serializer is used for temporary output rather than</em>
+<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a> <em class="jxr_javadoccomment">     * final output.</em>
+<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a> <em class="jxr_javadoccomment">     * This concept is made clear in the XSLT 2.0 draft.</em>
+<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a>     <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> inTemporaryOutputState()
+<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a>     {
+<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a>         <em class="jxr_comment">/* This is a hack. We should really be letting the serializer know</em>
+<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a> <em class="jxr_comment">         * that it is in temporary output state with an explicit call, but</em>
+<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a> <em class="jxr_comment">         * from a pragmatic point of view (for now anyways) having no output</em>
+<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a> <em class="jxr_comment">         * encoding at all, not even the default UTF-8 indicates that the serializer</em>
+<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a> <em class="jxr_comment">         * is being used for temporary RTF.</em>
+<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a> <em class="jxr_comment">         */</em>
+<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a>         <strong class="jxr_keyword">return</strong> (getEncoding() == <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a> 
+<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a>     }
+<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a> 
+<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a> <em class="jxr_javadoccomment">     * This method adds an attribute the the current element,</em>
+<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a> <em class="jxr_javadoccomment">     * but should not be used for an xsl:attribute child.</em>
+<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a> <em class="jxr_javadoccomment">     * @see ExtendedContentHandler#addAttribute(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)</em>
+<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addAttribute(<a href="../../../../../../../java/lang/String.html">String</a> uri, <a href="../../../../../../../java/lang/String.html">String</a> localName, <a href="../../../../../../../java/lang/String.html">String</a> rawName, <a href="../../../../../../../java/lang/String.html">String</a> type, <a href="../../../../../../../java/lang/String.html">String</a> value) <strong class="jxr_keyword">throws</strong> SAXException
+<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a>     {
+<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a>         <strong class="jxr_keyword">if</strong> (m_elemContext.m_startTagOpen)
+<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a>         {
+<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a>             addAttributeAlways(uri, localName, rawName, type, value, false);
+<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a>         }
+<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a>     }
+<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a> 
+<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a> <em class="jxr_javadoccomment">     * @see org.xml.sax.DTDHandler#notationDecl(java.lang.String, java.lang.String, java.lang.String)</em>
+<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> notationDecl(<a href="../../../../../../../java/lang/String.html">String</a> arg0, <a href="../../../../../../../java/lang/String.html">String</a> arg1, <a href="../../../../../../../java/lang/String.html">String</a> arg2)
+<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../org/xml/sax/SAXException.html">SAXException</a> {
+<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a>         <em class="jxr_comment">// This method just provides a definition to satisfy the interface</em>
+<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a>         <em class="jxr_comment">// A particular sub-class of SerializerBase provides the implementation (if desired)</em>
+<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a>     }
+<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a> 
+<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a> <em class="jxr_javadoccomment">     * @see org.xml.sax.DTDHandler#unparsedEntityDecl(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</em>
+<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> unparsedEntityDecl(
+<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a>         <a href="../../../../../../../java/lang/String.html">String</a> arg0,
+<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a>         <a href="../../../../../../../java/lang/String.html">String</a> arg1,
+<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a>         <a href="../../../../../../../java/lang/String.html">String</a> arg2,
+<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a>         <a href="../../../../../../../java/lang/String.html">String</a> arg3)
+<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../org/xml/sax/SAXException.html">SAXException</a> {
+<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a>         <em class="jxr_comment">// This method just provides a definition to satisfy the interface</em>
+<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>         <em class="jxr_comment">// A particular sub-class of SerializerBase provides the implementation (if desired)</em>
+<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a>     }
+<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a> 
+<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a> <em class="jxr_javadoccomment">     * If set to false the serializer does not expand DTD entities,</em>
+<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a> <em class="jxr_javadoccomment">     * but leaves them as is, the default value is true.</em>
+<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDTDEntityExpansion(<strong class="jxr_keyword">boolean</strong> expand) {
+<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>         <em class="jxr_comment">// This method just provides a definition to satisfy the interface</em>
+<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>         <em class="jxr_comment">// A particular sub-class of SerializerBase provides the implementation (if desired)</em>
+<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>     }
+<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a> 
+<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

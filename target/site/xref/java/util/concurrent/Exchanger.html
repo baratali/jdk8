@@ -1,0 +1,677 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Exchanger xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/java/util/concurrent/Exchanger.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_comment"> * Written by Doug Lea, Bill Scherer, and Michael Scott with</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_comment"> * assistance from members of JCP JSR-166 Expert Group and released to</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_comment"> * the public domain, as explained at</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_comment"> * <a href="http://creativecommons.org/publicdomain/zero/1.0" target="alexandria_uri">http://creativecommons.org/publicdomain/zero/1.0</a>/</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">package</strong> java.util.concurrent;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.atomic.AtomicInteger;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.atomic.AtomicReference;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.util.concurrent.locks.LockSupport;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * A synchronization point at which threads can pair and swap elements</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * within pairs.  Each thread presents some object on entry to the</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * {@link #exchange exchange} method, matches with a partner thread,</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * and receives its partner's object on return.  An Exchanger may be</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * viewed as a bidirectional form of a {@link SynchronousQueue}.</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * Exchangers may be useful in applications such as genetic algorithms</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * and pipeline designs.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;&lt;b&gt;Sample Usage:&lt;/b&gt;</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * Here are the highlights of a class that uses an {@code Exchanger}</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * to swap buffers between threads so that the thread filling the</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * buffer gets a freshly emptied one when it needs it, handing off the</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * filled one to the thread emptying the buffer.</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> *  &lt;pre&gt; {@code</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * class FillAndEmpty {</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> *   Exchanger&lt;DataBuffer&gt; exchanger = new Exchanger&lt;DataBuffer&gt;();</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> *   DataBuffer initialEmptyBuffer = ... a made-up type</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *   DataBuffer initialFullBuffer = ...</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> *   class FillingLoop implements Runnable {</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> *     public void run() {</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> *       DataBuffer currentBuffer = initialEmptyBuffer;</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> *       try {</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> *         while (currentBuffer != null) {</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> *           addToBuffer(currentBuffer);</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> *           if (currentBuffer.isFull())</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> *             currentBuffer = exchanger.exchange(currentBuffer);</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> *         }</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> *       } catch (InterruptedException ex) { ... handle ... }</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> *     }</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> *   }</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> *   class EmptyingLoop implements Runnable {</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> *     public void run() {</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> *       DataBuffer currentBuffer = initialFullBuffer;</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> *       try {</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> *         while (currentBuffer != null) {</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> *           takeFromBuffer(currentBuffer);</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> *           if (currentBuffer.isEmpty())</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> *             currentBuffer = exchanger.exchange(currentBuffer);</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> *         }</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> *       } catch (InterruptedException ex) { ... handle ...}</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> *     }</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> *   }</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> *   void start() {</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> *     new Thread(new FillingLoop()).start();</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> *     new Thread(new EmptyingLoop()).start();</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> *   }</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> * }}&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Memory consistency effects: For each pair of threads that</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> * successfully exchange objects via an {@code Exchanger}, actions</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> * prior to the {@code exchange()} in each thread</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> * &lt;a href="package-summary.html#MemoryVisibility"&gt;&lt;i&gt;happen-before&lt;/i&gt;&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * those subsequent to a return from the corresponding {@code exchange()}</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> * in the other thread.</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> * @since 1.5</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * @author Doug Lea and Bill Scherer and Michael Scott</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> * @param &lt;V&gt; The type of objects that may be exchanged</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> Exchanger&lt;V&gt; {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_comment">     * Overview: The core algorithm is, for an exchange "slot",</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_comment">     * and a participant (caller) with an item:</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_comment">     * for (;;) {</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_comment">     *   if (slot is empty) {                       // offer</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_comment">     *     place item in a Node;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_comment">     *     if (can CAS slot from empty to node) {</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_comment">     *       wait for release;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_comment">     *       return matching item in node;</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_comment">     *     }</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_comment">     *   }</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_comment">     *   else if (can CAS slot from node to empty) { // release</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_comment">     *     get the item in node;</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_comment">     *     set matching item in node;</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_comment">     *     release waiting thread;</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_comment">     *   }</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_comment">     *   // else retry on CAS failure</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_comment">     * }</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_comment">     * This is among the simplest forms of a "dual data structure" --</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_comment">     * see Scott and Scherer's DISC 04 paper and</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_comment">     * <a href="http://www.cs.rochester.edu/research/synchronization/pseudocode/duals.htm" target="alexandria_uri">http://www.cs.rochester.edu/research/synchronization/pseudocode/duals.htm</a>l</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_comment">     * This works great in principle. But in practice, like many</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_comment">     * algorithms centered on atomic updates to a single location, it</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_comment">     * scales horribly when there are more than a few participants</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_comment">     * using the same Exchanger. So the implementation instead uses a</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_comment">     * form of elimination arena, that spreads out this contention by</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_comment">     * arranging that some threads typically use different slots,</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_comment">     * while still ensuring that eventually, any two parties will be</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_comment">     * able to exchange items. That is, we cannot completely partition</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_comment">     * across threads, but instead give threads arena indices that</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_comment">     * will on average grow under contention and shrink under lack of</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_comment">     * contention. We approach this by defining the Nodes that we need</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_comment">     * anyway as ThreadLocals, and include in them per-thread index</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_comment">     * and related bookkeeping state. (We can safely reuse per-thread</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_comment">     * nodes rather than creating them fresh each time because slots</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_comment">     * alternate between pointing to a node vs null, so cannot</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_comment">     * encounter ABA problems. However, we do need some care in</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_comment">     * resetting them between uses.)</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_comment">     * Implementing an effective arena requires allocating a bunch of</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_comment">     * space, so we only do so upon detecting contention (except on</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_comment">     * uniprocessors, where they wouldn't help, so aren't used).</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_comment">     * Otherwise, exchanges use the single-slot slotExchange method.</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_comment">     * On contention, not only must the slots be in different</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_comment">     * locations, but the locations must not encounter memory</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_comment">     * contention due to being on the same cache line (or more</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_comment">     * generally, the same coherence unit).  Because, as of this</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_comment">     * writing, there is no way to determine cacheline size, we define</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_comment">     * a value that is enough for common platforms.  Additionally,</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_comment">     * extra care elsewhere is taken to avoid other false/unintended</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_comment">     * sharing and to enhance locality, including adding padding (via</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_comment">     * sun.misc.Contended) to Nodes, embedding "bound" as an Exchanger</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_comment">     * field, and reworking some park/unpark mechanics compared to</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_comment">     * LockSupport versions.</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_comment">     * The arena starts out with only one used slot. We expand the</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_comment">     * effective arena size by tracking collisions; i.e., failed CASes</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_comment">     * while trying to exchange. By nature of the above algorithm, the</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_comment">     * only kinds of collision that reliably indicate contention are</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_comment">     * when two attempted releases collide -- one of two attempted</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_comment">     * offers can legitimately fail to CAS without indicating</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_comment">     * contention by more than one other thread. (Note: it is possible</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_comment">     * but not worthwhile to more precisely detect contention by</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_comment">     * reading slot values after CAS failures.)  When a thread has</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_comment">     * collided at each slot within the current arena bound, it tries</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_comment">     * to expand the arena size by one. We track collisions within</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_comment">     * bounds by using a version (sequence) number on the "bound"</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_comment">     * field, and conservatively reset collision counts when a</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_comment">     * participant notices that bound has been updated (in either</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_comment">     * direction).</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_comment">     * The effective arena size is reduced (when there is more than</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_comment">     * one slot) by giving up on waiting after a while and trying to</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_comment">     * decrement the arena size on expiration. The value of "a while"</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_comment">     * is an empirical matter.  We implement by piggybacking on the</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_comment">     * use of spin-&gt;yield-&gt;block that is essential for reasonable</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_comment">     * waiting performance anyway -- in a busy exchanger, offers are</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_comment">     * usually almost immediately released, in which case context</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_comment">     * switching on multiprocessors is extremely slow/wasteful.  Arena</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_comment">     * waits just omit the blocking part, and instead cancel. The spin</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_comment">     * count is empirically chosen to be a value that avoids blocking</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_comment">     * 99% of the time under maximum sustained exchange rates on a</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_comment">     * range of test machines. Spins and yields entail some limited</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_comment">     * randomness (using a cheap xorshift) to avoid regular patterns</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_comment">     * that can induce unproductive grow/shrink cycles. (Using a</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_comment">     * pseudorandom also helps regularize spin cycle duration by</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_comment">     * making branches unpredictable.)  Also, during an offer, a</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_comment">     * waiter can "know" that it will be released when its slot has</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_comment">     * changed, but cannot yet proceed until match is set.  In the</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_comment">     * mean time it cannot cancel the offer, so instead spins/yields.</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_comment">     * Note: It is possible to avoid this secondary check by changing</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_comment">     * the linearization point to be a CAS of the match field (as done</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_comment">     * in one case in the Scott &amp; Scherer DISC paper), which also</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_comment">     * increases asynchrony a bit, at the expense of poorer collision</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_comment">     * detection and inability to always reuse per-thread nodes. So</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_comment">     * the current scheme is typically a better tradeoff.</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_comment">     * On collisions, indices traverse the arena cyclically in reverse</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_comment">     * order, restarting at the maximum index (which will tend to be</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_comment">     * sparsest) when bounds change. (On expirations, indices instead</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_comment">     * are halved until reaching 0.) It is possible (and has been</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_comment">     * tried) to use randomized, prime-value-stepped, or double-hash</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_comment">     * style traversal instead of simple cyclic traversal to reduce</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_comment">     * bunching.  But empirically, whatever benefits these may have</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_comment">     * don't overcome their added overhead: We are managing operations</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_comment">     * that occur very quickly unless there is sustained contention,</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_comment">     * so simpler/faster control policies work better than more</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_comment">     * accurate but slower ones.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_comment">     * Because we use expiration for arena size control, we cannot</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_comment">     * throw TimeoutExceptions in the timed version of the public</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_comment">     * exchange method until the arena size has shrunken to zero (or</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_comment">     * the arena isn't enabled). This may delay response to timeout</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_comment">     * but is still within spec.</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_comment">     * Essentially all of the implementation is in methods</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_comment">     * slotExchange and arenaExchange. These have similar overall</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_comment">     * structure, but differ in too many details to combine. The</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_comment">     * slotExchange method uses the single Exchanger field "slot"</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_comment">     * rather than arena array elements. However, it still needs</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_comment">     * minimal collision detection to trigger arena construction.</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_comment">     * (The messiest part is making sure interrupt status and</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_comment">     * InterruptedExceptions come out right during transitions when</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_comment">     * both methods may be called. This is done by using null return</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_comment">     * as a sentinel to recheck interrupt status.)</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_comment">     *</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_comment">     * As is too common in this sort of code, methods are monolithic</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_comment">     * because most of the logic relies on reads of fields that are</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_comment">     * maintained as local variables so can't be nicely factored --</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_comment">     * mainly, here, bulky spin-&gt;yield-&gt;block/cancel code), and</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_comment">     * heavily dependent on intrinsics (Unsafe) to use inlined</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_comment">     * embedded CAS and related memory access operations (that tend</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_comment">     * not to be as readily inlined by dynamic compilers when they are</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_comment">     * hidden behind other methods that would more nicely name and</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_comment">     * encapsulate the intended effects). This includes the use of</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_comment">     * putOrderedX to clear fields of the per-thread Nodes between</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_comment">     * uses. Note that field Node.item is not declared as volatile</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_comment">     * even though it is read by releasing threads, because they only</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_comment">     * do so after CAS operations that must precede access, and all</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_comment">     * uses by the owning thread are otherwise acceptably ordered by</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_comment">     * other operations. (Because the actual points of atomicity are</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_comment">     * slot CASes, it would also be legal for the write to Node.match</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_comment">     * in a release to be weaker than a full volatile write. However,</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_comment">     * this is not done because it could allow further postponement of</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_comment">     * the write, delaying progress.)</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_comment">     */</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * The byte distance (as a shift value) between any two used slots</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     * in the arena.  1 &lt;&lt; ASHIFT should be at least cacheline size.</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> ASHIFT = 7;
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     * The maximum supported arena index. The maximum allocatable</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * arena size is MMASK + 1. Must be a power of two minus one, less</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     * than (1&lt;&lt;(31-ASHIFT)). The cap of 255 (0xff) more than suffices</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     * for the expected scaling limits of the main algorithms.</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> MMASK = 0xff;
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * Unit for sequence/version bits of bound field. Each successful</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * change to the bound also adds SEQ.</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> SEQ = MMASK + 1;
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <em class="jxr_javadoccomment">/** The number of CPUs, for sizing and spin control */</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> NCPU = Runtime.getRuntime().availableProcessors();
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * The maximum slot index of the arena: The number of slots that</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     * can in principle hold all threads without contention, or at</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     * most the maximum indexable value.</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> FULL = (NCPU &gt;= (MMASK &lt;&lt; 1)) ? MMASK : NCPU &gt;&gt;&gt; 1;
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     * The bound for spins while waiting for a match. The actual</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     * number of iterations will on average be about twice this value</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     * due to randomization. Note: Spinning is disabled when NCPU==1.</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> SPINS = 1 &lt;&lt; 10;
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * Value representing null arguments/returns from public</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     * methods. Needed because the API originally didn't disallow null</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * arguments, which it should have.</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/lang/Object.html">Object</a> NULL_ITEM = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/Object.html">Object</a>();
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> 
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * Sentinel value returned by internal exchange methods upon</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * timeout, to avoid need for separate timed versions of these</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * methods.</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/lang/Object.html">Object</a> TIMED_OUT = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/Object.html">Object</a>();
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     * Nodes hold partially exchanged data, plus other per-thread</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * bookkeeping. Padded via @sun.misc.Contended to reduce memory</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     * contention.</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     @sun.misc.Contended <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>         <strong class="jxr_keyword">int</strong> index;              <em class="jxr_comment">// Arena index</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <strong class="jxr_keyword">int</strong> bound;              <em class="jxr_comment">// Last recorded value of Exchanger.bound</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         <strong class="jxr_keyword">int</strong> collides;           <em class="jxr_comment">// Number of CAS failures at current bound</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         <strong class="jxr_keyword">int</strong> hash;               <em class="jxr_comment">// Pseudo-random for spins</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>         <a href="../../../java/lang/Object.html">Object</a> item;            <em class="jxr_comment">// This thread's current item</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         <strong class="jxr_keyword">volatile</strong> <a href="../../../java/lang/Object.html">Object</a> match;  <em class="jxr_comment">// Item provided by releasing thread</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>         <strong class="jxr_keyword">volatile</strong> <a href="../../../java/lang/Thread.html">Thread</a> parked; <em class="jxr_comment">// Set to this thread when parked, else null</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     }
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     <em class="jxr_javadoccomment">/** The corresponding thread local class */</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../java/util/concurrent/Exchanger.html">Participant</a> <strong class="jxr_keyword">extends</strong> ThreadLocal&lt;Node&gt; {
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>         <strong class="jxr_keyword">public</strong> <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> initialValue() { <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Node(); }
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     }
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> 
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     * Per-thread state</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/util/concurrent/Exchanger.html">Participant</a> participant;
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     * Elimination array; null until enabled (within slotExchange).</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * Element accesses use emulation of volatile gets and CAS.</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">volatile</strong> <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a>[] arena;
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> 
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     * Slot used until contention detected.</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">volatile</strong> <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> slot;
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> 
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     * The index of the largest valid arena position, OR'ed with SEQ</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     * number in high bits, incremented on each update.  The initial</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     * update from 0 to SEQ is used to ensure that the arena array is</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     * constructed only once.</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">volatile</strong> <strong class="jxr_keyword">int</strong> bound;
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> 
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     * Exchange function when arenas enabled. See above for explanation.</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> <em class="jxr_javadoccomment">     * @param item the (non-null) item to exchange</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> <em class="jxr_javadoccomment">     * @param timed true if the wait is timed</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> <em class="jxr_javadoccomment">     * @param ns if timed, the maximum wait time, else 0L</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     * @return the other thread's item; or null if interrupted; or</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     * TIMED_OUT if timed and timed out</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/lang/Object.html">Object</a> arenaExchange(<a href="../../../java/lang/Object.html">Object</a> item, <strong class="jxr_keyword">boolean</strong> timed, <strong class="jxr_keyword">long</strong> ns) {
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a>[] a = arena;
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>         <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> p = participant.get();
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = p.index;;) {                      <em class="jxr_comment">// access slot at i</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>             <strong class="jxr_keyword">int</strong> b, m, c; <strong class="jxr_keyword">long</strong> j;                       <em class="jxr_comment">// j is raw array offset</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>             <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> q = (Node)U.getObjectVolatile(a, j = (i &lt;&lt; ASHIFT) + ABASE);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>             <strong class="jxr_keyword">if</strong> (q != <strong class="jxr_keyword">null</strong> &amp;&amp; U.compareAndSwapObject(a, j, q, <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>                 <a href="../../../java/lang/Object.html">Object</a> v = q.item;                     <em class="jxr_comment">// release</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>                 q.match = item;
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>                 <a href="../../../java/lang/Thread.html">Thread</a> w = q.parked;
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>                 <strong class="jxr_keyword">if</strong> (w != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>                     U.unpark(w);
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>                 <strong class="jxr_keyword">return</strong> v;
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>             }
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (i &lt;= (m = (b = bound) &amp; MMASK) &amp;&amp; q == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>                 p.item = item;                         <em class="jxr_comment">// offer</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>                 <strong class="jxr_keyword">if</strong> (U.compareAndSwapObject(a, j, <strong class="jxr_keyword">null</strong>, p)) {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>                     <strong class="jxr_keyword">long</strong> end = (timed &amp;&amp; m == 0) ? System.nanoTime() + ns : 0L;
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>                     <a href="../../../java/lang/Thread.html">Thread</a> t = Thread.currentThread(); <em class="jxr_comment">// wait</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> h = p.hash, spins = SPINS;;) {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>                         <a href="../../../java/lang/Object.html">Object</a> v = p.match;
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>                         <strong class="jxr_keyword">if</strong> (v != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                             U.putOrderedObject(p, MATCH, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>                             p.item = <strong class="jxr_keyword">null</strong>;             <em class="jxr_comment">// clear for next use</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                             p.hash = h;
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>                             <strong class="jxr_keyword">return</strong> v;
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>                         }
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>                         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (spins &gt; 0) {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>                             h ^= h &lt;&lt; 1; h ^= h &gt;&gt;&gt; 3; h ^= h &lt;&lt; 10; <em class="jxr_comment">// xorshift</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>                             <strong class="jxr_keyword">if</strong> (h == 0)                <em class="jxr_comment">// initialize hash</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>                                 h = SPINS | (<strong class="jxr_keyword">int</strong>)t.getId();
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>                             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (h &lt; 0 &amp;&amp;          <em class="jxr_comment">// approx 50% true</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>                                      (--spins &amp; ((SPINS &gt;&gt;&gt; 1) - 1)) == 0)
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>                                 Thread.yield();        <em class="jxr_comment">// two yields per wait</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>                         }
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>                         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (U.getObjectVolatile(a, j) != p)
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>                             spins = SPINS;       <em class="jxr_comment">// releaser hasn't set match yet</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>                         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!t.isInterrupted() &amp;&amp; m == 0 &amp;&amp;
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>                                  (!timed ||
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>                                   (ns = end - System.nanoTime()) &gt; 0L)) {
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>                             U.putObject(t, BLOCKER, <strong class="jxr_keyword">this</strong>); <em class="jxr_comment">// emulate LockSupport</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>                             p.parked = t;              <em class="jxr_comment">// minimize window</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>                             <strong class="jxr_keyword">if</strong> (U.getObjectVolatile(a, j) == p)
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>                                 U.park(false, ns);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>                             p.parked = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>                             U.putObject(t, BLOCKER, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>                         }
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>                         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (U.getObjectVolatile(a, j) == p &amp;&amp;
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>                                  U.compareAndSwapObject(a, j, p, <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>                             <strong class="jxr_keyword">if</strong> (m != 0)                <em class="jxr_comment">// try to shrink</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>                                 U.compareAndSwapInt(<strong class="jxr_keyword">this</strong>, BOUND, b, b + SEQ - 1);
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>                             p.item = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>                             p.hash = h;
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>                             i = p.index &gt;&gt;&gt;= 1;        <em class="jxr_comment">// descend</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>                             <strong class="jxr_keyword">if</strong> (Thread.interrupted())
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>                                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>                             <strong class="jxr_keyword">if</strong> (timed &amp;&amp; m == 0 &amp;&amp; ns &lt;= 0L)
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>                                 <strong class="jxr_keyword">return</strong> TIMED_OUT;
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>                             <strong class="jxr_keyword">break</strong>;                     <em class="jxr_comment">// expired; restart</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>                         }
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>                     }
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 }
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>                     p.item = <strong class="jxr_keyword">null</strong>;                     <em class="jxr_comment">// clear offer</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>             }
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>             <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>                 <strong class="jxr_keyword">if</strong> (p.bound != b) {                    <em class="jxr_comment">// stale; reset</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>                     p.bound = b;
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>                     p.collides = 0;
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>                     i = (i != m || m == 0) ? m : m - 1;
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>                 }
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>                 <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> ((c = p.collides) &lt; m || m == FULL ||
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>                          !U.compareAndSwapInt(<strong class="jxr_keyword">this</strong>, BOUND, b, b + SEQ + 1)) {
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>                     p.collides = c + 1;
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>                     i = (i == 0) ? m : i - 1;          <em class="jxr_comment">// cyclically traverse</em>
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>                 }
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>                     i = m + 1;                         <em class="jxr_comment">// grow</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>                 p.index = i;
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             }
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         }
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>     }
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> 
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">     * Exchange function used until arenas enabled. See above for explanation.</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> <em class="jxr_javadoccomment">     * @param item the item to exchange</em>
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> <em class="jxr_javadoccomment">     * @param timed true if the wait is timed</em>
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> <em class="jxr_javadoccomment">     * @param ns if timed, the maximum wait time, else 0L</em>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> <em class="jxr_javadoccomment">     * @return the other thread's item; or null if either the arena</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">     * was enabled or the thread was interrupted before completion; or</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">     * TIMED_OUT if timed and timed out</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/lang/Object.html">Object</a> slotExchange(<a href="../../../java/lang/Object.html">Object</a> item, <strong class="jxr_keyword">boolean</strong> timed, <strong class="jxr_keyword">long</strong> ns) {
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a> p = participant.get();
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <a href="../../../java/lang/Thread.html">Thread</a> t = Thread.currentThread();
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         <strong class="jxr_keyword">if</strong> (t.isInterrupted()) <em class="jxr_comment">// preserve interrupt status so caller can recheck</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> 
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         <strong class="jxr_keyword">for</strong> (Node q;;) {
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>             <strong class="jxr_keyword">if</strong> ((q = slot) != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>                 <strong class="jxr_keyword">if</strong> (U.compareAndSwapObject(<strong class="jxr_keyword">this</strong>, SLOT, q, <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>                     <a href="../../../java/lang/Object.html">Object</a> v = q.item;
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>                     q.match = item;
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>                     <a href="../../../java/lang/Thread.html">Thread</a> w = q.parked;
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>                     <strong class="jxr_keyword">if</strong> (w != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>                         U.unpark(w);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>                     <strong class="jxr_keyword">return</strong> v;
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>                 }
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>                 <em class="jxr_comment">// create arena on contention, but continue until slot null</em>
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>                 <strong class="jxr_keyword">if</strong> (NCPU &gt; 1 &amp;&amp; bound == 0 &amp;&amp;
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>                     U.compareAndSwapInt(<strong class="jxr_keyword">this</strong>, BOUND, 0, SEQ))
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>                     arena = <strong class="jxr_keyword">new</strong> <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a>[(FULL + 2) &lt;&lt; ASHIFT];
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>             }
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arena != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>; <em class="jxr_comment">// caller must reroute to arenaExchange</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>             <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>                 p.item = item;
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>                 <strong class="jxr_keyword">if</strong> (U.compareAndSwapObject(<strong class="jxr_keyword">this</strong>, SLOT, <strong class="jxr_keyword">null</strong>, p))
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>                 p.item = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>             }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>         }
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         <em class="jxr_comment">// await release</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         <strong class="jxr_keyword">int</strong> h = p.hash;
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>         <strong class="jxr_keyword">long</strong> end = timed ? System.nanoTime() + ns : 0L;
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>         <strong class="jxr_keyword">int</strong> spins = (NCPU &gt; 1) ? SPINS : 1;
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>         <a href="../../../java/lang/Object.html">Object</a> v;
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">while</strong> ((v = p.match) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>             <strong class="jxr_keyword">if</strong> (spins &gt; 0) {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>                 h ^= h &lt;&lt; 1; h ^= h &gt;&gt;&gt; 3; h ^= h &lt;&lt; 10;
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>                 <strong class="jxr_keyword">if</strong> (h == 0)
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>                     h = SPINS | (<strong class="jxr_keyword">int</strong>)t.getId();
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>                 <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (h &lt; 0 &amp;&amp; (--spins &amp; ((SPINS &gt;&gt;&gt; 1) - 1)) == 0)
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>                     Thread.yield();
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             }
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (slot != p)
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>                 spins = SPINS;
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!t.isInterrupted() &amp;&amp; arena == <strong class="jxr_keyword">null</strong> &amp;&amp;
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>                      (!timed || (ns = end - System.nanoTime()) &gt; 0L)) {
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>                 U.putObject(t, BLOCKER, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>                 p.parked = t;
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>                 <strong class="jxr_keyword">if</strong> (slot == p)
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>                     U.park(false, ns);
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>                 p.parked = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>                 U.putObject(t, BLOCKER, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>             }
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (U.compareAndSwapObject(<strong class="jxr_keyword">this</strong>, SLOT, p, <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>                 v = timed &amp;&amp; ns &lt;= 0L &amp;&amp; !t.isInterrupted() ? TIMED_OUT : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>                 <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>             }
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>         }
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         U.putOrderedObject(p, MATCH, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>         p.item = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>         p.hash = h;
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>         <strong class="jxr_keyword">return</strong> v;
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>     }
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> 
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">     * Creates a new Exchanger.</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/concurrent/Exchanger.html">Exchanger</a>() {
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>         participant = <strong class="jxr_keyword">new</strong> <a href="../../../java/util/concurrent/Exchanger.html">Participant</a>();
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>     }
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> 
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_javadoccomment">     * Waits for another thread to arrive at this exchange point (unless</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_javadoccomment">     * the current thread is {@linkplain Thread#interrupt interrupted}),</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_javadoccomment">     * and then transfers the given object to it, receiving its object</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> <em class="jxr_javadoccomment">     * in return.</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If another thread is already waiting at the exchange point then</em>
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> <em class="jxr_javadoccomment">     * it is resumed for thread scheduling purposes and receives the object</em>
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> <em class="jxr_javadoccomment">     * passed in by the current thread.  The current thread returns immediately,</em>
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> <em class="jxr_javadoccomment">     * receiving the object passed to the exchange by that other thread.</em>
+<a class="jxr_linenumber" name="L537" href="#L537">537</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L538" href="#L538">538</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If no other thread is already waiting at the exchange then the</em>
+<a class="jxr_linenumber" name="L539" href="#L539">539</a> <em class="jxr_javadoccomment">     * current thread is disabled for thread scheduling purposes and lies</em>
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> <em class="jxr_javadoccomment">     * dormant until one of two things happens:</em>
+<a class="jxr_linenumber" name="L541" href="#L541">541</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> <em class="jxr_javadoccomment">     * &lt;li&gt;Some other thread enters the exchange; or</em>
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> <em class="jxr_javadoccomment">     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}</em>
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> <em class="jxr_javadoccomment">     * the current thread.</em>
+<a class="jxr_linenumber" name="L545" href="#L545">545</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L546" href="#L546">546</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If the current thread:</em>
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L548" href="#L548">548</a> <em class="jxr_javadoccomment">     * &lt;li&gt;has its interrupted status set on entry to this method; or</em>
+<a class="jxr_linenumber" name="L549" href="#L549">549</a> <em class="jxr_javadoccomment">     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting</em>
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> <em class="jxr_javadoccomment">     * for the exchange,</em>
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L552" href="#L552">552</a> <em class="jxr_javadoccomment">     * then {@link InterruptedException} is thrown and the current thread's</em>
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> <em class="jxr_javadoccomment">     * interrupted status is cleared.</em>
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> <em class="jxr_javadoccomment">     * @param x the object to exchange</em>
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> <em class="jxr_javadoccomment">     * @return the object provided by the other thread</em>
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> <em class="jxr_javadoccomment">     * @throws InterruptedException if the current thread was</em>
+<a class="jxr_linenumber" name="L558" href="#L558">558</a> <em class="jxr_javadoccomment">     *         interrupted while waiting</em>
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>     <strong class="jxr_keyword">public</strong> V exchange(V x) <strong class="jxr_keyword">throws</strong> InterruptedException {
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>         <a href="../../../java/lang/Object.html">Object</a> v;
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>         <a href="../../../java/lang/Object.html">Object</a> item = (x == <strong class="jxr_keyword">null</strong>) ? NULL_ITEM : x; <em class="jxr_comment">// translate null args</em>
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>         <strong class="jxr_keyword">if</strong> ((arena != <strong class="jxr_keyword">null</strong> ||
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>              (v = slotExchange(item, false, 0L)) == <strong class="jxr_keyword">null</strong>) &amp;&amp;
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>             ((Thread.interrupted() || <em class="jxr_comment">// disambiguates null return</em>
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>               (v = arenaExchange(item, false, 0L)) == <strong class="jxr_keyword">null</strong>)))
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/InterruptedException.html">InterruptedException</a>();
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>         <strong class="jxr_keyword">return</strong> (v == NULL_ITEM) ? <strong class="jxr_keyword">null</strong> : (V)v;
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>     }
+<a class="jxr_linenumber" name="L571" href="#L571">571</a> 
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L573" href="#L573">573</a> <em class="jxr_javadoccomment">     * Waits for another thread to arrive at this exchange point (unless</em>
+<a class="jxr_linenumber" name="L574" href="#L574">574</a> <em class="jxr_javadoccomment">     * the current thread is {@linkplain Thread#interrupt interrupted} or</em>
+<a class="jxr_linenumber" name="L575" href="#L575">575</a> <em class="jxr_javadoccomment">     * the specified waiting time elapses), and then transfers the given</em>
+<a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">     * object to it, receiving its object in return.</em>
+<a class="jxr_linenumber" name="L577" href="#L577">577</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L578" href="#L578">578</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If another thread is already waiting at the exchange point then</em>
+<a class="jxr_linenumber" name="L579" href="#L579">579</a> <em class="jxr_javadoccomment">     * it is resumed for thread scheduling purposes and receives the object</em>
+<a class="jxr_linenumber" name="L580" href="#L580">580</a> <em class="jxr_javadoccomment">     * passed in by the current thread.  The current thread returns immediately,</em>
+<a class="jxr_linenumber" name="L581" href="#L581">581</a> <em class="jxr_javadoccomment">     * receiving the object passed to the exchange by that other thread.</em>
+<a class="jxr_linenumber" name="L582" href="#L582">582</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L583" href="#L583">583</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If no other thread is already waiting at the exchange then the</em>
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> <em class="jxr_javadoccomment">     * current thread is disabled for thread scheduling purposes and lies</em>
+<a class="jxr_linenumber" name="L585" href="#L585">585</a> <em class="jxr_javadoccomment">     * dormant until one of three things happens:</em>
+<a class="jxr_linenumber" name="L586" href="#L586">586</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L587" href="#L587">587</a> <em class="jxr_javadoccomment">     * &lt;li&gt;Some other thread enters the exchange; or</em>
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">     * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}</em>
+<a class="jxr_linenumber" name="L589" href="#L589">589</a> <em class="jxr_javadoccomment">     * the current thread; or</em>
+<a class="jxr_linenumber" name="L590" href="#L590">590</a> <em class="jxr_javadoccomment">     * &lt;li&gt;The specified waiting time elapses.</em>
+<a class="jxr_linenumber" name="L591" href="#L591">591</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L592" href="#L592">592</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If the current thread:</em>
+<a class="jxr_linenumber" name="L593" href="#L593">593</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L594" href="#L594">594</a> <em class="jxr_javadoccomment">     * &lt;li&gt;has its interrupted status set on entry to this method; or</em>
+<a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">     * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting</em>
+<a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">     * for the exchange,</em>
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">     * then {@link InterruptedException} is thrown and the current thread's</em>
+<a class="jxr_linenumber" name="L599" href="#L599">599</a> <em class="jxr_javadoccomment">     * interrupted status is cleared.</em>
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If the specified waiting time elapses then {@link</em>
+<a class="jxr_linenumber" name="L602" href="#L602">602</a> <em class="jxr_javadoccomment">     * TimeoutException} is thrown.  If the time is less than or equal</em>
+<a class="jxr_linenumber" name="L603" href="#L603">603</a> <em class="jxr_javadoccomment">     * to zero, the method will not wait at all.</em>
+<a class="jxr_linenumber" name="L604" href="#L604">604</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L605" href="#L605">605</a> <em class="jxr_javadoccomment">     * @param x the object to exchange</em>
+<a class="jxr_linenumber" name="L606" href="#L606">606</a> <em class="jxr_javadoccomment">     * @param timeout the maximum time to wait</em>
+<a class="jxr_linenumber" name="L607" href="#L607">607</a> <em class="jxr_javadoccomment">     * @param unit the time unit of the {@code timeout} argument</em>
+<a class="jxr_linenumber" name="L608" href="#L608">608</a> <em class="jxr_javadoccomment">     * @return the object provided by the other thread</em>
+<a class="jxr_linenumber" name="L609" href="#L609">609</a> <em class="jxr_javadoccomment">     * @throws InterruptedException if the current thread was</em>
+<a class="jxr_linenumber" name="L610" href="#L610">610</a> <em class="jxr_javadoccomment">     *         interrupted while waiting</em>
+<a class="jxr_linenumber" name="L611" href="#L611">611</a> <em class="jxr_javadoccomment">     * @throws TimeoutException if the specified waiting time elapses</em>
+<a class="jxr_linenumber" name="L612" href="#L612">612</a> <em class="jxr_javadoccomment">     *         before another thread enters the exchange</em>
+<a class="jxr_linenumber" name="L613" href="#L613">613</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>     <strong class="jxr_keyword">public</strong> V exchange(V x, <strong class="jxr_keyword">long</strong> timeout, <a href="../../../java/util/concurrent/TimeUnit.html">TimeUnit</a> unit)
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>         <strong class="jxr_keyword">throws</strong> InterruptedException, <a href="../../../java/util/concurrent/TimeoutException.html">TimeoutException</a> {
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         <a href="../../../java/lang/Object.html">Object</a> v;
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>         <a href="../../../java/lang/Object.html">Object</a> item = (x == <strong class="jxr_keyword">null</strong>) ? NULL_ITEM : x;
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>         <strong class="jxr_keyword">long</strong> ns = unit.toNanos(timeout);
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>         <strong class="jxr_keyword">if</strong> ((arena != <strong class="jxr_keyword">null</strong> ||
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>              (v = slotExchange(item, <strong class="jxr_keyword">true</strong>, ns)) == <strong class="jxr_keyword">null</strong>) &amp;&amp;
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>             ((Thread.interrupted() ||
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>               (v = arenaExchange(item, <strong class="jxr_keyword">true</strong>, ns)) == <strong class="jxr_keyword">null</strong>)))
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/InterruptedException.html">InterruptedException</a>();
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>         <strong class="jxr_keyword">if</strong> (v == TIMED_OUT)
+<a class="jxr_linenumber" name="L626" href="#L626">626</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/util/concurrent/TimeoutException.html">TimeoutException</a>();
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>         <strong class="jxr_keyword">return</strong> (v == NULL_ITEM) ? <strong class="jxr_keyword">null</strong> : (V)v;
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>     }
+<a class="jxr_linenumber" name="L629" href="#L629">629</a> 
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>     <em class="jxr_comment">// Unsafe mechanics</em>
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> sun.misc.Unsafe U;
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> BOUND;
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> SLOT;
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> MATCH;
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> BLOCKER;
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> ABASE;
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>     <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>         <strong class="jxr_keyword">int</strong> s;
+<a class="jxr_linenumber" name="L639" href="#L639">639</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>             U = sun.misc.Unsafe.getUnsafe();
+<a class="jxr_linenumber" name="L641" href="#L641">641</a>             Class&lt;?&gt; ek = Exchanger.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L642" href="#L642">642</a>             Class&lt;?&gt; nk = Node.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L643" href="#L643">643</a>             Class&lt;?&gt; ak = <a href="../../../java/util/concurrent/locks/AbstractQueuedLongSynchronizer.html">Node</a>[].<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L644" href="#L644">644</a>             Class&lt;?&gt; tk = Thread.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L645" href="#L645">645</a>             BOUND = U.objectFieldOffset
+<a class="jxr_linenumber" name="L646" href="#L646">646</a>                 (ek.getDeclaredField(<span class="jxr_string">"bound"</span>));
+<a class="jxr_linenumber" name="L647" href="#L647">647</a>             SLOT = U.objectFieldOffset
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>                 (ek.getDeclaredField(<span class="jxr_string">"slot"</span>));
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>             MATCH = U.objectFieldOffset
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>                 (nk.getDeclaredField(<span class="jxr_string">"match"</span>));
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>             BLOCKER = U.objectFieldOffset
+<a class="jxr_linenumber" name="L652" href="#L652">652</a>                 (tk.getDeclaredField(<span class="jxr_string">"parkBlocker"</span>));
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>             s = U.arrayIndexScale(ak);
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>             <em class="jxr_comment">// ABASE absorbs padding in front of element 0</em>
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>             ABASE = U.arrayBaseOffset(ak) + (1 &lt;&lt; ASHIFT);
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> 
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/Error.html">Error</a>(e);
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>         }
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>         <strong class="jxr_keyword">if</strong> ((s &amp; (s-1)) != 0 || s &gt; (1 &lt;&lt; ASHIFT))
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/Error.html">Error</a>(<span class="jxr_string">"Unsupported array scale"</span>);
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>     }
+<a class="jxr_linenumber" name="L663" href="#L663">663</a> 
+<a class="jxr_linenumber" name="L664" href="#L664">664</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

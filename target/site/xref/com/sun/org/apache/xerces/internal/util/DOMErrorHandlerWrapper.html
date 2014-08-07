@@ -1,0 +1,433 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>DOMErrorHandlerWrapper xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2007-2012, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Copyright 2001, 2002, 2004 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">package</strong> com.sun.org.apache.xerces.internal.util;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.xni.XNIException;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.xni.parser.XMLErrorHandler;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.xni.parser.XMLParseException;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Node;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.DOMError;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.DOMLocator;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.DOMErrorHandler;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.dom.DOMErrorImpl;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.dom.DOMLocatorImpl;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xerces.internal.impl.msg.XMLMessageFormatter;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.io.PrintWriter;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Hashtable;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * This class handles DOM errors .</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * @see DOMErrorHandler</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * @author Gopal Sharma, SUN Microsystems Inc.</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_comment">// REVISIT: current implementations wraps error several times:</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_comment">//          XMLErrorReport.reportError creates XMLParserException (by wrapping all info)</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_comment">//          and goes via switch to send errors.</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_comment">//          DOMErrorHandlerWrapper catches calls, copies info from XMLParserException and</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_comment">//          sends one call back to the application</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_comment">//          I think we can avoid this indirection if we modify XMLErrorReporter. --el</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">DOMErrorHandlerWrapper</a>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">implements</strong> XMLErrorHandler, <a href="../../../../../../../org/w3c/dom/DOMErrorHandler.html">DOMErrorHandler</a> {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <em class="jxr_comment">// It keeps the reference of DOMErrorHandler of application</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../org/w3c/dom/DOMErrorHandler.html">DOMErrorHandler</a> fDomErrorHandler;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <em class="jxr_comment">// Error Status</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">boolean</strong> eStatus = <strong class="jxr_keyword">true</strong> ;
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <em class="jxr_comment">// Print writer</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../java/io/PrintWriter.html">PrintWriter</a> fOut;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <em class="jxr_comment">// some components may set error node</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <em class="jxr_comment">// @see DOMNormalizer.</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../../org/w3c/dom/Node.html">Node</a> fCurrentNode;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <em class="jxr_javadoccomment">/** Error code for comparisons. **/</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a> fErrorCode = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/dom/DOMErrorImpl.html">DOMErrorImpl</a> fDOMError = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/dom/DOMErrorImpl.html">DOMErrorImpl</a>();
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <em class="jxr_comment">// Constructors</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <em class="jxr_comment">// Default constructor /</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">DOMErrorHandlerWrapper</a>() {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          fOut = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../java/io/PrintWriter.html">PrintWriter</a>(System.err);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">DOMErrorHandlerWrapper</a>(<a href="../../../../../../../org/w3c/dom/DOMErrorHandler.html">DOMErrorHandler</a> domErrorHandler) {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          fDomErrorHandler = domErrorHandler;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      } <em class="jxr_comment">// DOMErrorHandlerWrapper(DOMErrorHandler domErrorHandler)</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <em class="jxr_comment">// Public methods</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <em class="jxr_javadoccomment">/** Sets the DOM error handler. */</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setErrorHandler(<a href="../../../../../../../org/w3c/dom/DOMErrorHandler.html">DOMErrorHandler</a> errorHandler) {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         fDomErrorHandler = errorHandler;
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     } <em class="jxr_comment">// setErrorHandler(ErrorHandler)</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../../org/w3c/dom/DOMErrorHandler.html">DOMErrorHandler</a> getErrorHandler(){
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         <strong class="jxr_keyword">return</strong> fDomErrorHandler;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     } <em class="jxr_comment">//getErrorHandler()</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <em class="jxr_comment">// XMLErrorHandler methods</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * Reports a warning. Warnings are non-fatal and can be safely ignored</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     * by most applications.</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * @param domain    The domain of the warning. The domain can be any</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     *                  string but is suggested to be a valid URI. The</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     *                  domain can be used to conveniently specify a web</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     *                  site location of the relevent specification or</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     *                  document pertaining to this warning.</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     * @param key       The warning key. This key can be any string and</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     *                  is implementation dependent.</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">     * @param exception Exception.</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     * @throws XNIException Thrown to signal that the parser should stop</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     *                      parsing the document.</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> warning(<a href="../../../../../../../java/lang/String.html">String</a> domain, <a href="../../../../../../../java/lang/String.html">String</a> key,
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                         <a href="../../../../../../../com/sun/org/apache/xerces/internal/xni/parser/XMLParseException.html">XMLParseException</a> exception) <strong class="jxr_keyword">throws</strong> XNIException {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         fDOMError.fSeverity = DOMError.SEVERITY_WARNING;
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         fDOMError.fException = exception;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <em class="jxr_comment">// REVISIT: May need to lookup from DOMErrorTypeMap in the future.</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         fDOMError.fType = key;
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         fDOMError.fRelatedData = fDOMError.fMessage = exception.getMessage();
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <a href="../../../../../../../com/sun/org/apache/xerces/internal/dom/DOMLocatorImpl.html">DOMLocatorImpl</a> locator = fDOMError.fLocator;
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">if</strong> (locator != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>             locator.fColumnNumber = exception.getColumnNumber();
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>             locator.fLineNumber = exception.getLineNumber();
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>             locator.fUtf16Offset = exception.getCharacterOffset();
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>             locator.fUri = exception.getExpandedSystemId();
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>             locator.fRelatedNode = fCurrentNode;
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <strong class="jxr_keyword">if</strong> (fDomErrorHandler != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>             fDomErrorHandler.handleError(fDOMError);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     } <em class="jxr_comment">// warning(String,String,XMLParseException)</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     * Reports an error. Errors are non-fatal and usually signify that the</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * document is invalid with respect to its grammar(s).</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * @param domain    The domain of the error. The domain can be any</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     *                  string but is suggested to be a valid URI. The</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     *                  domain can be used to conveniently specify a web</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     *                  site location of the relevent specification or</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     *                  document pertaining to this error.</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * @param key       The error key. This key can be any string and</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     *                  is implementation dependent.</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * @param exception Exception.</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">     * @throws XNIException Thrown to signal that the parser should stop</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     *                      parsing the document.</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> error(<a href="../../../../../../../java/lang/String.html">String</a> domain, <a href="../../../../../../../java/lang/String.html">String</a> key,
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                       <a href="../../../../../../../com/sun/org/apache/xerces/internal/xni/parser/XMLParseException.html">XMLParseException</a> exception) <strong class="jxr_keyword">throws</strong> XNIException {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         fDOMError.fSeverity = DOMError.SEVERITY_ERROR;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         fDOMError.fException = exception;
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         <em class="jxr_comment">// REVISIT: May need to lookup from DOMErrorTypeMap in the future.</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         fDOMError.fType = key;
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         fDOMError.fRelatedData = fDOMError.fMessage = exception.getMessage();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         <a href="../../../../../../../com/sun/org/apache/xerces/internal/dom/DOMLocatorImpl.html">DOMLocatorImpl</a> locator = fDOMError.fLocator;
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">if</strong> (locator != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>             locator.fColumnNumber = exception.getColumnNumber();
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>             locator.fLineNumber = exception.getLineNumber();
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             locator.fUtf16Offset = exception.getCharacterOffset();
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             locator.fUri = exception.getExpandedSystemId();
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>             locator.fRelatedNode= fCurrentNode;
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         }
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <strong class="jxr_keyword">if</strong> (fDomErrorHandler != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>             fDomErrorHandler.handleError(fDOMError);
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         }
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     } <em class="jxr_comment">// error(String,String,XMLParseException)</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     * Report a fatal error. Fatal errors usually occur when the document</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     * is not well-formed and signifies that the parser cannot continue</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     * normal operation.</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * &lt;strong&gt;Note:&lt;/strong&gt; The error handler should &lt;em&gt;always&lt;/em&gt;</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * throw an &lt;code&gt;XNIException&lt;/code&gt; from this method. This exception</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     * can either be the same exception that is passed as a parameter to</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">     * the method or a new XNI exception object. If the registered error</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">     * handler fails to throw an exception, the continuing operation of</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">     * the parser is undetermined.</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">     * @param domain    The domain of the fatal error. The domain can be</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     *                  any string but is suggested to be a valid URI. The</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     *                  domain can be used to conveniently specify a web</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     *                  site location of the relevent specification or</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     *                  document pertaining to this fatal error.</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * @param key       The fatal error key. This key can be any string</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     *                  and is implementation dependent.</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * @param exception Exception.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * @throws XNIException Thrown to signal that the parser should stop</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     *                      parsing the document.</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> fatalError(<a href="../../../../../../../java/lang/String.html">String</a> domain, <a href="../../../../../../../java/lang/String.html">String</a> key,
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                            <a href="../../../../../../../com/sun/org/apache/xerces/internal/xni/parser/XMLParseException.html">XMLParseException</a> exception) <strong class="jxr_keyword">throws</strong> XNIException {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         fDOMError.fSeverity = DOMError.SEVERITY_FATAL_ERROR;
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         fDOMError.fException = exception;
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         fErrorCode.setValues(domain, key);
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         <a href="../../../../../../../java/lang/String.html">String</a> domErrorType = DOMErrorTypeMap.getDOMErrorType(fErrorCode);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         fDOMError.fType = (domErrorType != <strong class="jxr_keyword">null</strong>) ? domErrorType : key;
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         fDOMError.fRelatedData = fDOMError.fMessage = exception.getMessage();
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         <a href="../../../../../../../com/sun/org/apache/xerces/internal/dom/DOMLocatorImpl.html">DOMLocatorImpl</a> locator = fDOMError.fLocator;
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         <strong class="jxr_keyword">if</strong> (locator != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>             locator.fColumnNumber = exception.getColumnNumber();
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>             locator.fLineNumber = exception.getLineNumber();
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>             locator.fUtf16Offset = exception.getCharacterOffset();
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>             locator.fUri = exception.getExpandedSystemId();
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             locator.fRelatedNode = fCurrentNode;
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         }
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         <strong class="jxr_keyword">if</strong> (fDomErrorHandler != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>             fDomErrorHandler.handleError(fDOMError);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>         }
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     } <em class="jxr_comment">// fatalError(String,String,XMLParseException)</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> 
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> handleError(<a href="../../../../../../../org/w3c/dom/DOMError.html">DOMError</a> error) {
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         printError(error);
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">return</strong> eStatus;
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     }
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     <em class="jxr_javadoccomment">/** Prints the error message. */</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> printError(<a href="../../../../../../../org/w3c/dom/DOMError.html">DOMError</a> error) {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         <strong class="jxr_keyword">int</strong> severity = error.getSeverity();
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         fOut.print(<span class="jxr_string">"["</span>);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         <strong class="jxr_keyword">if</strong> ( severity == DOMError.SEVERITY_WARNING) {
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>             fOut.print(<span class="jxr_string">"Warning"</span>);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> ( severity == DOMError.SEVERITY_ERROR) {
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>             fOut.print(<span class="jxr_string">"Error"</span>);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>             fOut.print(<span class="jxr_string">"FatalError"</span>);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>             eStatus = false ; <em class="jxr_comment">//REVISIT: Abort processing if fatal error, do we need to??</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         }
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         fOut.print(<span class="jxr_string">"] "</span>);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <a href="../../../../../../../org/w3c/dom/DOMLocator.html">DOMLocator</a> locator = error.getLocation();
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">if</strong> (locator != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>             fOut.print(locator.getLineNumber());
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>             fOut.print(<span class="jxr_string">":"</span>);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>             fOut.print(locator.getColumnNumber());
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>             fOut.print(<span class="jxr_string">":"</span>);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>             fOut.print(locator.getByteOffset());
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>             fOut.print(<span class="jxr_string">","</span>);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>             fOut.print(locator.getUtf16Offset());
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>             <a href="../../../../../../../org/w3c/dom/Node.html">Node</a> node = locator.getRelatedNode();
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             <strong class="jxr_keyword">if</strong> (node != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>                 fOut.print(<span class="jxr_string">"["</span>);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>                 fOut.print(node.getNodeName());
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                 fOut.print(<span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>             }
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             <a href="../../../../../../../java/lang/String.html">String</a> systemId = locator.getUri();
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">if</strong> (systemId != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 <strong class="jxr_keyword">int</strong> index = systemId.lastIndexOf('/');
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                 <strong class="jxr_keyword">if</strong> (index != -1)
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>                     systemId = systemId.substring(index + 1);
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>                 fOut.print(<span class="jxr_string">": "</span>);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>                 fOut.print(systemId);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>             }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         }
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> 
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         fOut.print(<span class="jxr_string">":"</span>);
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         fOut.print(error.getMessage());
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         fOut.println();
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         fOut.flush();
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     } <em class="jxr_comment">// printError(DOMError)</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> 
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     * A convenience class for converting between internal</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * error codes and DOM error types.</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">DOMErrorTypeMap</a> {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> 
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         <em class="jxr_javadoccomment">/** Map for converting internal error codes to DOM error types. **/</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../../java/util/Hashtable.html">Hashtable</a> fgDOMErrorTypeTable;
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>             <em class="jxr_comment">// initialize error type table: internal error codes (represented by domain and key) need to be mapped to a DOM error type.</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> 
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>             <em class="jxr_comment">// REVISIT: do well-formedness issues involving XML declaration &lt;?xml ... ?&gt; need to be added to hash table (no XML declaration node in DOM, but Document includes xmlEncoding, xmlStandalone, xmlVersion, etc.</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             fgDOMErrorTypeTable = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../java/util/Hashtable.html">Hashtable</a>();
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInCDSect"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInContent"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"TwoColonsInQName"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ColonNotLegalWithNS"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInProlog"</span>), <span class="jxr_string">"wf-invalid-character"</span>);  <em class="jxr_comment">// e.g. in Processing Instruction</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>             <em class="jxr_comment">// InvalidCharInXMLDecl omitted because XML declaration is not a DOM Node</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"CDEndInContent"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"CDSectUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"DoctypeNotAllowed"</span>), <span class="jxr_string">"doctype-not-allowed"</span>);
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ETagRequired"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ElementUnterminated"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EqRequiredInAttribute"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"OpenQuoteExpected"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"CloseQuoteExpected"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ETagUnterminated"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MarkupNotRecognizedInContent"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"DoctypeIllegalInContent"</span>), <span class="jxr_string">"doctype-not-allowed"</span>);
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInAttValue"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInPI"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInInternalSubset"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"QuoteRequiredInAttValue"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"LessthanInAttValue"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"AttributeValueUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PITargetRequired"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SpaceRequiredInPI"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PIUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ReservedPITarget"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PI_NOT_IN_ONE_ENTITY"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PINotInOneEntity"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EncodingDeclInvalid"</span>), <span class="jxr_string">"unsupported-encoding"</span>);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EncodingByteOrderUnsupported"</span>), <span class="jxr_string">"unsupported-encoding"</span>);
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInEntityValue"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInExternalSubset"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInIgnoreSect"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInPublicID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"InvalidCharInSystemID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SpaceRequiredAfterSYSTEM"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"QuoteRequiredInSystemID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SystemIDUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SpaceRequiredAfterPUBLIC"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"QuoteRequiredInPublicID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PublicIDUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PubidCharIllegal"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SpaceRequiredBetweenPublicAndSystem"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ROOT_ELEMENT_TYPE_IN_DOCTYPEDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node (which follows !DOCTYPE)</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_ROOT_ELEMENT_TYPE_REQUIRED"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"DoctypedeclUnterminated"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PEReferenceWithinMarkup"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_MARKUP_NOT_RECOGNIZED_IN_DTD"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ELEMENT_TYPE_IN_ELEMENTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_ELEMENT_TYPE_REQUIRED_IN_ELEMENTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_CONTENTSPEC_IN_ELEMENTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_CONTENTSPEC_REQUIRED_IN_ELEMENTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ElementDeclUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_OPEN_PAREN_OR_ELEMENT_TYPE_REQUIRED_IN_CHILDREN"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_CLOSE_PAREN_REQUIRED_IN_CHILDREN"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_ELEMENT_TYPE_REQUIRED_IN_MIXED_CONTENT"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_CLOSE_PAREN_REQUIRED_IN_MIXED"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MixedContentUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ELEMENT_TYPE_IN_ATTLISTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_ELEMENT_TYPE_REQUIRED_IN_ATTLISTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ATTRIBUTE_NAME_IN_ATTDEF"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"AttNameRequiredInAttDef"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ATTTYPE_IN_ATTDEF"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"AttTypeRequiredInAttDef"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_DEFAULTDECL_IN_ATTDEF"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_DUPLICATE_ATTRIBUTE_DEFINITION"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_AFTER_NOTATION_IN_NOTATIONTYPE"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_OPEN_PAREN_REQUIRED_IN_NOTATIONTYPE"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_NAME_REQUIRED_IN_NOTATIONTYPE"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"NotationTypeUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_NMTOKEN_REQUIRED_IN_ENUMERATION"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EnumerationUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_DISTINCT_TOKENS_IN_ENUMERATION"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_DISTINCT_NOTATION_IN_ENUMERATION"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_AFTER_FIXED_IN_DEFAULTDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"IncludeSectUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"IgnoreSectUnterminated"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"NameRequiredInPEReference"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"SemicolonRequiredInPEReference"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ENTITY_NAME_IN_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node (which follows !ENTITY)</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_PERCENT_IN_PEDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node (which follows !ENTITY %)</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_ENTITY_NAME_IN_PEDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node (which follows !ENTITY %)</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_ENTITY_NAME_REQUIRED_IN_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node (which follows !ENTITY)</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_AFTER_ENTITY_NAME_IN_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_NOTATION_NAME_IN_UNPARSED_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_NDATA_IN_UNPARSED_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_NOTATION_NAME_REQUIRED_FOR_UNPARSED_ENTITYDECL"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EntityDeclUnterminated"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_DUPLICATE_ENTITY_DEFINITION"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ExternalIDRequired"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_PUBIDLITERAL_IN_EXTERNALID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_AFTER_PUBIDLITERAL_IN_EXTERNALID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_SYSTEMLITERAL_IN_EXTERNALID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_URI_FRAGMENT_IN_SYSTEMID"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_BEFORE_NOTATION_NAME_IN_NOTATIONDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node, which follows !NOTATION</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_NOTATION_NAME_REQUIRED_IN_NOTATIONDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node, which follows !NOTATION</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"MSG_SPACE_REQUIRED_AFTER_NOTATION_NAME_IN_NOTATIONDECL"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);  <em class="jxr_comment">// considered error in name of node, which follows !NOTATION</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ExternalIDorPublicIDRequired"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"NotationDeclUnterminated"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ReferenceToExternalEntity"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ReferenceToUnparsedEntity"</span>), <span class="jxr_string">"wf-invalid-character"</span>);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>             <em class="jxr_comment">// REVISIT: do EntityNotDeclared, RecursiveReference, RecursiveGeneralReference, RecursivePEReference belong here?</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EncodingNotSupported"</span>), <span class="jxr_string">"unsupported-encoding"</span>);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EncodingRequired"</span>), <span class="jxr_string">"unsupported-encoding"</span>);
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"IllegalQName"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ElementXMLNSPrefix"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"ElementPrefixUnbound"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"AttributePrefixUnbound"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"EmptyPrefixedAttName"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>             fgDOMErrorTypeTable.put(<strong class="jxr_keyword">new</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/XMLErrorCode.html">XMLErrorCode</a>(XMLMessageFormatter.XML_DOMAIN, <span class="jxr_string">"PrefixDeclared"</span>), <span class="jxr_string">"wf-invalid-character-in-node-name"</span>);
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         }
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../../java/lang/String.html">String</a> getDOMErrorType (XMLErrorCode error) {
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>             <strong class="jxr_keyword">return</strong> (String) fgDOMErrorTypeTable.get(error);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         }
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../../../com/sun/org/apache/xerces/internal/util/DOMErrorHandlerWrapper.html">DOMErrorTypeMap</a> () {}
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>     }
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> 
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> } <em class="jxr_comment">// class DOMErrorHandlerWrapper</em>
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

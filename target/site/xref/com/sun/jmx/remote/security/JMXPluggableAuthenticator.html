@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>JMXPluggableAuthenticator xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2004, 2008, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> com.sun.jmx.remote.security;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.security.AccessController;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.security.Principal;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.security.PrivilegedAction;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.security.PrivilegedActionException;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> java.security.PrivilegedExceptionAction;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> javax.management.remote.JMXPrincipal;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> javax.management.remote.JMXAuthenticator;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.AuthPermission;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.Subject;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.callback.*;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.login.AppConfigurationEntry;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.login.Configuration;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.login.LoginContext;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.login.LoginException;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.spi.LoginModule;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> com.sun.jmx.remote.util.ClassLogger;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> com.sun.jmx.remote.util.EnvHelp;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;This class represents a</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * &lt;a href="{@docRoot}/../guide/security/jaas/JAASRefGuide.html"&gt;JAAS&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * based implementation of the {@link JMXAuthenticator} interface.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Authentication is performed by passing the supplied user's credentials</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * to one or more authentication mechanisms ({@link LoginModule}) for</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * verification. An authentication mechanism acquires the user's credentials</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * by calling {@link NameCallback} and/or {@link PasswordCallback}.</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * If authentication is successful then an authenticated {@link Subject}</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * filled in with a {@link Principal} is returned.  Authorization checks</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * will then be performed based on this &lt;code&gt;Subject&lt;/code&gt;.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;By default, a single file-based authentication mechanism</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * {@link FileLoginModule} is configured (&lt;code&gt;FileLoginConfig&lt;/code&gt;).&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;To override the default configuration use the</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;com.sun.management.jmxremote.login.config&lt;/code&gt; management property</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * described in the JRE/lib/management/management.properties file.</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * Set this property to the name of a JAAS configuration entry and ensure that</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * the entry is loaded by the installed {@link Configuration}. In addition,</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * ensure that the authentication mechanisms specified in the entry acquire</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * the user's credentials by calling {@link NameCallback} and</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * {@link PasswordCallback} and that they return a {@link Subject} filled-in</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * with a {@link Principal}, for those users that are successfully</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * authenticated.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">JMXPluggableAuthenticator</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../javax/management/remote/JMXAuthenticator.html">JMXAuthenticator</a> {
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * Creates an instance of &lt;code&gt;JMXPluggableAuthenticator&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     * and initializes it with a {@link LoginContext}.</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     * @param env the environment containing configuration properties for the</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">     *            authenticator. Can be null, which is equivalent to an empty</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">     *            Map.</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">     * @exception SecurityException if the authentication mechanism cannot be</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">     *            initialized.</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">JMXPluggableAuthenticator</a>(Map&lt;?, ?&gt; env) {
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <a href="../../../../../java/lang/String.html">String</a> loginConfigName = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          <a href="../../../../../java/lang/String.html">String</a> passwordFile = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">if</strong> (env != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              loginConfigName = (String) env.get(LOGIN_CONFIG_PROP);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>              passwordFile = (String) env.get(PASSWORD_FILE_PROP);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          }
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>             <strong class="jxr_keyword">if</strong> (loginConfigName != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>                 <em class="jxr_comment">// use the supplied JAAS login configuration</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>                 loginContext =
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/login/LoginContext.html">LoginContext</a>(loginConfigName, <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">JMXCallbackHandler</a>());
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>                 <em class="jxr_comment">// use the default JAAS login configuration (file-based)</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                 <a href="../../../../../java/lang/SecurityManager.html">SecurityManager</a> sm = System.getSecurityManager();
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>                 <strong class="jxr_keyword">if</strong> (sm != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>                     sm.checkPermission(
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>                             <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/AuthPermission.html">AuthPermission</a>(<span class="jxr_string">"createLoginContext."</span> +
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>                                                LOGIN_CONFIG_NAME));
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>                 }
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>                 <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> pf = passwordFile;
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>                     loginContext = AccessController.doPrivileged(
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>                         <strong class="jxr_keyword">new</strong> PrivilegedExceptionAction&lt;LoginContext&gt;() {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>                             <strong class="jxr_keyword">public</strong> <a href="../../../../../javax/security/auth/login/LoginContext.html">LoginContext</a> run() <strong class="jxr_keyword">throws</strong> LoginException {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>                                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/login/LoginContext.html">LoginContext</a>(
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                                                 LOGIN_CONFIG_NAME,
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                                                 <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                                                 <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">JMXCallbackHandler</a>(),
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                                                 <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">FileLoginConfig</a>(pf));
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                             }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                         });
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                 } <strong class="jxr_keyword">catch</strong> (PrivilegedActionException pae) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                     <strong class="jxr_keyword">throw</strong> (LoginException) pae.getException();
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                 }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>             }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         } <strong class="jxr_keyword">catch</strong> (LoginException le) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, le);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         } <strong class="jxr_keyword">catch</strong> (SecurityException se) {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, se);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         }
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     }
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     * Authenticate the &lt;code&gt;MBeanServerConnection&lt;/code&gt; client</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * with the given client credentials.</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     * @param credentials the user-defined credentials to be passed in</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * to the server in order to authenticate the user before creating</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     * the &lt;code&gt;MBeanServerConnection&lt;/code&gt;.  This parameter must</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">     * be a two-element &lt;code&gt;String[]&lt;/code&gt; containing the client's</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * username and password in that order.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * @return the authenticated subject containing a</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     * &lt;code&gt;JMXPrincipal(username)&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * @exception SecurityException if the server cannot authenticate the user</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * with the provided credentials.</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../javax/security/auth/Subject.html">Subject</a> authenticate(<a href="../../../../../java/lang/Object.html">Object</a> credentials) {
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         <em class="jxr_comment">// Verify that credentials is of type String[].</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         <strong class="jxr_keyword">if</strong> (!(credentials instanceof String[])) {
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             <em class="jxr_comment">// Special case for null so we get a more informative message</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">if</strong> (credentials == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                 authenticationFailure(<span class="jxr_string">"authenticate"</span>, <span class="jxr_string">"Credentials required"</span>);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> message =
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                 <span class="jxr_string">"Credentials should be String[] instead of "</span> +
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                  credentials.getClass().getName();
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, message);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <em class="jxr_comment">// Verify that the array contains two elements.</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a>[] aCredentials = (String[]) credentials;
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">if</strong> (aCredentials.length != 2) {
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> message =
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>                 <span class="jxr_string">"Credentials should have 2 elements not "</span> +
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>                 aCredentials.length;
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, message);
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>         }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         <em class="jxr_comment">// Verify that username exists and the associated</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <em class="jxr_comment">// password matches the one supplied by the client.</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         username = aCredentials[0];
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         password = aCredentials[1];
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <strong class="jxr_keyword">if</strong> (username == <strong class="jxr_keyword">null</strong> || password == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> message = <span class="jxr_string">"Username or password is null"</span>;
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, message);
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         }
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         <em class="jxr_comment">// Perform authentication</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>             loginContext.login();
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../javax/security/auth/Subject.html">Subject</a> subject = loginContext.getSubject();
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>             AccessController.doPrivileged(<strong class="jxr_keyword">new</strong> PrivilegedAction&lt;Void&gt;() {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                     <strong class="jxr_keyword">public</strong> <a href="../../../../../java/lang/Void.html">Void</a> run() {
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                         subject.setReadOnly();
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>                         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                     }
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>                 });
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>             <strong class="jxr_keyword">return</strong> subject;
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> 
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         } <strong class="jxr_keyword">catch</strong> (LoginException le) {
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>             authenticationFailure(<span class="jxr_string">"authenticate"</span>, le);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>         }
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     }
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> 
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> authenticationFailure(<a href="../../../../../java/lang/String.html">String</a> method, <a href="../../../../../java/lang/String.html">String</a> message)
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> msg = <span class="jxr_string">"Authentication failed! "</span> + message;
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> e = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a>(msg);
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         logException(method, msg, e);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> authenticationFailure(<a href="../../../../../java/lang/String.html">String</a> method,
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>                                               <a href="../../../../../java/lang/Exception.html">Exception</a> exception)
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> {
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>         <a href="../../../../../java/lang/String.html">String</a> msg;
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> se;
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <strong class="jxr_keyword">if</strong> (exception instanceof SecurityException) {
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>             msg = exception.getMessage();
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             se = (SecurityException) exception;
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>             msg = <span class="jxr_string">"Authentication failed! "</span> + exception.getMessage();
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> e = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a>(msg);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>             EnvHelp.initCause(e, exception);
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>             se = e;
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         }
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         logException(method, msg, se);
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         <strong class="jxr_keyword">throw</strong> se;
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     }
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> logException(<a href="../../../../../java/lang/String.html">String</a> method,
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>                                      <a href="../../../../../java/lang/String.html">String</a> message,
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>                                      <a href="../../../../../java/lang/Exception.html">Exception</a> e) {
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         <strong class="jxr_keyword">if</strong> (logger.traceOn()) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             logger.trace(method, message);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">if</strong> (logger.debugOn()) {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>             logger.debug(method, e);
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     }
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../javax/security/auth/login/LoginContext.html">LoginContext</a> loginContext;
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/String.html">String</a> username;
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/String.html">String</a> password;
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> LOGIN_CONFIG_PROP =
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         <span class="jxr_string">"jmx.remote.x.login.config"</span>;
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> LOGIN_CONFIG_NAME = <span class="jxr_string">"JMXPluggableAuthenticator"</span>;
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> PASSWORD_FILE_PROP =
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <span class="jxr_string">"jmx.remote.x.password.file"</span>;
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../com/sun/jmx/remote/util/ClassLogger.html">ClassLogger</a> logger =
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/util/ClassLogger.html">ClassLogger</a>(<span class="jxr_string">"javax.management.remote.misc"</span>, LOGIN_CONFIG_NAME);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment"> * This callback handler supplies the username and password (which was</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment"> * originally supplied by the JMX user) to the JAAS login module performing</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment"> * the authentication. No interactive user prompting is required because the</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment"> * credentials are already available to this class (via its enclosing class).</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">JMXCallbackHandler</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../../javax/security/auth/callback/CallbackHandler.html">CallbackHandler</a> {
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> 
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * Sets the username and password in the appropriate Callback object.</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> handle(<a href="../../../../../java/io/ObjectInputStream.html">Callback</a>[] callbacks)
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>         <strong class="jxr_keyword">throws</strong> IOException, <a href="../../../../../javax/security/auth/callback/UnsupportedCallbackException.html">UnsupportedCallbackException</a> {
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; callbacks.length; i++) {
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             <strong class="jxr_keyword">if</strong> (callbacks[i] instanceof NameCallback) {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>                 ((<a href="../../../../../javax/security/auth/callback/NameCallback.html">NameCallback</a>)callbacks[i]).setName(username);
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (callbacks[i] instanceof PasswordCallback) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>                 ((<a href="../../../../../javax/security/auth/callback/PasswordCallback.html">PasswordCallback</a>)callbacks[i])
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                     .setPassword(password.toCharArray());
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/callback/UnsupportedCallbackException.html">UnsupportedCallbackException</a>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>                     (callbacks[i], <span class="jxr_string">"Unrecognized Callback"</span>);
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>             }
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         }
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> }
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> 
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment"> * This class defines the JAAS configuration for file-based authentication.</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment"> * It is equivalent to the following textual configuration entry:</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment"> *     JMXPluggableAuthenticator {</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment"> *         com.sun.jmx.remote.security.FileLoginModule required;</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment"> *     };</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment"> * &lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">FileLoginConfig</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../javax/security/auth/login/Configuration.html">Configuration</a> {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>     <em class="jxr_comment">// The JAAS configuration for file-based authentication</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../javax/security/auth/login/AppConfigurationEntry.html">AppConfigurationEntry</a>[] entries;
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> 
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     <em class="jxr_comment">// The classname of the login module for file-based authentication</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> FILE_LOGIN_MODULE =
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         FileLoginModule.<strong class="jxr_keyword">class</strong>.getName();
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     <em class="jxr_comment">// The option that identifies the password file to use</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> PASSWORD_FILE_OPTION = <span class="jxr_string">"passwordFile"</span>;
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * Creates an instance of &lt;code&gt;FileLoginConfig&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * @param passwordFile A filepath that identifies the password file to use.</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     *                     If null then the default password file is used.</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/JMXPluggableAuthenticator.html">FileLoginConfig</a>(<a href="../../../../../java/lang/String.html">String</a> passwordFile) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         Map&lt;String, String&gt; options;
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         <strong class="jxr_keyword">if</strong> (passwordFile != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             options = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;(1);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             options.put(PASSWORD_FILE_OPTION, passwordFile);
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>             options = Collections.emptyMap();
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         }
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         entries = <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/login/AppConfigurationEntry.html">AppConfigurationEntry</a>[] {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../../javax/security/auth/login/AppConfigurationEntry.html">AppConfigurationEntry</a>(FILE_LOGIN_MODULE,
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>                 AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>                     options)
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         };
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     }
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     * Gets the JAAS configuration for file-based authentication</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../javax/security/auth/login/AppConfigurationEntry.html">AppConfigurationEntry</a>[] getAppConfigurationEntry(<a href="../../../../../java/lang/String.html">String</a> name) {
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         <strong class="jxr_keyword">return</strong> name.equals(LOGIN_CONFIG_NAME) ? entries : <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     }
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     * Refreshes the configuration.</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> refresh() {
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <em class="jxr_comment">// the configuration is fixed</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> }
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> 
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

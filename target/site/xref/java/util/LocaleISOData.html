@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>LocaleISOData xref</title>
+<link type="text/css" rel="stylesheet" href="../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../apidocs/java/util/LocaleISOData.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2005, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> java.util;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">class</strong> <a href="../../java/util/LocaleISOData.html">LocaleISOData</a> {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">     * The 2- and 3-letter ISO 639 language codes.</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../java/lang/String.html">String</a> isoLanguageTable =
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>            <span class="jxr_string">"aa"</span> + <span class="jxr_string">"aar"</span>  <em class="jxr_comment">// Afar</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          + <span class="jxr_string">"ab"</span> + <span class="jxr_string">"abk"</span>  <em class="jxr_comment">// Abkhazian</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          + <span class="jxr_string">"ae"</span> + <span class="jxr_string">"ave"</span>  <em class="jxr_comment">// Avestan</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>          + <span class="jxr_string">"af"</span> + <span class="jxr_string">"afr"</span>  <em class="jxr_comment">// Afrikaans</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>          + <span class="jxr_string">"ak"</span> + <span class="jxr_string">"aka"</span>  <em class="jxr_comment">// Akan</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          + <span class="jxr_string">"am"</span> + <span class="jxr_string">"amh"</span>  <em class="jxr_comment">// Amharic</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>          + <span class="jxr_string">"an"</span> + <span class="jxr_string">"arg"</span>  <em class="jxr_comment">// Aragonese</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          + <span class="jxr_string">"ar"</span> + <span class="jxr_string">"ara"</span>  <em class="jxr_comment">// Arabic</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          + <span class="jxr_string">"as"</span> + <span class="jxr_string">"asm"</span>  <em class="jxr_comment">// Assamese</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          + <span class="jxr_string">"av"</span> + <span class="jxr_string">"ava"</span>  <em class="jxr_comment">// Avaric</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          + <span class="jxr_string">"ay"</span> + <span class="jxr_string">"aym"</span>  <em class="jxr_comment">// Aymara</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          + <span class="jxr_string">"az"</span> + <span class="jxr_string">"aze"</span>  <em class="jxr_comment">// Azerbaijani</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          + <span class="jxr_string">"ba"</span> + <span class="jxr_string">"bak"</span>  <em class="jxr_comment">// Bashkir</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          + <span class="jxr_string">"be"</span> + <span class="jxr_string">"bel"</span>  <em class="jxr_comment">// Belarusian</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          + <span class="jxr_string">"bg"</span> + <span class="jxr_string">"bul"</span>  <em class="jxr_comment">// Bulgarian</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          + <span class="jxr_string">"bh"</span> + <span class="jxr_string">"bih"</span>  <em class="jxr_comment">// Bihari</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          + <span class="jxr_string">"bi"</span> + <span class="jxr_string">"bis"</span>  <em class="jxr_comment">// Bislama</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          + <span class="jxr_string">"bm"</span> + <span class="jxr_string">"bam"</span>  <em class="jxr_comment">// Bambara</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          + <span class="jxr_string">"bn"</span> + <span class="jxr_string">"ben"</span>  <em class="jxr_comment">// Bengali</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>          + <span class="jxr_string">"bo"</span> + <span class="jxr_string">"bod"</span>  <em class="jxr_comment">// Tibetan</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          + <span class="jxr_string">"br"</span> + <span class="jxr_string">"bre"</span>  <em class="jxr_comment">// Breton</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>          + <span class="jxr_string">"bs"</span> + <span class="jxr_string">"bos"</span>  <em class="jxr_comment">// Bosnian</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          + <span class="jxr_string">"ca"</span> + <span class="jxr_string">"cat"</span>  <em class="jxr_comment">// Catalan</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          + <span class="jxr_string">"ce"</span> + <span class="jxr_string">"che"</span>  <em class="jxr_comment">// Chechen</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          + <span class="jxr_string">"ch"</span> + <span class="jxr_string">"cha"</span>  <em class="jxr_comment">// Chamorro</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          + <span class="jxr_string">"co"</span> + <span class="jxr_string">"cos"</span>  <em class="jxr_comment">// Corsican</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          + <span class="jxr_string">"cr"</span> + <span class="jxr_string">"cre"</span>  <em class="jxr_comment">// Cree</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          + <span class="jxr_string">"cs"</span> + <span class="jxr_string">"ces"</span>  <em class="jxr_comment">// Czech</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          + <span class="jxr_string">"cu"</span> + <span class="jxr_string">"chu"</span>  <em class="jxr_comment">// Church Slavic</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          + <span class="jxr_string">"cv"</span> + <span class="jxr_string">"chv"</span>  <em class="jxr_comment">// Chuvash</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          + <span class="jxr_string">"cy"</span> + <span class="jxr_string">"cym"</span>  <em class="jxr_comment">// Welsh</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          + <span class="jxr_string">"da"</span> + <span class="jxr_string">"dan"</span>  <em class="jxr_comment">// Danish</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          + <span class="jxr_string">"de"</span> + <span class="jxr_string">"deu"</span>  <em class="jxr_comment">// German</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          + <span class="jxr_string">"dv"</span> + <span class="jxr_string">"div"</span>  <em class="jxr_comment">// Divehi</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          + <span class="jxr_string">"dz"</span> + <span class="jxr_string">"dzo"</span>  <em class="jxr_comment">// Dzongkha</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          + <span class="jxr_string">"ee"</span> + <span class="jxr_string">"ewe"</span>  <em class="jxr_comment">// Ewe</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          + <span class="jxr_string">"el"</span> + <span class="jxr_string">"ell"</span>  <em class="jxr_comment">// Greek</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          + <span class="jxr_string">"en"</span> + <span class="jxr_string">"eng"</span>  <em class="jxr_comment">// English</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          + <span class="jxr_string">"eo"</span> + <span class="jxr_string">"epo"</span>  <em class="jxr_comment">// Esperanto</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          + <span class="jxr_string">"es"</span> + <span class="jxr_string">"spa"</span>  <em class="jxr_comment">// Spanish</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          + <span class="jxr_string">"et"</span> + <span class="jxr_string">"est"</span>  <em class="jxr_comment">// Estonian</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          + <span class="jxr_string">"eu"</span> + <span class="jxr_string">"eus"</span>  <em class="jxr_comment">// Basque</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          + <span class="jxr_string">"fa"</span> + <span class="jxr_string">"fas"</span>  <em class="jxr_comment">// Persian</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          + <span class="jxr_string">"ff"</span> + <span class="jxr_string">"ful"</span>  <em class="jxr_comment">// Fulah</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          + <span class="jxr_string">"fi"</span> + <span class="jxr_string">"fin"</span>  <em class="jxr_comment">// Finnish</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          + <span class="jxr_string">"fj"</span> + <span class="jxr_string">"fij"</span>  <em class="jxr_comment">// Fijian</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          + <span class="jxr_string">"fo"</span> + <span class="jxr_string">"fao"</span>  <em class="jxr_comment">// Faroese</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>          + <span class="jxr_string">"fr"</span> + <span class="jxr_string">"fra"</span>  <em class="jxr_comment">// French</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          + <span class="jxr_string">"fy"</span> + <span class="jxr_string">"fry"</span>  <em class="jxr_comment">// Frisian</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          + <span class="jxr_string">"ga"</span> + <span class="jxr_string">"gle"</span>  <em class="jxr_comment">// Irish</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          + <span class="jxr_string">"gd"</span> + <span class="jxr_string">"gla"</span>  <em class="jxr_comment">// Scottish Gaelic</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          + <span class="jxr_string">"gl"</span> + <span class="jxr_string">"glg"</span>  <em class="jxr_comment">// Gallegan</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          + <span class="jxr_string">"gn"</span> + <span class="jxr_string">"grn"</span>  <em class="jxr_comment">// Guarani</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          + <span class="jxr_string">"gu"</span> + <span class="jxr_string">"guj"</span>  <em class="jxr_comment">// Gujarati</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          + <span class="jxr_string">"gv"</span> + <span class="jxr_string">"glv"</span>  <em class="jxr_comment">// Manx</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          + <span class="jxr_string">"ha"</span> + <span class="jxr_string">"hau"</span>  <em class="jxr_comment">// Hausa</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          + <span class="jxr_string">"he"</span> + <span class="jxr_string">"heb"</span>  <em class="jxr_comment">// Hebrew</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          + <span class="jxr_string">"hi"</span> + <span class="jxr_string">"hin"</span>  <em class="jxr_comment">// Hindi</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          + <span class="jxr_string">"ho"</span> + <span class="jxr_string">"hmo"</span>  <em class="jxr_comment">// Hiri Motu</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>          + <span class="jxr_string">"hr"</span> + <span class="jxr_string">"hrv"</span>  <em class="jxr_comment">// Croatian</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          + <span class="jxr_string">"ht"</span> + <span class="jxr_string">"hat"</span>  <em class="jxr_comment">// Haitian</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          + <span class="jxr_string">"hu"</span> + <span class="jxr_string">"hun"</span>  <em class="jxr_comment">// Hungarian</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          + <span class="jxr_string">"hy"</span> + <span class="jxr_string">"hye"</span>  <em class="jxr_comment">// Armenian</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          + <span class="jxr_string">"hz"</span> + <span class="jxr_string">"her"</span>  <em class="jxr_comment">// Herero</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          + <span class="jxr_string">"ia"</span> + <span class="jxr_string">"ina"</span>  <em class="jxr_comment">// Interlingua</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          + <span class="jxr_string">"id"</span> + <span class="jxr_string">"ind"</span>  <em class="jxr_comment">// Indonesian</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          + <span class="jxr_string">"ie"</span> + <span class="jxr_string">"ile"</span>  <em class="jxr_comment">// Interlingue</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         + <span class="jxr_string">"ig"</span> + <span class="jxr_string">"ibo"</span>  <em class="jxr_comment">// Igbo</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         + <span class="jxr_string">"ii"</span> + <span class="jxr_string">"iii"</span>  <em class="jxr_comment">// Sichuan Yi</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         + <span class="jxr_string">"ik"</span> + <span class="jxr_string">"ipk"</span>  <em class="jxr_comment">// Inupiaq</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         + <span class="jxr_string">"in"</span> + <span class="jxr_string">"ind"</span>  <em class="jxr_comment">// Indonesian (old)</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         + <span class="jxr_string">"io"</span> + <span class="jxr_string">"ido"</span>  <em class="jxr_comment">// Ido</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         + <span class="jxr_string">"is"</span> + <span class="jxr_string">"isl"</span>  <em class="jxr_comment">// Icelandic</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         + <span class="jxr_string">"it"</span> + <span class="jxr_string">"ita"</span>  <em class="jxr_comment">// Italian</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         + <span class="jxr_string">"iu"</span> + <span class="jxr_string">"iku"</span>  <em class="jxr_comment">// Inuktitut</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         + <span class="jxr_string">"iw"</span> + <span class="jxr_string">"heb"</span>  <em class="jxr_comment">// Hebrew (old)</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         + <span class="jxr_string">"ja"</span> + <span class="jxr_string">"jpn"</span>  <em class="jxr_comment">// Japanese</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         + <span class="jxr_string">"ji"</span> + <span class="jxr_string">"yid"</span>  <em class="jxr_comment">// Yiddish (old)</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         + <span class="jxr_string">"jv"</span> + <span class="jxr_string">"jav"</span>  <em class="jxr_comment">// Javanese</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         + <span class="jxr_string">"ka"</span> + <span class="jxr_string">"kat"</span>  <em class="jxr_comment">// Georgian</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         + <span class="jxr_string">"kg"</span> + <span class="jxr_string">"kon"</span>  <em class="jxr_comment">// Kongo</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         + <span class="jxr_string">"ki"</span> + <span class="jxr_string">"kik"</span>  <em class="jxr_comment">// Kikuyu</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         + <span class="jxr_string">"kj"</span> + <span class="jxr_string">"kua"</span>  <em class="jxr_comment">// Kwanyama</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         + <span class="jxr_string">"kk"</span> + <span class="jxr_string">"kaz"</span>  <em class="jxr_comment">// Kazakh</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         + <span class="jxr_string">"kl"</span> + <span class="jxr_string">"kal"</span>  <em class="jxr_comment">// Greenlandic</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         + <span class="jxr_string">"km"</span> + <span class="jxr_string">"khm"</span>  <em class="jxr_comment">// Khmer</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         + <span class="jxr_string">"kn"</span> + <span class="jxr_string">"kan"</span>  <em class="jxr_comment">// Kannada</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         + <span class="jxr_string">"ko"</span> + <span class="jxr_string">"kor"</span>  <em class="jxr_comment">// Korean</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>         + <span class="jxr_string">"kr"</span> + <span class="jxr_string">"kau"</span>  <em class="jxr_comment">// Kanuri</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         + <span class="jxr_string">"ks"</span> + <span class="jxr_string">"kas"</span>  <em class="jxr_comment">// Kashmiri</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         + <span class="jxr_string">"ku"</span> + <span class="jxr_string">"kur"</span>  <em class="jxr_comment">// Kurdish</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         + <span class="jxr_string">"kv"</span> + <span class="jxr_string">"kom"</span>  <em class="jxr_comment">// Komi</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>         + <span class="jxr_string">"kw"</span> + <span class="jxr_string">"cor"</span>  <em class="jxr_comment">// Cornish</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         + <span class="jxr_string">"ky"</span> + <span class="jxr_string">"kir"</span>  <em class="jxr_comment">// Kirghiz</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         + <span class="jxr_string">"la"</span> + <span class="jxr_string">"lat"</span>  <em class="jxr_comment">// Latin</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         + <span class="jxr_string">"lb"</span> + <span class="jxr_string">"ltz"</span>  <em class="jxr_comment">// Luxembourgish</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         + <span class="jxr_string">"lg"</span> + <span class="jxr_string">"lug"</span>  <em class="jxr_comment">// Ganda</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         + <span class="jxr_string">"li"</span> + <span class="jxr_string">"lim"</span>  <em class="jxr_comment">// Limburgish</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         + <span class="jxr_string">"ln"</span> + <span class="jxr_string">"lin"</span>  <em class="jxr_comment">// Lingala</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         + <span class="jxr_string">"lo"</span> + <span class="jxr_string">"lao"</span>  <em class="jxr_comment">// Lao</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         + <span class="jxr_string">"lt"</span> + <span class="jxr_string">"lit"</span>  <em class="jxr_comment">// Lithuanian</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         + <span class="jxr_string">"lu"</span> + <span class="jxr_string">"lub"</span>  <em class="jxr_comment">// Luba-Katanga</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         + <span class="jxr_string">"lv"</span> + <span class="jxr_string">"lav"</span>  <em class="jxr_comment">// Latvian</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         + <span class="jxr_string">"mg"</span> + <span class="jxr_string">"mlg"</span>  <em class="jxr_comment">// Malagasy</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         + <span class="jxr_string">"mh"</span> + <span class="jxr_string">"mah"</span>  <em class="jxr_comment">// Marshallese</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         + <span class="jxr_string">"mi"</span> + <span class="jxr_string">"mri"</span>  <em class="jxr_comment">// Maori</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         + <span class="jxr_string">"mk"</span> + <span class="jxr_string">"mkd"</span>  <em class="jxr_comment">// Macedonian</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         + <span class="jxr_string">"ml"</span> + <span class="jxr_string">"mal"</span>  <em class="jxr_comment">// Malayalam</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         + <span class="jxr_string">"mn"</span> + <span class="jxr_string">"mon"</span>  <em class="jxr_comment">// Mongolian</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         + <span class="jxr_string">"mo"</span> + <span class="jxr_string">"mol"</span>  <em class="jxr_comment">// Moldavian</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         + <span class="jxr_string">"mr"</span> + <span class="jxr_string">"mar"</span>  <em class="jxr_comment">// Marathi</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         + <span class="jxr_string">"ms"</span> + <span class="jxr_string">"msa"</span>  <em class="jxr_comment">// Malay</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         + <span class="jxr_string">"mt"</span> + <span class="jxr_string">"mlt"</span>  <em class="jxr_comment">// Maltese</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         + <span class="jxr_string">"my"</span> + <span class="jxr_string">"mya"</span>  <em class="jxr_comment">// Burmese</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         + <span class="jxr_string">"na"</span> + <span class="jxr_string">"nau"</span>  <em class="jxr_comment">// Nauru</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>         + <span class="jxr_string">"nb"</span> + <span class="jxr_string">"nob"</span>  <em class="jxr_comment">// Norwegian Bokm?l</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>         + <span class="jxr_string">"nd"</span> + <span class="jxr_string">"nde"</span>  <em class="jxr_comment">// North Ndebele</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>         + <span class="jxr_string">"ne"</span> + <span class="jxr_string">"nep"</span>  <em class="jxr_comment">// Nepali</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         + <span class="jxr_string">"ng"</span> + <span class="jxr_string">"ndo"</span>  <em class="jxr_comment">// Ndonga</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         + <span class="jxr_string">"nl"</span> + <span class="jxr_string">"nld"</span>  <em class="jxr_comment">// Dutch</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         + <span class="jxr_string">"nn"</span> + <span class="jxr_string">"nno"</span>  <em class="jxr_comment">// Norwegian Nynorsk</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         + <span class="jxr_string">"no"</span> + <span class="jxr_string">"nor"</span>  <em class="jxr_comment">// Norwegian</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         + <span class="jxr_string">"nr"</span> + <span class="jxr_string">"nbl"</span>  <em class="jxr_comment">// South Ndebele</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         + <span class="jxr_string">"nv"</span> + <span class="jxr_string">"nav"</span>  <em class="jxr_comment">// Navajo</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>         + <span class="jxr_string">"ny"</span> + <span class="jxr_string">"nya"</span>  <em class="jxr_comment">// Nyanja</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         + <span class="jxr_string">"oc"</span> + <span class="jxr_string">"oci"</span>  <em class="jxr_comment">// Occitan</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         + <span class="jxr_string">"oj"</span> + <span class="jxr_string">"oji"</span>  <em class="jxr_comment">// Ojibwa</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         + <span class="jxr_string">"om"</span> + <span class="jxr_string">"orm"</span>  <em class="jxr_comment">// Oromo</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>         + <span class="jxr_string">"or"</span> + <span class="jxr_string">"ori"</span>  <em class="jxr_comment">// Oriya</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         + <span class="jxr_string">"os"</span> + <span class="jxr_string">"oss"</span>  <em class="jxr_comment">// Ossetian</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         + <span class="jxr_string">"pa"</span> + <span class="jxr_string">"pan"</span>  <em class="jxr_comment">// Panjabi</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         + <span class="jxr_string">"pi"</span> + <span class="jxr_string">"pli"</span>  <em class="jxr_comment">// Pali</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         + <span class="jxr_string">"pl"</span> + <span class="jxr_string">"pol"</span>  <em class="jxr_comment">// Polish</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>         + <span class="jxr_string">"ps"</span> + <span class="jxr_string">"pus"</span>  <em class="jxr_comment">// Pushto</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         + <span class="jxr_string">"pt"</span> + <span class="jxr_string">"por"</span>  <em class="jxr_comment">// Portuguese</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         + <span class="jxr_string">"qu"</span> + <span class="jxr_string">"que"</span>  <em class="jxr_comment">// Quechua</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         + <span class="jxr_string">"rm"</span> + <span class="jxr_string">"roh"</span>  <em class="jxr_comment">// Raeto-Romance</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         + <span class="jxr_string">"rn"</span> + <span class="jxr_string">"run"</span>  <em class="jxr_comment">// Rundi</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         + <span class="jxr_string">"ro"</span> + <span class="jxr_string">"ron"</span>  <em class="jxr_comment">// Romanian</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         + <span class="jxr_string">"ru"</span> + <span class="jxr_string">"rus"</span>  <em class="jxr_comment">// Russian</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         + <span class="jxr_string">"rw"</span> + <span class="jxr_string">"kin"</span>  <em class="jxr_comment">// Kinyarwanda</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         + <span class="jxr_string">"sa"</span> + <span class="jxr_string">"san"</span>  <em class="jxr_comment">// Sanskrit</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         + <span class="jxr_string">"sc"</span> + <span class="jxr_string">"srd"</span>  <em class="jxr_comment">// Sardinian</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>         + <span class="jxr_string">"sd"</span> + <span class="jxr_string">"snd"</span>  <em class="jxr_comment">// Sindhi</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>         + <span class="jxr_string">"se"</span> + <span class="jxr_string">"sme"</span>  <em class="jxr_comment">// Northern Sami</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>         + <span class="jxr_string">"sg"</span> + <span class="jxr_string">"sag"</span>  <em class="jxr_comment">// Sango</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         + <span class="jxr_string">"si"</span> + <span class="jxr_string">"sin"</span>  <em class="jxr_comment">// Sinhalese</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         + <span class="jxr_string">"sk"</span> + <span class="jxr_string">"slk"</span>  <em class="jxr_comment">// Slovak</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         + <span class="jxr_string">"sl"</span> + <span class="jxr_string">"slv"</span>  <em class="jxr_comment">// Slovenian</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         + <span class="jxr_string">"sm"</span> + <span class="jxr_string">"smo"</span>  <em class="jxr_comment">// Samoan</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         + <span class="jxr_string">"sn"</span> + <span class="jxr_string">"sna"</span>  <em class="jxr_comment">// Shona</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         + <span class="jxr_string">"so"</span> + <span class="jxr_string">"som"</span>  <em class="jxr_comment">// Somali</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         + <span class="jxr_string">"sq"</span> + <span class="jxr_string">"sqi"</span>  <em class="jxr_comment">// Albanian</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         + <span class="jxr_string">"sr"</span> + <span class="jxr_string">"srp"</span>  <em class="jxr_comment">// Serbian</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         + <span class="jxr_string">"ss"</span> + <span class="jxr_string">"ssw"</span>  <em class="jxr_comment">// Swati</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         + <span class="jxr_string">"st"</span> + <span class="jxr_string">"sot"</span>  <em class="jxr_comment">// Southern Sotho</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         + <span class="jxr_string">"su"</span> + <span class="jxr_string">"sun"</span>  <em class="jxr_comment">// Sundanese</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         + <span class="jxr_string">"sv"</span> + <span class="jxr_string">"swe"</span>  <em class="jxr_comment">// Swedish</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         + <span class="jxr_string">"sw"</span> + <span class="jxr_string">"swa"</span>  <em class="jxr_comment">// Swahili</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         + <span class="jxr_string">"ta"</span> + <span class="jxr_string">"tam"</span>  <em class="jxr_comment">// Tamil</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         + <span class="jxr_string">"te"</span> + <span class="jxr_string">"tel"</span>  <em class="jxr_comment">// Telugu</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>         + <span class="jxr_string">"tg"</span> + <span class="jxr_string">"tgk"</span>  <em class="jxr_comment">// Tajik</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         + <span class="jxr_string">"th"</span> + <span class="jxr_string">"tha"</span>  <em class="jxr_comment">// Thai</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         + <span class="jxr_string">"ti"</span> + <span class="jxr_string">"tir"</span>  <em class="jxr_comment">// Tigrinya</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         + <span class="jxr_string">"tk"</span> + <span class="jxr_string">"tuk"</span>  <em class="jxr_comment">// Turkmen</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         + <span class="jxr_string">"tl"</span> + <span class="jxr_string">"tgl"</span>  <em class="jxr_comment">// Tagalog</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>         + <span class="jxr_string">"tn"</span> + <span class="jxr_string">"tsn"</span>  <em class="jxr_comment">// Tswana</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         + <span class="jxr_string">"to"</span> + <span class="jxr_string">"ton"</span>  <em class="jxr_comment">// Tonga</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         + <span class="jxr_string">"tr"</span> + <span class="jxr_string">"tur"</span>  <em class="jxr_comment">// Turkish</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         + <span class="jxr_string">"ts"</span> + <span class="jxr_string">"tso"</span>  <em class="jxr_comment">// Tsonga</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>         + <span class="jxr_string">"tt"</span> + <span class="jxr_string">"tat"</span>  <em class="jxr_comment">// Tatar</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>         + <span class="jxr_string">"tw"</span> + <span class="jxr_string">"twi"</span>  <em class="jxr_comment">// Twi</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         + <span class="jxr_string">"ty"</span> + <span class="jxr_string">"tah"</span>  <em class="jxr_comment">// Tahitian</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         + <span class="jxr_string">"ug"</span> + <span class="jxr_string">"uig"</span>  <em class="jxr_comment">// Uighur</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>         + <span class="jxr_string">"uk"</span> + <span class="jxr_string">"ukr"</span>  <em class="jxr_comment">// Ukrainian</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         + <span class="jxr_string">"ur"</span> + <span class="jxr_string">"urd"</span>  <em class="jxr_comment">// Urdu</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>         + <span class="jxr_string">"uz"</span> + <span class="jxr_string">"uzb"</span>  <em class="jxr_comment">// Uzbek</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         + <span class="jxr_string">"ve"</span> + <span class="jxr_string">"ven"</span>  <em class="jxr_comment">// Venda</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         + <span class="jxr_string">"vi"</span> + <span class="jxr_string">"vie"</span>  <em class="jxr_comment">// Vietnamese</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         + <span class="jxr_string">"vo"</span> + <span class="jxr_string">"vol"</span>  <em class="jxr_comment">// Volap?k</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         + <span class="jxr_string">"wa"</span> + <span class="jxr_string">"wln"</span>  <em class="jxr_comment">// Walloon</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         + <span class="jxr_string">"wo"</span> + <span class="jxr_string">"wol"</span>  <em class="jxr_comment">// Wolof</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         + <span class="jxr_string">"xh"</span> + <span class="jxr_string">"xho"</span>  <em class="jxr_comment">// Xhosa</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         + <span class="jxr_string">"yi"</span> + <span class="jxr_string">"yid"</span>  <em class="jxr_comment">// Yiddish</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         + <span class="jxr_string">"yo"</span> + <span class="jxr_string">"yor"</span>  <em class="jxr_comment">// Yoruba</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         + <span class="jxr_string">"za"</span> + <span class="jxr_string">"zha"</span>  <em class="jxr_comment">// Zhuang</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>         + <span class="jxr_string">"zh"</span> + <span class="jxr_string">"zho"</span>  <em class="jxr_comment">// Chinese</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         + <span class="jxr_string">"zu"</span> + <span class="jxr_string">"zul"</span>  <em class="jxr_comment">// Zulu</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         ;
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     * The 2- and 3-letter ISO 3166 country codes.</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../java/lang/String.html">String</a> isoCountryTable =
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>           <span class="jxr_string">"AD"</span> + <span class="jxr_string">"AND"</span>  <em class="jxr_comment">// Andorra, Principality of</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>         + <span class="jxr_string">"AE"</span> + <span class="jxr_string">"ARE"</span>  <em class="jxr_comment">// United Arab Emirates</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         + <span class="jxr_string">"AF"</span> + <span class="jxr_string">"AFG"</span>  <em class="jxr_comment">// Afghanistan</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         + <span class="jxr_string">"AG"</span> + <span class="jxr_string">"ATG"</span>  <em class="jxr_comment">// Antigua and Barbuda</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         + <span class="jxr_string">"AI"</span> + <span class="jxr_string">"AIA"</span>  <em class="jxr_comment">// Anguilla</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         + <span class="jxr_string">"AL"</span> + <span class="jxr_string">"ALB"</span>  <em class="jxr_comment">// Albania, People's Socialist Republic of</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         + <span class="jxr_string">"AM"</span> + <span class="jxr_string">"ARM"</span>  <em class="jxr_comment">// Armenia</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         + <span class="jxr_string">"AN"</span> + <span class="jxr_string">"ANT"</span>  <em class="jxr_comment">// Netherlands Antilles</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         + <span class="jxr_string">"AO"</span> + <span class="jxr_string">"AGO"</span>  <em class="jxr_comment">// Angola, Republic of</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         + <span class="jxr_string">"AQ"</span> + <span class="jxr_string">"ATA"</span>  <em class="jxr_comment">// Antarctica (the territory South of 60 deg S)</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         + <span class="jxr_string">"AR"</span> + <span class="jxr_string">"ARG"</span>  <em class="jxr_comment">// Argentina, Argentine Republic</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         + <span class="jxr_string">"AS"</span> + <span class="jxr_string">"ASM"</span>  <em class="jxr_comment">// American Samoa</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         + <span class="jxr_string">"AT"</span> + <span class="jxr_string">"AUT"</span>  <em class="jxr_comment">// Austria, Republic of</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         + <span class="jxr_string">"AU"</span> + <span class="jxr_string">"AUS"</span>  <em class="jxr_comment">// Australia, Commonwealth of</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         + <span class="jxr_string">"AW"</span> + <span class="jxr_string">"ABW"</span>  <em class="jxr_comment">// Aruba</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         + <span class="jxr_string">"AX"</span> + <span class="jxr_string">"ALA"</span>  <em class="jxr_comment">// \u00c5land Islands</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         + <span class="jxr_string">"AZ"</span> + <span class="jxr_string">"AZE"</span>  <em class="jxr_comment">// Azerbaijan, Republic of</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         + <span class="jxr_string">"BA"</span> + <span class="jxr_string">"BIH"</span>  <em class="jxr_comment">// Bosnia and Herzegovina</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         + <span class="jxr_string">"BB"</span> + <span class="jxr_string">"BRB"</span>  <em class="jxr_comment">// Barbados</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         + <span class="jxr_string">"BD"</span> + <span class="jxr_string">"BGD"</span>  <em class="jxr_comment">// Bangladesh, People's Republic of</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>         + <span class="jxr_string">"BE"</span> + <span class="jxr_string">"BEL"</span>  <em class="jxr_comment">// Belgium, Kingdom of</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         + <span class="jxr_string">"BF"</span> + <span class="jxr_string">"BFA"</span>  <em class="jxr_comment">// Burkina Faso</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         + <span class="jxr_string">"BG"</span> + <span class="jxr_string">"BGR"</span>  <em class="jxr_comment">// Bulgaria, People's Republic of</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         + <span class="jxr_string">"BH"</span> + <span class="jxr_string">"BHR"</span>  <em class="jxr_comment">// Bahrain, Kingdom of</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         + <span class="jxr_string">"BI"</span> + <span class="jxr_string">"BDI"</span>  <em class="jxr_comment">// Burundi, Republic of</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         + <span class="jxr_string">"BJ"</span> + <span class="jxr_string">"BEN"</span>  <em class="jxr_comment">// Benin, People's Republic of</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         + <span class="jxr_string">"BL"</span> + <span class="jxr_string">"BLM"</span>  <em class="jxr_comment">// Saint Barth\u00e9lemy</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         + <span class="jxr_string">"BM"</span> + <span class="jxr_string">"BMU"</span>  <em class="jxr_comment">// Bermuda</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         + <span class="jxr_string">"BN"</span> + <span class="jxr_string">"BRN"</span>  <em class="jxr_comment">// Brunei Darussalam</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         + <span class="jxr_string">"BO"</span> + <span class="jxr_string">"BOL"</span>  <em class="jxr_comment">// Bolivia, Republic of</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         + <span class="jxr_string">"BQ"</span> + <span class="jxr_string">"BES"</span>  <em class="jxr_comment">// Bonaire, Sint Eustatius and Saba</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         + <span class="jxr_string">"BR"</span> + <span class="jxr_string">"BRA"</span>  <em class="jxr_comment">// Brazil, Federative Republic of</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         + <span class="jxr_string">"BS"</span> + <span class="jxr_string">"BHS"</span>  <em class="jxr_comment">// Bahamas, Commonwealth of the</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         + <span class="jxr_string">"BT"</span> + <span class="jxr_string">"BTN"</span>  <em class="jxr_comment">// Bhutan, Kingdom of</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>         + <span class="jxr_string">"BV"</span> + <span class="jxr_string">"BVT"</span>  <em class="jxr_comment">// Bouvet Island (Bouvetoya)</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         + <span class="jxr_string">"BW"</span> + <span class="jxr_string">"BWA"</span>  <em class="jxr_comment">// Botswana, Republic of</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         + <span class="jxr_string">"BY"</span> + <span class="jxr_string">"BLR"</span>  <em class="jxr_comment">// Belarus</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         + <span class="jxr_string">"BZ"</span> + <span class="jxr_string">"BLZ"</span>  <em class="jxr_comment">// Belize</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         + <span class="jxr_string">"CA"</span> + <span class="jxr_string">"CAN"</span>  <em class="jxr_comment">// Canada</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         + <span class="jxr_string">"CC"</span> + <span class="jxr_string">"CCK"</span>  <em class="jxr_comment">// Cocos (Keeling) Islands</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>         + <span class="jxr_string">"CD"</span> + <span class="jxr_string">"COD"</span>  <em class="jxr_comment">// Congo, Democratic Republic of</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>         + <span class="jxr_string">"CF"</span> + <span class="jxr_string">"CAF"</span>  <em class="jxr_comment">// Central African Republic</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         + <span class="jxr_string">"CG"</span> + <span class="jxr_string">"COG"</span>  <em class="jxr_comment">// Congo, People's Republic of</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         + <span class="jxr_string">"CH"</span> + <span class="jxr_string">"CHE"</span>  <em class="jxr_comment">// Switzerland, Swiss Confederation</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         + <span class="jxr_string">"CI"</span> + <span class="jxr_string">"CIV"</span>  <em class="jxr_comment">// Cote D'Ivoire, Ivory Coast, Republic of the</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         + <span class="jxr_string">"CK"</span> + <span class="jxr_string">"COK"</span>  <em class="jxr_comment">// Cook Islands</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         + <span class="jxr_string">"CL"</span> + <span class="jxr_string">"CHL"</span>  <em class="jxr_comment">// Chile, Republic of</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         + <span class="jxr_string">"CM"</span> + <span class="jxr_string">"CMR"</span>  <em class="jxr_comment">// Cameroon, United Republic of</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>         + <span class="jxr_string">"CN"</span> + <span class="jxr_string">"CHN"</span>  <em class="jxr_comment">// China, People's Republic of</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         + <span class="jxr_string">"CO"</span> + <span class="jxr_string">"COL"</span>  <em class="jxr_comment">// Colombia, Republic of</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         + <span class="jxr_string">"CR"</span> + <span class="jxr_string">"CRI"</span>  <em class="jxr_comment">// Costa Rica, Republic of</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_comment">//      + "CS" + "SCG"  // Serbia and Montenegro</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         + <span class="jxr_string">"CU"</span> + <span class="jxr_string">"CUB"</span>  <em class="jxr_comment">// Cuba, Republic of</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>         + <span class="jxr_string">"CV"</span> + <span class="jxr_string">"CPV"</span>  <em class="jxr_comment">// Cape Verde, Republic of</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         + <span class="jxr_string">"CW"</span> + <span class="jxr_string">"CUW"</span>  <em class="jxr_comment">// Cura\u00e7ao</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         + <span class="jxr_string">"CX"</span> + <span class="jxr_string">"CXR"</span>  <em class="jxr_comment">// Christmas Island</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         + <span class="jxr_string">"CY"</span> + <span class="jxr_string">"CYP"</span>  <em class="jxr_comment">// Cyprus, Republic of</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         + <span class="jxr_string">"CZ"</span> + <span class="jxr_string">"CZE"</span>  <em class="jxr_comment">// Czech Republic</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         + <span class="jxr_string">"DE"</span> + <span class="jxr_string">"DEU"</span>  <em class="jxr_comment">// Germany</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         + <span class="jxr_string">"DJ"</span> + <span class="jxr_string">"DJI"</span>  <em class="jxr_comment">// Djibouti, Republic of</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         + <span class="jxr_string">"DK"</span> + <span class="jxr_string">"DNK"</span>  <em class="jxr_comment">// Denmark, Kingdom of</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>         + <span class="jxr_string">"DM"</span> + <span class="jxr_string">"DMA"</span>  <em class="jxr_comment">// Dominica, Commonwealth of</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         + <span class="jxr_string">"DO"</span> + <span class="jxr_string">"DOM"</span>  <em class="jxr_comment">// Dominican Republic</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         + <span class="jxr_string">"DZ"</span> + <span class="jxr_string">"DZA"</span>  <em class="jxr_comment">// Algeria, People's Democratic Republic of</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         + <span class="jxr_string">"EC"</span> + <span class="jxr_string">"ECU"</span>  <em class="jxr_comment">// Ecuador, Republic of</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         + <span class="jxr_string">"EE"</span> + <span class="jxr_string">"EST"</span>  <em class="jxr_comment">// Estonia</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         + <span class="jxr_string">"EG"</span> + <span class="jxr_string">"EGY"</span>  <em class="jxr_comment">// Egypt, Arab Republic of</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         + <span class="jxr_string">"EH"</span> + <span class="jxr_string">"ESH"</span>  <em class="jxr_comment">// Western Sahara</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         + <span class="jxr_string">"ER"</span> + <span class="jxr_string">"ERI"</span>  <em class="jxr_comment">// Eritrea</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>         + <span class="jxr_string">"ES"</span> + <span class="jxr_string">"ESP"</span>  <em class="jxr_comment">// Spain, Spanish State</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         + <span class="jxr_string">"ET"</span> + <span class="jxr_string">"ETH"</span>  <em class="jxr_comment">// Ethiopia</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>         + <span class="jxr_string">"FI"</span> + <span class="jxr_string">"FIN"</span>  <em class="jxr_comment">// Finland, Republic of</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         + <span class="jxr_string">"FJ"</span> + <span class="jxr_string">"FJI"</span>  <em class="jxr_comment">// Fiji, Republic of the Fiji Islands</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         + <span class="jxr_string">"FK"</span> + <span class="jxr_string">"FLK"</span>  <em class="jxr_comment">// Falkland Islands (Malvinas)</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         + <span class="jxr_string">"FM"</span> + <span class="jxr_string">"FSM"</span>  <em class="jxr_comment">// Micronesia, Federated States of</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         + <span class="jxr_string">"FO"</span> + <span class="jxr_string">"FRO"</span>  <em class="jxr_comment">// Faeroe Islands</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         + <span class="jxr_string">"FR"</span> + <span class="jxr_string">"FRA"</span>  <em class="jxr_comment">// France, French Republic</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>         + <span class="jxr_string">"GA"</span> + <span class="jxr_string">"GAB"</span>  <em class="jxr_comment">// Gabon, Gabonese Republic</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         + <span class="jxr_string">"GB"</span> + <span class="jxr_string">"GBR"</span>  <em class="jxr_comment">// United Kingdom of Great Britain &amp; N. Ireland</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         + <span class="jxr_string">"GD"</span> + <span class="jxr_string">"GRD"</span>  <em class="jxr_comment">// Grenada</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>         + <span class="jxr_string">"GE"</span> + <span class="jxr_string">"GEO"</span>  <em class="jxr_comment">// Georgia</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>         + <span class="jxr_string">"GF"</span> + <span class="jxr_string">"GUF"</span>  <em class="jxr_comment">// French Guiana</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         + <span class="jxr_string">"GG"</span> + <span class="jxr_string">"GGY"</span>  <em class="jxr_comment">// Guernsey</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         + <span class="jxr_string">"GH"</span> + <span class="jxr_string">"GHA"</span>  <em class="jxr_comment">// Ghana, Republic of</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         + <span class="jxr_string">"GI"</span> + <span class="jxr_string">"GIB"</span>  <em class="jxr_comment">// Gibraltar</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         + <span class="jxr_string">"GL"</span> + <span class="jxr_string">"GRL"</span>  <em class="jxr_comment">// Greenland</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         + <span class="jxr_string">"GM"</span> + <span class="jxr_string">"GMB"</span>  <em class="jxr_comment">// Gambia, Republic of the</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>         + <span class="jxr_string">"GN"</span> + <span class="jxr_string">"GIN"</span>  <em class="jxr_comment">// Guinea, Revolutionary People's Rep'c of</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         + <span class="jxr_string">"GP"</span> + <span class="jxr_string">"GLP"</span>  <em class="jxr_comment">// Guadaloupe</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         + <span class="jxr_string">"GQ"</span> + <span class="jxr_string">"GNQ"</span>  <em class="jxr_comment">// Equatorial Guinea, Republic of</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         + <span class="jxr_string">"GR"</span> + <span class="jxr_string">"GRC"</span>  <em class="jxr_comment">// Greece, Hellenic Republic</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>         + <span class="jxr_string">"GS"</span> + <span class="jxr_string">"SGS"</span>  <em class="jxr_comment">// South Georgia and the South Sandwich Islands</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         + <span class="jxr_string">"GT"</span> + <span class="jxr_string">"GTM"</span>  <em class="jxr_comment">// Guatemala, Republic of</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>         + <span class="jxr_string">"GU"</span> + <span class="jxr_string">"GUM"</span>  <em class="jxr_comment">// Guam</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         + <span class="jxr_string">"GW"</span> + <span class="jxr_string">"GNB"</span>  <em class="jxr_comment">// Guinea-Bissau, Republic of</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         + <span class="jxr_string">"GY"</span> + <span class="jxr_string">"GUY"</span>  <em class="jxr_comment">// Guyana, Republic of</em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         + <span class="jxr_string">"HK"</span> + <span class="jxr_string">"HKG"</span>  <em class="jxr_comment">// Hong Kong, Special Administrative Region of China</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>         + <span class="jxr_string">"HM"</span> + <span class="jxr_string">"HMD"</span>  <em class="jxr_comment">// Heard and McDonald Islands</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>         + <span class="jxr_string">"HN"</span> + <span class="jxr_string">"HND"</span>  <em class="jxr_comment">// Honduras, Republic of</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>         + <span class="jxr_string">"HR"</span> + <span class="jxr_string">"HRV"</span>  <em class="jxr_comment">// Hrvatska (Croatia)</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         + <span class="jxr_string">"HT"</span> + <span class="jxr_string">"HTI"</span>  <em class="jxr_comment">// Haiti, Republic of</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         + <span class="jxr_string">"HU"</span> + <span class="jxr_string">"HUN"</span>  <em class="jxr_comment">// Hungary, Hungarian People's Republic</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>         + <span class="jxr_string">"ID"</span> + <span class="jxr_string">"IDN"</span>  <em class="jxr_comment">// Indonesia, Republic of</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         + <span class="jxr_string">"IE"</span> + <span class="jxr_string">"IRL"</span>  <em class="jxr_comment">// Ireland</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         + <span class="jxr_string">"IL"</span> + <span class="jxr_string">"ISR"</span>  <em class="jxr_comment">// Israel, State of</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         + <span class="jxr_string">"IM"</span> + <span class="jxr_string">"IMN"</span>  <em class="jxr_comment">// Isle of Man</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         + <span class="jxr_string">"IN"</span> + <span class="jxr_string">"IND"</span>  <em class="jxr_comment">// India, Republic of</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         + <span class="jxr_string">"IO"</span> + <span class="jxr_string">"IOT"</span>  <em class="jxr_comment">// British Indian Ocean Territory (Chagos Archipelago)</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         + <span class="jxr_string">"IQ"</span> + <span class="jxr_string">"IRQ"</span>  <em class="jxr_comment">// Iraq, Republic of</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>         + <span class="jxr_string">"IR"</span> + <span class="jxr_string">"IRN"</span>  <em class="jxr_comment">// Iran, Islamic Republic of</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>         + <span class="jxr_string">"IS"</span> + <span class="jxr_string">"ISL"</span>  <em class="jxr_comment">// Iceland, Republic of</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         + <span class="jxr_string">"IT"</span> + <span class="jxr_string">"ITA"</span>  <em class="jxr_comment">// Italy, Italian Republic</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>         + <span class="jxr_string">"JE"</span> + <span class="jxr_string">"JEY"</span>  <em class="jxr_comment">// Jersey</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>         + <span class="jxr_string">"JM"</span> + <span class="jxr_string">"JAM"</span>  <em class="jxr_comment">// Jamaica</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>         + <span class="jxr_string">"JO"</span> + <span class="jxr_string">"JOR"</span>  <em class="jxr_comment">// Jordan, Hashemite Kingdom of</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         + <span class="jxr_string">"JP"</span> + <span class="jxr_string">"JPN"</span>  <em class="jxr_comment">// Japan</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>         + <span class="jxr_string">"KE"</span> + <span class="jxr_string">"KEN"</span>  <em class="jxr_comment">// Kenya, Republic of</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         + <span class="jxr_string">"KG"</span> + <span class="jxr_string">"KGZ"</span>  <em class="jxr_comment">// Kyrgyz Republic</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>         + <span class="jxr_string">"KH"</span> + <span class="jxr_string">"KHM"</span>  <em class="jxr_comment">// Cambodia, Kingdom of</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>         + <span class="jxr_string">"KI"</span> + <span class="jxr_string">"KIR"</span>  <em class="jxr_comment">// Kiribati, Republic of</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         + <span class="jxr_string">"KM"</span> + <span class="jxr_string">"COM"</span>  <em class="jxr_comment">// Comoros, Union of the</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         + <span class="jxr_string">"KN"</span> + <span class="jxr_string">"KNA"</span>  <em class="jxr_comment">// St. Kitts and Nevis</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         + <span class="jxr_string">"KP"</span> + <span class="jxr_string">"PRK"</span>  <em class="jxr_comment">// Korea, Democratic People's Republic of</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         + <span class="jxr_string">"KR"</span> + <span class="jxr_string">"KOR"</span>  <em class="jxr_comment">// Korea, Republic of</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         + <span class="jxr_string">"KW"</span> + <span class="jxr_string">"KWT"</span>  <em class="jxr_comment">// Kuwait, State of</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         + <span class="jxr_string">"KY"</span> + <span class="jxr_string">"CYM"</span>  <em class="jxr_comment">// Cayman Islands</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         + <span class="jxr_string">"KZ"</span> + <span class="jxr_string">"KAZ"</span>  <em class="jxr_comment">// Kazakhstan, Republic of</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         + <span class="jxr_string">"LA"</span> + <span class="jxr_string">"LAO"</span>  <em class="jxr_comment">// Lao People's Democratic Republic</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         + <span class="jxr_string">"LB"</span> + <span class="jxr_string">"LBN"</span>  <em class="jxr_comment">// Lebanon, Lebanese Republic</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         + <span class="jxr_string">"LC"</span> + <span class="jxr_string">"LCA"</span>  <em class="jxr_comment">// St. Lucia</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         + <span class="jxr_string">"LI"</span> + <span class="jxr_string">"LIE"</span>  <em class="jxr_comment">// Liechtenstein, Principality of</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>         + <span class="jxr_string">"LK"</span> + <span class="jxr_string">"LKA"</span>  <em class="jxr_comment">// Sri Lanka, Democratic Socialist Republic of</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>         + <span class="jxr_string">"LR"</span> + <span class="jxr_string">"LBR"</span>  <em class="jxr_comment">// Liberia, Republic of</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>         + <span class="jxr_string">"LS"</span> + <span class="jxr_string">"LSO"</span>  <em class="jxr_comment">// Lesotho, Kingdom of</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         + <span class="jxr_string">"LT"</span> + <span class="jxr_string">"LTU"</span>  <em class="jxr_comment">// Lithuania</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         + <span class="jxr_string">"LU"</span> + <span class="jxr_string">"LUX"</span>  <em class="jxr_comment">// Luxembourg, Grand Duchy of</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>         + <span class="jxr_string">"LV"</span> + <span class="jxr_string">"LVA"</span>  <em class="jxr_comment">// Latvia</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         + <span class="jxr_string">"LY"</span> + <span class="jxr_string">"LBY"</span>  <em class="jxr_comment">// Libyan Arab Jamahiriya</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         + <span class="jxr_string">"MA"</span> + <span class="jxr_string">"MAR"</span>  <em class="jxr_comment">// Morocco, Kingdom of</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>         + <span class="jxr_string">"MC"</span> + <span class="jxr_string">"MCO"</span>  <em class="jxr_comment">// Monaco, Principality of</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>         + <span class="jxr_string">"MD"</span> + <span class="jxr_string">"MDA"</span>  <em class="jxr_comment">// Moldova, Republic of</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>         + <span class="jxr_string">"ME"</span> + <span class="jxr_string">"MNE"</span>  <em class="jxr_comment">// Montenegro, Republic of</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>         + <span class="jxr_string">"MF"</span> + <span class="jxr_string">"MAF"</span>  <em class="jxr_comment">// Saint Martin</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>         + <span class="jxr_string">"MG"</span> + <span class="jxr_string">"MDG"</span>  <em class="jxr_comment">// Madagascar, Republic of</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>         + <span class="jxr_string">"MH"</span> + <span class="jxr_string">"MHL"</span>  <em class="jxr_comment">// Marshall Islands</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         + <span class="jxr_string">"MK"</span> + <span class="jxr_string">"MKD"</span>  <em class="jxr_comment">// Macedonia, the former Yugoslav Republic of</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         + <span class="jxr_string">"ML"</span> + <span class="jxr_string">"MLI"</span>  <em class="jxr_comment">// Mali, Republic of</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         + <span class="jxr_string">"MM"</span> + <span class="jxr_string">"MMR"</span>  <em class="jxr_comment">// Myanmar</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         + <span class="jxr_string">"MN"</span> + <span class="jxr_string">"MNG"</span>  <em class="jxr_comment">// Mongolia, Mongolian People's Republic</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         + <span class="jxr_string">"MO"</span> + <span class="jxr_string">"MAC"</span>  <em class="jxr_comment">// Macao, Special Administrative Region of China</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         + <span class="jxr_string">"MP"</span> + <span class="jxr_string">"MNP"</span>  <em class="jxr_comment">// Northern Mariana Islands</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         + <span class="jxr_string">"MQ"</span> + <span class="jxr_string">"MTQ"</span>  <em class="jxr_comment">// Martinique</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         + <span class="jxr_string">"MR"</span> + <span class="jxr_string">"MRT"</span>  <em class="jxr_comment">// Mauritania, Islamic Republic of</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>         + <span class="jxr_string">"MS"</span> + <span class="jxr_string">"MSR"</span>  <em class="jxr_comment">// Montserrat</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         + <span class="jxr_string">"MT"</span> + <span class="jxr_string">"MLT"</span>  <em class="jxr_comment">// Malta, Republic of</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>         + <span class="jxr_string">"MU"</span> + <span class="jxr_string">"MUS"</span>  <em class="jxr_comment">// Mauritius</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         + <span class="jxr_string">"MV"</span> + <span class="jxr_string">"MDV"</span>  <em class="jxr_comment">// Maldives, Republic of</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         + <span class="jxr_string">"MW"</span> + <span class="jxr_string">"MWI"</span>  <em class="jxr_comment">// Malawi, Republic of</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>         + <span class="jxr_string">"MX"</span> + <span class="jxr_string">"MEX"</span>  <em class="jxr_comment">// Mexico, United Mexican States</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         + <span class="jxr_string">"MY"</span> + <span class="jxr_string">"MYS"</span>  <em class="jxr_comment">// Malaysia</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         + <span class="jxr_string">"MZ"</span> + <span class="jxr_string">"MOZ"</span>  <em class="jxr_comment">// Mozambique, People's Republic of</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>         + <span class="jxr_string">"NA"</span> + <span class="jxr_string">"NAM"</span>  <em class="jxr_comment">// Namibia</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         + <span class="jxr_string">"NC"</span> + <span class="jxr_string">"NCL"</span>  <em class="jxr_comment">// New Caledonia</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>         + <span class="jxr_string">"NE"</span> + <span class="jxr_string">"NER"</span>  <em class="jxr_comment">// Niger, Republic of the</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         + <span class="jxr_string">"NF"</span> + <span class="jxr_string">"NFK"</span>  <em class="jxr_comment">// Norfolk Island</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         + <span class="jxr_string">"NG"</span> + <span class="jxr_string">"NGA"</span>  <em class="jxr_comment">// Nigeria, Federal Republic of</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>         + <span class="jxr_string">"NI"</span> + <span class="jxr_string">"NIC"</span>  <em class="jxr_comment">// Nicaragua, Republic of</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         + <span class="jxr_string">"NL"</span> + <span class="jxr_string">"NLD"</span>  <em class="jxr_comment">// Netherlands, Kingdom of the</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         + <span class="jxr_string">"NO"</span> + <span class="jxr_string">"NOR"</span>  <em class="jxr_comment">// Norway, Kingdom of</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         + <span class="jxr_string">"NP"</span> + <span class="jxr_string">"NPL"</span>  <em class="jxr_comment">// Nepal, Kingdom of</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         + <span class="jxr_string">"NR"</span> + <span class="jxr_string">"NRU"</span>  <em class="jxr_comment">// Nauru, Republic of</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         + <span class="jxr_string">"NU"</span> + <span class="jxr_string">"NIU"</span>  <em class="jxr_comment">// Niue, Republic of</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         + <span class="jxr_string">"NZ"</span> + <span class="jxr_string">"NZL"</span>  <em class="jxr_comment">// New Zealand</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         + <span class="jxr_string">"OM"</span> + <span class="jxr_string">"OMN"</span>  <em class="jxr_comment">// Oman, Sultanate of</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         + <span class="jxr_string">"PA"</span> + <span class="jxr_string">"PAN"</span>  <em class="jxr_comment">// Panama, Republic of</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         + <span class="jxr_string">"PE"</span> + <span class="jxr_string">"PER"</span>  <em class="jxr_comment">// Peru, Republic of</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>         + <span class="jxr_string">"PF"</span> + <span class="jxr_string">"PYF"</span>  <em class="jxr_comment">// French Polynesia</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         + <span class="jxr_string">"PG"</span> + <span class="jxr_string">"PNG"</span>  <em class="jxr_comment">// Papua New Guinea</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         + <span class="jxr_string">"PH"</span> + <span class="jxr_string">"PHL"</span>  <em class="jxr_comment">// Philippines, Republic of the</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         + <span class="jxr_string">"PK"</span> + <span class="jxr_string">"PAK"</span>  <em class="jxr_comment">// Pakistan, Islamic Republic of</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         + <span class="jxr_string">"PL"</span> + <span class="jxr_string">"POL"</span>  <em class="jxr_comment">// Poland, Republic of Poland</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         + <span class="jxr_string">"PM"</span> + <span class="jxr_string">"SPM"</span>  <em class="jxr_comment">// St. Pierre and Miquelon</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>         + <span class="jxr_string">"PN"</span> + <span class="jxr_string">"PCN"</span>  <em class="jxr_comment">// Pitcairn Island</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>         + <span class="jxr_string">"PR"</span> + <span class="jxr_string">"PRI"</span>  <em class="jxr_comment">// Puerto Rico</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         + <span class="jxr_string">"PS"</span> + <span class="jxr_string">"PSE"</span>  <em class="jxr_comment">// Palestinian Territory, Occupied</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         + <span class="jxr_string">"PT"</span> + <span class="jxr_string">"PRT"</span>  <em class="jxr_comment">// Portugal, Portuguese Republic</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         + <span class="jxr_string">"PW"</span> + <span class="jxr_string">"PLW"</span>  <em class="jxr_comment">// Palau</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         + <span class="jxr_string">"PY"</span> + <span class="jxr_string">"PRY"</span>  <em class="jxr_comment">// Paraguay, Republic of</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         + <span class="jxr_string">"QA"</span> + <span class="jxr_string">"QAT"</span>  <em class="jxr_comment">// Qatar, State of</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         + <span class="jxr_string">"RE"</span> + <span class="jxr_string">"REU"</span>  <em class="jxr_comment">// Reunion</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         + <span class="jxr_string">"RO"</span> + <span class="jxr_string">"ROU"</span>  <em class="jxr_comment">// Romania, Socialist Republic of</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>         + <span class="jxr_string">"RS"</span> + <span class="jxr_string">"SRB"</span>  <em class="jxr_comment">// Serbia, Republic of</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>         + <span class="jxr_string">"RU"</span> + <span class="jxr_string">"RUS"</span>  <em class="jxr_comment">// Russian Federation</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         + <span class="jxr_string">"RW"</span> + <span class="jxr_string">"RWA"</span>  <em class="jxr_comment">// Rwanda, Rwandese Republic</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>         + <span class="jxr_string">"SA"</span> + <span class="jxr_string">"SAU"</span>  <em class="jxr_comment">// Saudi Arabia, Kingdom of</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         + <span class="jxr_string">"SB"</span> + <span class="jxr_string">"SLB"</span>  <em class="jxr_comment">// Solomon Islands</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>         + <span class="jxr_string">"SC"</span> + <span class="jxr_string">"SYC"</span>  <em class="jxr_comment">// Seychelles, Republic of</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>         + <span class="jxr_string">"SD"</span> + <span class="jxr_string">"SDN"</span>  <em class="jxr_comment">// Sudan, Democratic Republic of the</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>         + <span class="jxr_string">"SE"</span> + <span class="jxr_string">"SWE"</span>  <em class="jxr_comment">// Sweden, Kingdom of</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         + <span class="jxr_string">"SG"</span> + <span class="jxr_string">"SGP"</span>  <em class="jxr_comment">// Singapore, Republic of</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         + <span class="jxr_string">"SH"</span> + <span class="jxr_string">"SHN"</span>  <em class="jxr_comment">// St. Helena</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         + <span class="jxr_string">"SI"</span> + <span class="jxr_string">"SVN"</span>  <em class="jxr_comment">// Slovenia</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         + <span class="jxr_string">"SJ"</span> + <span class="jxr_string">"SJM"</span>  <em class="jxr_comment">// Svalbard &amp; Jan Mayen Islands</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>         + <span class="jxr_string">"SK"</span> + <span class="jxr_string">"SVK"</span>  <em class="jxr_comment">// Slovakia (Slovak Republic)</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         + <span class="jxr_string">"SL"</span> + <span class="jxr_string">"SLE"</span>  <em class="jxr_comment">// Sierra Leone, Republic of</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         + <span class="jxr_string">"SM"</span> + <span class="jxr_string">"SMR"</span>  <em class="jxr_comment">// San Marino, Republic of</em>
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         + <span class="jxr_string">"SN"</span> + <span class="jxr_string">"SEN"</span>  <em class="jxr_comment">// Senegal, Republic of</em>
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>         + <span class="jxr_string">"SO"</span> + <span class="jxr_string">"SOM"</span>  <em class="jxr_comment">// Somalia, Somali Republic</em>
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         + <span class="jxr_string">"SR"</span> + <span class="jxr_string">"SUR"</span>  <em class="jxr_comment">// Suriname, Republic of</em>
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         + <span class="jxr_string">"SS"</span> + <span class="jxr_string">"SSD"</span>  <em class="jxr_comment">// South Sudan</em>
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         + <span class="jxr_string">"ST"</span> + <span class="jxr_string">"STP"</span>  <em class="jxr_comment">// Sao Tome and Principe, Democratic Republic of</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>         + <span class="jxr_string">"SV"</span> + <span class="jxr_string">"SLV"</span>  <em class="jxr_comment">// El Salvador, Republic of</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         + <span class="jxr_string">"SX"</span> + <span class="jxr_string">"SXM"</span>  <em class="jxr_comment">// Sint Maarten (Dutch part)</em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>         + <span class="jxr_string">"SY"</span> + <span class="jxr_string">"SYR"</span>  <em class="jxr_comment">// Syrian Arab Republic</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         + <span class="jxr_string">"SZ"</span> + <span class="jxr_string">"SWZ"</span>  <em class="jxr_comment">// Swaziland, Kingdom of</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         + <span class="jxr_string">"TC"</span> + <span class="jxr_string">"TCA"</span>  <em class="jxr_comment">// Turks and Caicos Islands</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         + <span class="jxr_string">"TD"</span> + <span class="jxr_string">"TCD"</span>  <em class="jxr_comment">// Chad, Republic of</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>         + <span class="jxr_string">"TF"</span> + <span class="jxr_string">"ATF"</span>  <em class="jxr_comment">// French Southern Territories</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         + <span class="jxr_string">"TG"</span> + <span class="jxr_string">"TGO"</span>  <em class="jxr_comment">// Togo, Togolese Republic</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         + <span class="jxr_string">"TH"</span> + <span class="jxr_string">"THA"</span>  <em class="jxr_comment">// Thailand, Kingdom of</em>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         + <span class="jxr_string">"TJ"</span> + <span class="jxr_string">"TJK"</span>  <em class="jxr_comment">// Tajikistan</em>
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         + <span class="jxr_string">"TK"</span> + <span class="jxr_string">"TKL"</span>  <em class="jxr_comment">// Tokelau (Tokelau Islands)</em>
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         + <span class="jxr_string">"TL"</span> + <span class="jxr_string">"TLS"</span>  <em class="jxr_comment">// Timor-Leste, Democratic Republic of</em>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         + <span class="jxr_string">"TM"</span> + <span class="jxr_string">"TKM"</span>  <em class="jxr_comment">// Turkmenistan</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         + <span class="jxr_string">"TN"</span> + <span class="jxr_string">"TUN"</span>  <em class="jxr_comment">// Tunisia, Republic of</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>         + <span class="jxr_string">"TO"</span> + <span class="jxr_string">"TON"</span>  <em class="jxr_comment">// Tonga, Kingdom of</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>         + <span class="jxr_string">"TR"</span> + <span class="jxr_string">"TUR"</span>  <em class="jxr_comment">// Turkey, Republic of</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         + <span class="jxr_string">"TT"</span> + <span class="jxr_string">"TTO"</span>  <em class="jxr_comment">// Trinidad and Tobago, Republic of</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         + <span class="jxr_string">"TV"</span> + <span class="jxr_string">"TUV"</span>  <em class="jxr_comment">// Tuvalu</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         + <span class="jxr_string">"TW"</span> + <span class="jxr_string">"TWN"</span>  <em class="jxr_comment">// Taiwan, Province of China</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         + <span class="jxr_string">"TZ"</span> + <span class="jxr_string">"TZA"</span>  <em class="jxr_comment">// Tanzania, United Republic of</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         + <span class="jxr_string">"UA"</span> + <span class="jxr_string">"UKR"</span>  <em class="jxr_comment">// Ukraine</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         + <span class="jxr_string">"UG"</span> + <span class="jxr_string">"UGA"</span>  <em class="jxr_comment">// Uganda, Republic of</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         + <span class="jxr_string">"UM"</span> + <span class="jxr_string">"UMI"</span>  <em class="jxr_comment">// United States Minor Outlying Islands</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         + <span class="jxr_string">"US"</span> + <span class="jxr_string">"USA"</span>  <em class="jxr_comment">// United States of America</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         + <span class="jxr_string">"UY"</span> + <span class="jxr_string">"URY"</span>  <em class="jxr_comment">// Uruguay, Eastern Republic of</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         + <span class="jxr_string">"UZ"</span> + <span class="jxr_string">"UZB"</span>  <em class="jxr_comment">// Uzbekistan</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>         + <span class="jxr_string">"VA"</span> + <span class="jxr_string">"VAT"</span>  <em class="jxr_comment">// Holy See (Vatican City State)</em>
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         + <span class="jxr_string">"VC"</span> + <span class="jxr_string">"VCT"</span>  <em class="jxr_comment">// St. Vincent and the Grenadines</em>
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         + <span class="jxr_string">"VE"</span> + <span class="jxr_string">"VEN"</span>  <em class="jxr_comment">// Venezuela, Bolivarian Republic of</em>
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         + <span class="jxr_string">"VG"</span> + <span class="jxr_string">"VGB"</span>  <em class="jxr_comment">// British Virgin Islands</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         + <span class="jxr_string">"VI"</span> + <span class="jxr_string">"VIR"</span>  <em class="jxr_comment">// US Virgin Islands</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         + <span class="jxr_string">"VN"</span> + <span class="jxr_string">"VNM"</span>  <em class="jxr_comment">// Viet Nam, Socialist Republic of</em>
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         + <span class="jxr_string">"VU"</span> + <span class="jxr_string">"VUT"</span>  <em class="jxr_comment">// Vanuatu</em>
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         + <span class="jxr_string">"WF"</span> + <span class="jxr_string">"WLF"</span>  <em class="jxr_comment">// Wallis and Futuna Islands</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         + <span class="jxr_string">"WS"</span> + <span class="jxr_string">"WSM"</span>  <em class="jxr_comment">// Samoa, Independent State of</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         + <span class="jxr_string">"YE"</span> + <span class="jxr_string">"YEM"</span>  <em class="jxr_comment">// Yemen</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         + <span class="jxr_string">"YT"</span> + <span class="jxr_string">"MYT"</span>  <em class="jxr_comment">// Mayotte</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         + <span class="jxr_string">"ZA"</span> + <span class="jxr_string">"ZAF"</span>  <em class="jxr_comment">// South Africa, Republic of</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         + <span class="jxr_string">"ZM"</span> + <span class="jxr_string">"ZMB"</span>  <em class="jxr_comment">// Zambia, Republic of</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         + <span class="jxr_string">"ZW"</span> + <span class="jxr_string">"ZWE"</span>  <em class="jxr_comment">// Zimbabwe</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         ;
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     <strong class="jxr_keyword">private</strong> <a href="../../java/util/LocaleISOData.html">LocaleISOData</a>() {
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>     }
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

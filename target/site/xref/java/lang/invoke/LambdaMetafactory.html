@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>LambdaMetafactory xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/java/lang/invoke/LambdaMetafactory.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> java.lang.invoke;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Methods to facilitate the creation of simple "function objects" that</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * implement one or more interfaces by delegation to a provided {@link MethodHandle},</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * possibly after type adaptation and partial evaluation of arguments.  These</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * methods are typically used as &lt;em&gt;bootstrap methods&lt;/em&gt; for {@code invokedynamic}</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * call sites, to support the &lt;em&gt;lambda expression&lt;/em&gt; and &lt;em&gt;method</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * reference expression&lt;/em&gt; features of the Java Programming Language.</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Indirect access to the behavior specified by the provided {@code MethodHandle}</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * proceeds in order through three phases:</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Linkage&lt;/em&gt; occurs when the methods in this class are invoked.</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> *     They take as arguments an interface to be implemented (typically a</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> *     &lt;em&gt;functional interface&lt;/em&gt;, one with a single abstract method), a</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> *     name and signature of a method from that interface to be implemented, a</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> *     method handle describing the desired implementation behavior</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> *     for that method, and possibly other additional metadata, and produce a</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> *     {@link CallSite} whose target can be used to create suitable function</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> *     objects.  Linkage may involve dynamically loading a new class that</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *     implements the target interface. The {@code CallSite} can be considered a</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> *     "factory" for function objects and so these linkage methods are referred</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> *     to as "metafactories".&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Capture&lt;/em&gt; occurs when the {@code CallSite}'s target is</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> *     invoked, typically through an {@code invokedynamic} call site,</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> *     producing a function object.  This may occur many times for</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> *     a single factory {@code CallSite}.  Capture may involve allocation of a</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> *     new function object, or may return an existing function object.  The</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> *     behavior {@code MethodHandle} may have additional parameters beyond those</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *     of the specified interface method; these are referred to as &lt;em&gt;captured</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> *     parameters&lt;/em&gt;, which must be provided as arguments to the</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> *     {@code CallSite} target, and which may be early-bound to the behavior</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> *     {@code MethodHandle}.  The number of captured parameters and their types</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> *     are determined during linkage.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Invocation&lt;/em&gt; occurs when an implemented interface method</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> *     is invoked on a function object.  This may occur many times for a single</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> *     function object.  The method referenced by the behavior {@code MethodHandle}</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> *     is invoked with the captured arguments and any additional arguments</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> *     provided on invocation, as if by {@link MethodHandle#invoke(Object...)}.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;It is sometimes useful to restrict the set of inputs or results permitted</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * at invocation.  For example, when the generic interface {@code Predicate&lt;T&gt;}</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * is parameterized as {@code Predicate&lt;String&gt;}, the input must be a</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * {@code String}, even though the method to implement allows any {@code Object}.</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * At linkage time, an additional {@link MethodType} parameter describes the</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> * "instantiated" method type; on invocation, the arguments and eventual result</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * are checked against this {@code MethodType}.</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;This class provides two forms of linkage methods: a standard version</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> * ({@link #metafactory(MethodHandles.Lookup, String, MethodType, MethodType, MethodHandle, MethodType)})</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> * using an optimized protocol, and an alternate version</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * {@link #altMetafactory(MethodHandles.Lookup, String, MethodType, Object...)}).</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * The alternate version is a generalization of the standard version, providing</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * additional control over the behavior of the generated function objects via</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> * flags and additional arguments.  The alternate version adds the ability to</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> * manage the following attributes of function objects:</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Bridging.&lt;/em&gt;  It is sometimes useful to implement multiple</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> *     variations of the method signature, involving argument or return type</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> *     adaptation.  This occurs when multiple distinct VM signatures for a method</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> *     are logically considered to be the same method by the language.  The</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> *     flag {@code FLAG_BRIDGES} indicates that a list of additional</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> *     {@code MethodType}s will be provided, each of which will be implemented</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> *     by the resulting function object.  These methods will share the same</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> *     name and instantiated type.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Multiple interfaces.&lt;/em&gt;  If needed, more than one interface</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> *     can be implemented by the function object.  (These additional interfaces</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> *     are typically marker interfaces with no methods.)  The flag {@code FLAG_MARKERS}</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> *     indicates that a list of additional interfaces will be provided, each of</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> *     which should be implemented by the resulting function object.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;&lt;em&gt;Serializability.&lt;/em&gt;  The generated function objects do not</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment"> *     generally support serialization.  If desired, {@code FLAG_SERIALIZABLE}</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment"> *     can be used to indicate that the function objects should be serializable.</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment"> *     Serializable function objects will use, as their serialized form,</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment"> *     instances of the class {@code SerializedLambda}, which requires additional</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment"> *     assistance from the capturing class (the class described by the</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment"> *     {@link MethodHandles.Lookup} parameter {@code caller}); see</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment"> *     {@link SerializedLambda} for details.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment"> * &lt;p&gt;Assume the linkage arguments are as follows:</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment"> *      &lt;li&gt;{@code invokedType} (describing the {@code CallSite} signature) has</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment"> *      K parameters of types (D1..Dk) and return type Rd;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment"> *      &lt;li&gt;{@code samMethodType} (describing the implemented method type) has N</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment"> *      parameters, of types (U1..Un) and return type Ru;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment"> *      &lt;li&gt;{@code implMethod} (the {@code MethodHandle} providing the</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment"> *      implementation has M parameters, of types (A1..Am) and return type Ra</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment"> *      (if the method describes an instance method, the method type of this</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment"> *      method handle already includes an extra first argument corresponding to</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment"> *      the receiver);&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment"> *      &lt;li&gt;{@code instantiatedMethodType} (allowing restrictions on invocation)</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment"> *      has N parameters, of types (T1..Tn) and return type Rt.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment"> * &lt;p&gt;Then the following linkage invariants must hold:</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;Rd is an interface&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;{@code implMethod} is a &lt;em&gt;direct method handle&lt;/em&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;{@code samMethodType} and {@code instantiatedMethodType} have the same</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment"> *     arity N, and for i=1..N, Ti and Ui are the same type, or Ti and Ui are</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment"> *     both reference types and Ti is a subtype of Ui&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;Either Rt and Ru are the same type, or both are reference types and</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment"> *     Rt is a subtype of Ru&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;K + N = M&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;For i=1..K, Di = Ai&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;For i=1..N, Ti is adaptable to Aj, where j=i+k&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment"> *     &lt;li&gt;The return type Rt is void, or the return type Ra is not void and is</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment"> *     adaptable to Rt&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment"> * &lt;p&gt;Further, at capture time, if {@code implMethod} corresponds to an instance</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment"> * method, and there are any capture arguments ({@code K &gt; 0}), then the first</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment"> * capture argument (corresponding to the receiver) must be non-null.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment"> * &lt;p&gt;A type Q is considered adaptable to S as follows:</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment"> * &lt;table summary="adaptable types"&gt;</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment"> *     &lt;tr&gt;&lt;th&gt;Q&lt;/th&gt;&lt;th&gt;S&lt;/th&gt;&lt;th&gt;Link-time checks&lt;/th&gt;&lt;th&gt;Invocation-time checks&lt;/th&gt;&lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment"> *     &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Primitive&lt;/td&gt;&lt;td&gt;Primitive&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Q can be converted to S via a primitive widening conversion&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;None&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment"> *     &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment"> *     &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Primitive&lt;/td&gt;&lt;td&gt;Reference&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;S is a supertype of the Wrapper(Q)&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Cast from Wrapper(Q) to S&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment"> *     &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment"> *     &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Reference&lt;/td&gt;&lt;td&gt;Primitive&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;for parameter types: Q is a primitive wrapper and Primitive(Q)</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment"> *         can be widened to S</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment"> *         &lt;br&gt;for return types: If Q is a primitive wrapper, check that</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment"> *         Primitive(Q) can be widened to S&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;If Q is not a primitive wrapper, cast Q to the base Wrapper(S);</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment"> *         for example Number for numeric types&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment"> *     &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment"> *     &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Reference&lt;/td&gt;&lt;td&gt;Reference&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;for parameter types: S is a supertype of Q</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment"> *         &lt;br&gt;for return types: none&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment"> *         &lt;td&gt;Cast from Q to S&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment"> *     &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment"> * &lt;/table&gt;</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment"> * @apiNote These linkage methods are designed to support the evaluation</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment"> * of &lt;em&gt;lambda expressions&lt;/em&gt; and &lt;em&gt;method references&lt;/em&gt; in the Java</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment"> * Language.  For every lambda expressions or method reference in the source code,</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment"> * there is a target type which is a functional interface.  Evaluating a lambda</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment"> * expression produces an object of its target type. The recommended mechanism</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment"> * for evaluating lambda expressions is to desugar the lambda body to a method,</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment"> * invoke an invokedynamic call site whose static argument list describes the</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment"> * sole method of the functional interface and the desugared implementation</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment"> * method, and returns an object (the lambda object) that implements the target</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment"> * type. (For method references, the implementation method is simply the</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment"> * referenced method; no desugaring is needed.)</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment"> * &lt;p&gt;The argument list of the implementation method and the argument list of</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment"> * the interface method(s) may differ in several ways.  The implementation</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment"> * methods may have additional arguments to accommodate arguments captured by</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment"> * the lambda expression; there may also be differences resulting from permitted</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment"> * adaptations of arguments, such as casting, boxing, unboxing, and primitive</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment"> * widening. (Varargs adaptations are not handled by the metafactories; these are</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment"> * expected to be handled by the caller.)</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment"> * &lt;p&gt;Invokedynamic call sites have two argument lists: a static argument list</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment"> * and a dynamic argument list.  The static argument list is stored in the</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment"> * constant pool; the dynamic argument is pushed on the operand stack at capture</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment"> * time.  The bootstrap method has access to the entire static argument list</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment"> * (which in this case, includes information describing the implementation method,</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment"> * the target interface, and the target interface method(s)), as well as a</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment"> * method signature describing the number and static types (but not the values)</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment"> * of the dynamic arguments and the static return type of the invokedynamic site.</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment"> * @implNote The implementation method is described with a method handle. In</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment"> * theory, any method handle could be used. Currently supported are direct method</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment"> * handles representing invocation of virtual, interface, constructor and static</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment"> * methods.</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../java/lang/invoke/LambdaMetafactory.html">LambdaMetafactory</a> {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> 
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <em class="jxr_javadoccomment">/** Flag for alternate metafactories indicating the lambda object</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     * must be serializable */</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> FLAG_SERIALIZABLE = 1 &lt;&lt; 0;
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * Flag for alternate metafactories indicating the lambda object implements</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * other marker interfaces</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     * besides Serializable</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> FLAG_MARKERS = 1 &lt;&lt; 1;
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * Flag for alternate metafactories indicating the lambda object requires</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * additional bridge methods</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> FLAG_BRIDGES = 1 &lt;&lt; 2;
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Class&lt;?&gt;[] EMPTY_CLASS_ARRAY = <strong class="jxr_keyword">new</strong> Class&lt;?&gt;[0];
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../java/lang/invoke/MethodType.html">MethodType</a>[] EMPTY_MT_ARRAY = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/invoke/MethodType.html">MethodType</a>[0];
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> 
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">     * Facilitates the creation of simple "function objects" that implement one</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">     * or more interfaces by delegation to a provided {@link MethodHandle},</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     * after appropriate type adaptation and partial evaluation of arguments.</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * Typically used as a &lt;em&gt;bootstrap method&lt;/em&gt; for {@code invokedynamic}</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     * call sites, to support the &lt;em&gt;lambda expression&lt;/em&gt; and &lt;em&gt;method</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * reference expression&lt;/em&gt; features of the Java Programming Language.</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This is the standard, streamlined metafactory; additional flexibility</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     * is provided by {@link #altMetafactory(MethodHandles.Lookup, String, MethodType, Object...)}.</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     * A general description of the behavior of this method is provided</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     * {@link LambdaMetafactory above}.</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * &lt;p&gt;When the target of the {@code CallSite} returned from this method is</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * invoked, the resulting function objects are instances of a class which</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * implements the interface named by the return type of {@code invokedType},</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * declares a method with the name given by {@code invokedName} and the</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * signature given by {@code samMethodType}.  It may also override additional</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     * methods from {@code Object}.</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     * @param caller Represents a lookup context with the accessibility</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     *               privileges of the caller.  When used with {@code invokedynamic},</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     *               this is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     * @param invokedName The name of the method to implement.  When used with</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     *                    {@code invokedynamic}, this is provided by the</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     *                    {@code NameAndType} of the {@code InvokeDynamic}</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     *                    structure and is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     * @param invokedType The expected signature of the {@code CallSite}.  The</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     *                    parameter types represent the types of capture variables;</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     *                    the return type is the interface to implement.   When</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     *                    used with {@code invokedynamic}, this is provided by</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     *                    the {@code NameAndType} of the {@code InvokeDynamic}</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     *                    structure and is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     *                    In the event that the implementation method is an</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     *                    instance method and this signature has any parameters,</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     *                    the first parameter in the invocation signature must</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     *                    correspond to the receiver.</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * @param samMethodType Signature and return type of method to be implemented</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     *                      by the function object.</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * @param implMethod A direct method handle describing the implementation</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     *                   method which should be called (with suitable adaptation</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     *                   of argument types, return types, and with captured</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     *                   arguments prepended to the invocation arguments) at</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">     *                   invocation time.</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * @param instantiatedMethodType The signature and return type that should</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     *                               be enforced dynamically at invocation time.</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     *                               This may be the same as {@code samMethodType},</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     *                               or may be a specialization of it.</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * @return a CallSite whose target can be used to perform capture, generating</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     *         instances of the interface named by {@code invokedType}</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     * @throws LambdaConversionException If any of the linkage invariants</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     *                                   described {@link LambdaMetafactory above}</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     *                                   are violated</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../java/lang/invoke/CallSite.html">CallSite</a> metafactory(MethodHandles.Lookup caller,
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>                                        <a href="../../../java/lang/String.html">String</a> invokedName,
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>                                        <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> invokedType,
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>                                        <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> samMethodType,
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                                        <a href="../../../java/lang/invoke/MethodHandle.html">MethodHandle</a> implMethod,
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                                        <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> instantiatedMethodType)
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../java/lang/invoke/LambdaConversionException.html">LambdaConversionException</a> {
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>         <a href="../../../java/lang/invoke/AbstractValidatingLambdaMetafactory.html">AbstractValidatingLambdaMetafactory</a> mf;
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         mf = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/invoke/InnerClassLambdaMetafactory.html">InnerClassLambdaMetafactory</a>(caller, invokedType,
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>                                              invokedName, samMethodType,
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>                                              implMethod, instantiatedMethodType,
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>                                              false, EMPTY_CLASS_ARRAY, EMPTY_MT_ARRAY);
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         mf.validateMetafactoryArgs();
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>         <strong class="jxr_keyword">return</strong> mf.buildCallSite();
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     }
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * Facilitates the creation of simple "function objects" that implement one</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     * or more interfaces by delegation to a provided {@link MethodHandle},</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * after appropriate type adaptation and partial evaluation of arguments.</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     * Typically used as a &lt;em&gt;bootstrap method&lt;/em&gt; for {@code invokedynamic}</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     * call sites, to support the &lt;em&gt;lambda expression&lt;/em&gt; and &lt;em&gt;method</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment">     * reference expression&lt;/em&gt; features of the Java Programming Language.</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This is the general, more flexible metafactory; a streamlined version</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * is provided by {@link #altMetafactory(MethodHandles.Lookup, String, MethodType, Object...)}.</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * A general description of the behavior of this method is provided</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     * {@link LambdaMetafactory above}.</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The argument list for this method includes three fixed parameters,</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">     * corresponding to the parameters automatically stacked by the VM for the</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> <em class="jxr_javadoccomment">     * bootstrap method in an {@code invokedynamic} invocation, and an {@code Object[]}</em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment">     * parameter that contains additional parameters.  The declared argument</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">     * list for this method is:</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     *  CallSite altMetafactory(MethodHandles.Lookup caller,</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     *                          String invokedName,</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     *                          MethodType invokedType,</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     *                          Object... args)</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">     * &lt;p&gt;but it behaves as if the argument list is as follows:</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     *  CallSite altMetafactory(MethodHandles.Lookup caller,</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">     *                          String invokedName,</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">     *                          MethodType invokedType,</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     *                          MethodType samMethodType,</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     *                          MethodHandle implMethod,</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     *                          MethodType instantiatedMethodType,</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     *                          int flags,</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     *                          int markerInterfaceCount,  // IF flags has MARKERS set</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     *                          Class... markerInterfaces, // IF flags has MARKERS set</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     *                          int bridgeCount,           // IF flags has BRIDGES set</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     *                          MethodType... bridges      // IF flags has BRIDGES set</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     *                          )</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Arguments that appear in the argument list for</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">     * {@link #metafactory(MethodHandles.Lookup, String, MethodType, MethodType, MethodHandle, MethodType)}</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     * have the same specification as in that method.  The additional arguments</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     * are interpreted as follows:</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;{@code flags} indicates additional options; this is a bitwise</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> <em class="jxr_javadoccomment">     *     OR of desired flags.  Defined flags are {@link #FLAG_BRIDGES},</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> <em class="jxr_javadoccomment">     *     {@link #FLAG_MARKERS}, and {@link #FLAG_SERIALIZABLE}.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;{@code markerInterfaceCount} is the number of additional interfaces</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     *     the function object should implement, and is present if and only if the</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     *     {@code FLAG_MARKERS} flag is set.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;{@code markerInterfaces} is a variable-length list of additional</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     *     interfaces to implement, whose length equals {@code markerInterfaceCount},</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     *     and is present if and only if the {@code FLAG_MARKERS} flag is set.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;{@code bridgeCount} is the number of additional method signatures</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     *     the function object should implement, and is present if and only if</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     *     the {@code FLAG_BRIDGES} flag is set.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;{@code bridges} is a variable-length list of additional</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     *     methods signatures to implement, whose length equals {@code bridgeCount},</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     *     and is present if and only if the {@code FLAG_BRIDGES} flag is set.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Each class named by {@code markerInterfaces} is subject to the same</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">     * restrictions as {@code Rd}, the return type of {@code invokedType},</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">     * as described {@link LambdaMetafactory above}.  Each {@code MethodType}</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">     * named by {@code bridges} is subject to the same restrictions as</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     * {@code samMethodType}, as described {@link LambdaMetafactory above}.</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">     * &lt;p&gt;When FLAG_SERIALIZABLE is set in {@code flags}, the function objects</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">     * will implement {@code Serializable}, and will have a {@code writeReplace}</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">     * method that returns an appropriate {@link SerializedLambda}.  The</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">     * {@code caller} class must have an appropriate {@code $deserializeLambda$}</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * method, as described in {@link SerializedLambda}.</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     * &lt;p&gt;When the target of the {@code CallSite} returned from this method is</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">     * invoked, the resulting function objects are instances of a class with</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_javadoccomment">     * the following properties:</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;The class implements the interface named by the return type</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     *     of {@code invokedType} and any interfaces named by {@code markerInterfaces}&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;The class declares methods with the name given by {@code invokedName},</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     *     and the signature given by {@code samMethodType} and additional signatures</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     *     given by {@code bridges}&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     *     &lt;li&gt;The class may override methods from {@code Object}, and may</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     *     implement methods related to serialization.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     * @param caller Represents a lookup context with the accessibility</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     *               privileges of the caller.  When used with {@code invokedynamic},</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     *               this is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">     * @param invokedName The name of the method to implement.  When used with</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">     *                    {@code invokedynamic}, this is provided by the</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> <em class="jxr_javadoccomment">     *                    {@code NameAndType} of the {@code InvokeDynamic}</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     *                    structure and is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     * @param invokedType The expected signature of the {@code CallSite}.  The</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     *                    parameter types represent the types of capture variables;</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     *                    the return type is the interface to implement.   When</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     *                    used with {@code invokedynamic}, this is provided by</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     *                    the {@code NameAndType} of the {@code InvokeDynamic}</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     *                    structure and is stacked automatically by the VM.</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     *                    In the event that the implementation method is an</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     *                    instance method and this signature has any parameters,</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     *                    the first parameter in the invocation signature must</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">     *                    correspond to the receiver.</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     * @param  args       An {@code Object[]} array containing the required</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">     *                    arguments {@code samMethodType}, {@code implMethod},</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">     *                    {@code instantiatedMethodType}, {@code flags}, and any</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">     *                    optional arguments, as described</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">     *                    {@link #altMetafactory(MethodHandles.Lookup, String, MethodType, Object...)} above}</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">     * @return a CallSite whose target can be used to perform capture, generating</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">     *         instances of the interface named by {@code invokedType}</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">     * @throws LambdaConversionException If any of the linkage invariants</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     *                                   described {@link LambdaMetafactory above}</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">     *                                   are violated</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../java/lang/invoke/CallSite.html">CallSite</a> altMetafactory(MethodHandles.Lookup caller,
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>                                           <a href="../../../java/lang/String.html">String</a> invokedName,
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>                                           <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> invokedType,
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>                                           Object... args)
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">throws</strong> <a href="../../../java/lang/invoke/LambdaConversionException.html">LambdaConversionException</a> {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>         <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> samMethodType = (MethodType)args[0];
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         <a href="../../../java/lang/invoke/MethodHandle.html">MethodHandle</a> implMethod = (MethodHandle)args[1];
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> instantiatedMethodType = (MethodType)args[2];
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         <strong class="jxr_keyword">int</strong> flags = (Integer) args[3];
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>         Class&lt;?&gt;[] markerInterfaces;
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         <a href="../../../java/lang/invoke/MethodType.html">MethodType</a>[] bridges;
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         <strong class="jxr_keyword">int</strong> argIndex = 4;
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         <strong class="jxr_keyword">if</strong> ((flags &amp; FLAG_MARKERS) != 0) {
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             <strong class="jxr_keyword">int</strong> markerCount = (Integer) args[argIndex++];
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>             markerInterfaces = <strong class="jxr_keyword">new</strong> Class&lt;?&gt;[markerCount];
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             System.arraycopy(args, argIndex, markerInterfaces, 0, markerCount);
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>             argIndex += markerCount;
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         }
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>             markerInterfaces = EMPTY_CLASS_ARRAY;
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         <strong class="jxr_keyword">if</strong> ((flags &amp; FLAG_BRIDGES) != 0) {
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">int</strong> bridgeCount = (Integer) args[argIndex++];
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>             bridges = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/invoke/MethodType.html">MethodType</a>[bridgeCount];
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>             System.arraycopy(args, argIndex, bridges, 0, bridgeCount);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             argIndex += bridgeCount;
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         }
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             bridges = EMPTY_MT_ARRAY;
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         <strong class="jxr_keyword">boolean</strong> isSerializable = ((flags &amp; FLAG_SERIALIZABLE) != 0);
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         <strong class="jxr_keyword">if</strong> (isSerializable) {
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>             <strong class="jxr_keyword">boolean</strong> foundSerializableSupertype = Serializable.<strong class="jxr_keyword">class</strong>.isAssignableFrom(invokedType.returnType());
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>             <strong class="jxr_keyword">for</strong> (Class&lt;?&gt; c : markerInterfaces)
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>                 foundSerializableSupertype |= Serializable.<strong class="jxr_keyword">class</strong>.isAssignableFrom(c);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>             <strong class="jxr_keyword">if</strong> (!foundSerializableSupertype) {
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>                 markerInterfaces = Arrays.copyOf(markerInterfaces, markerInterfaces.length + 1);
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>                 markerInterfaces[markerInterfaces.length-1] = Serializable.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>             }
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         }
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> 
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         <a href="../../../java/lang/invoke/AbstractValidatingLambdaMetafactory.html">AbstractValidatingLambdaMetafactory</a> mf
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>                 = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/invoke/InnerClassLambdaMetafactory.html">InnerClassLambdaMetafactory</a>(caller, invokedType,
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>                                                   invokedName, samMethodType,
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>                                                   implMethod,
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>                                                   instantiatedMethodType,
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>                                                   isSerializable,
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>                                                   markerInterfaces, bridges);
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         mf.validateMetafactoryArgs();
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         <strong class="jxr_keyword">return</strong> mf.buildCallSite();
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>     }
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>MBeanServerFileAccessController xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/com/sun/jmx/remote/security/MBeanServerFileAccessController.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2003, 2008, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> com.sun.jmx.remote.security;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.io.FileInputStream;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.security.AccessControlContext;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.security.AccessController;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.security.Principal;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> java.security.PrivilegedAction;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.Iterator;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> java.util.Properties;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> java.util.StringTokenizer;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> java.util.regex.Pattern;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> javax.management.MBeanServer;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> javax.management.ObjectName;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> javax.security.auth.Subject;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;An object of this class implements the MBeanServerAccessController</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * interface and, for each of its methods, calls an appropriate checking</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * method and then forwards the request to a wrapped MBeanServer object.</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * The checking method may throw a SecurityException if the operation is</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * not allowed; in this case the request is not forwarded to the</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * wrapped object.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;This class implements the {@link #checkRead()}, {@link #checkWrite()},</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * {@link #checkCreate(String)}, and {@link #checkUnregister(ObjectName)}</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * methods based on an access level properties file containing username/access</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * level pairs. The set of username/access level pairs is passed either as a</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * filename which denotes a properties file on disk, or directly as an instance</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * of the {@link Properties} class.  In both cases, the name of each property</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * represents a username, and the value of the property is the associated access</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * level.  Thus, any given username either does not exist in the properties or</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * has exactly one access level. The same access level can be shared by several</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * usernames.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;The supported access level values are {@code readonly} and</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * {@code readwrite}.  The {@code readwrite} access level can be</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * qualified by one or more &lt;i&gt;clauses&lt;/i&gt;, where each clause looks</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * like &lt;code&gt;create &lt;i&gt;classNamePattern&lt;/i&gt;&lt;/code&gt; or {@code</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * unregister}.  For example:&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * &lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * monitorRole  readonly</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * controlRole  readwrite \</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> *              create javax.management.timer.*,javax.management.monitor.* \</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> *              unregister</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * &lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;(The continuation lines with {@code \} come from the parser for</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> * Properties files.)&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">MBeanServerFileAccessController</a>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerAccessController.html">MBeanServerAccessController</a> {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> READONLY = <span class="jxr_string">"readonly"</span>;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> READWRITE = <span class="jxr_string">"readwrite"</span>;
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> CREATE = <span class="jxr_string">"create"</span>;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> UNREGISTER = <span class="jxr_string">"unregister"</span>;
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">private</strong> enum <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">AccessType</a> {READ, WRITE, CREATE, UNREGISTER};
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> write;
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a>[] createPatterns;
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> unregister;
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a>(<strong class="jxr_keyword">boolean</strong> write, <strong class="jxr_keyword">boolean</strong> unregister, List&lt;String&gt; createPatternList) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              <strong class="jxr_keyword">this</strong>.write = write;
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>             <strong class="jxr_keyword">int</strong> npats = (createPatternList == <strong class="jxr_keyword">null</strong>) ? 0 : createPatternList.size();
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>             <strong class="jxr_keyword">if</strong> (npats == 0)
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>                 <strong class="jxr_keyword">this</strong>.createPatterns = NO_STRINGS;
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>                 <strong class="jxr_keyword">this</strong>.createPatterns = createPatternList.toArray(<strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/String.html">String</a>[npats]);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             <strong class="jxr_keyword">this</strong>.unregister = unregister;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         }
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a>[] NO_STRINGS = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/String.html">String</a>[0];
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     }
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Create a new MBeanServerAccessController that forwards all the</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * MBeanServer requests to the MBeanServer set by invoking the {@link</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     * #setMBeanServer} method after doing access checks based on read and</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * write permissions.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This instance is initialized from the specified properties file.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * @param accessFileName name of the file which denotes a properties</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * file on disk containing the username/access level entries.</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     * @exception IOException if the file does not exist, is a</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">     * directory rather than a regular file, or for some other</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">     * reason cannot be opened for reading.</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if any of the supplied access</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * level values differs from "readonly" or "readwrite".</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">MBeanServerFileAccessController</a>(<a href="../../../../../java/lang/String.html">String</a> accessFileName)
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/io/IOException.html">IOException</a> {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">this</strong>.accessFileName = accessFileName;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <a href="../../../../../java/util/Properties.html">Properties</a> props = propertiesFromFile(accessFileName);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         parseProperties(props);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     }
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Create a new MBeanServerAccessController that forwards all the</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * MBeanServer requests to &lt;code&gt;mbs&lt;/code&gt; after doing access checks</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     * based on read and write permissions.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This instance is initialized from the specified properties file.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     * @param accessFileName name of the file which denotes a properties</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     * file on disk containing the username/access level entries.</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     * @param mbs the MBeanServer object to which requests will be forwarded.</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * @exception IOException if the file does not exist, is a</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     * directory rather than a regular file, or for some other</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * reason cannot be opened for reading.</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if any of the supplied access</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * level values differs from "readonly" or "readwrite".</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">MBeanServerFileAccessController</a>(<a href="../../../../../java/lang/String.html">String</a> accessFileName,
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>                                            <a href="../../../../../javax/management/MBeanServer.html">MBeanServer</a> mbs)
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/io/IOException.html">IOException</a> {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">this</strong>(accessFileName);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>         setMBeanServer(mbs);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Create a new MBeanServerAccessController that forwards all the</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * MBeanServer requests to the MBeanServer set by invoking the {@link</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     * #setMBeanServer} method after doing access checks based on read and</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     * write permissions.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This instance is initialized from the specified properties</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     * instance.  This constructor makes a copy of the properties</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * instance and it is the copy that is consulted to check the</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * username and access level of an incoming connection. The</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * original properties object can be modified without affecting</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * the copy. If the {@link #refresh} method is then called, the</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * &lt;code&gt;MBeanServerFileAccessController&lt;/code&gt; will make a new</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * copy of the properties object at that time.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @param accessFileProps properties list containing the username/access</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * level entries.</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if &lt;code&gt;accessFileProps&lt;/code&gt; is</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">     * &lt;code&gt;null&lt;/code&gt; or if any of the supplied access level values differs</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     * from "readonly" or "readwrite".</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">MBeanServerFileAccessController</a>(<a href="../../../../../java/util/Properties.html">Properties</a> accessFileProps)
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/io/IOException.html">IOException</a> {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <strong class="jxr_keyword">if</strong> (accessFileProps == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(<span class="jxr_string">"Null properties"</span>);
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         originalProps = accessFileProps;
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         parseProperties(accessFileProps);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     }
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Create a new MBeanServerAccessController that forwards all the</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">     * MBeanServer requests to the MBeanServer set by invoking the {@link</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">     * #setMBeanServer} method after doing access checks based on read and</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     * write permissions.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This instance is initialized from the specified properties</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * instance.  This constructor makes a copy of the properties</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * instance and it is the copy that is consulted to check the</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     * username and access level of an incoming connection. The</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * original properties object can be modified without affecting</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * the copy. If the {@link #refresh} method is then called, the</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * &lt;code&gt;MBeanServerFileAccessController&lt;/code&gt; will make a new</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * copy of the properties object at that time.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     * @param accessFileProps properties list containing the username/access</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     * level entries.</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     * @param mbs the MBeanServer object to which requests will be forwarded.</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if &lt;code&gt;accessFileProps&lt;/code&gt; is</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * &lt;code&gt;null&lt;/code&gt; or if any of the supplied access level values differs</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * from "readonly" or "readwrite".</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">MBeanServerFileAccessController</a>(<a href="../../../../../java/util/Properties.html">Properties</a> accessFileProps,
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                                            <a href="../../../../../javax/management/MBeanServer.html">MBeanServer</a> mbs)
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/io/IOException.html">IOException</a> {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <strong class="jxr_keyword">this</strong>(accessFileProps);
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>         setMBeanServer(mbs);
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     }
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     * Check if the caller can do read operations. This method does</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">     * nothing if so, otherwise throws SecurityException.</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>     @Override
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> checkRead() {
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         checkAccess(AccessType.READ, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     }
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * Check if the caller can do write operations.  This method does</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * nothing if so, otherwise throws SecurityException.</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     @Override
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> checkWrite() {
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         checkAccess(AccessType.WRITE, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * Check if the caller can create MBeans or instances of the given class.</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * This method does nothing if so, otherwise throws SecurityException.</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     @Override
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> checkCreate(<a href="../../../../../java/lang/String.html">String</a> className) {
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         checkAccess(AccessType.CREATE, className);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * Check if the caller can do unregister operations.  This method does</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * nothing if so, otherwise throws SecurityException.</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     @Override
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> checkUnregister(<a href="../../../../../javax/management/ObjectName.html">ObjectName</a> name) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         checkAccess(AccessType.UNREGISTER, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Refresh the set of username/access level entries.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If this instance was created using the</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * {@link #MBeanServerFileAccessController(String)} or</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     * {@link #MBeanServerFileAccessController(String,MBeanServer)}</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     * constructors to specify a file from which the entries are read,</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     * the file is re-read.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If this instance was created using the</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     * {@link #MBeanServerFileAccessController(Properties)} or</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * {@link #MBeanServerFileAccessController(Properties,MBeanServer)}</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * constructors then a new copy of the &lt;code&gt;Properties&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * is made.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * @exception IOException if the file does not exist, is a</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     * directory rather than a regular file, or for some other</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     * reason cannot be opened for reading.</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if any of the supplied access</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * level values differs from "readonly" or "readwrite".</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> refresh() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         <a href="../../../../../java/util/Properties.html">Properties</a> props;
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         <strong class="jxr_keyword">if</strong> (accessFileName == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>             props = (Properties) originalProps;
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>             props = propertiesFromFile(accessFileName);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         parseProperties(props);
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     }
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> 
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../java/util/Properties.html">Properties</a> propertiesFromFile(<a href="../../../../../java/lang/String.html">String</a> fname)
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../java/io/IOException.html">IOException</a> {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         <a href="../../../../../java/io/FileInputStream.html">FileInputStream</a> fin = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/io/FileInputStream.html">FileInputStream</a>(fname);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>             <a href="../../../../../java/util/Properties.html">Properties</a> p = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/util/Properties.html">Properties</a>();
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             p.load(fin);
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>             <strong class="jxr_keyword">return</strong> p;
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             fin.close();
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     }
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> checkAccess(<a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">AccessType</a> requiredAccess, <a href="../../../../../java/lang/String.html">String</a> arg) {
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../java/security/AccessControlContext.html">AccessControlContext</a> acc = AccessController.getContext();
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../javax/security/auth/Subject.html">Subject</a> s =
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             AccessController.doPrivileged(<strong class="jxr_keyword">new</strong> PrivilegedAction&lt;Subject&gt;() {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>                     <strong class="jxr_keyword">public</strong> <a href="../../../../../javax/security/auth/Subject.html">Subject</a> run() {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>                         <strong class="jxr_keyword">return</strong> Subject.getSubject(acc);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>                     }
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>                 });
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         <strong class="jxr_keyword">if</strong> (s == <strong class="jxr_keyword">null</strong>) <strong class="jxr_keyword">return</strong>; <em class="jxr_comment">/* security has not been enabled */</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         <strong class="jxr_keyword">final</strong> <a href="../../../../../java/util/Set.html">Set</a> principals = s.getPrincipals();
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>         <a href="../../../../../java/lang/String.html">String</a> newPropertyValue = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <strong class="jxr_keyword">for</strong> (Iterator i = principals.iterator(); i.hasNext(); ) {
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../../java/security/Principal.html">Principal</a> p = (Principal) i.next();
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>             <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> access = accessMap.get(p.getName());
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             <strong class="jxr_keyword">if</strong> (access != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>                 <strong class="jxr_keyword">boolean</strong> ok;
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>                 <strong class="jxr_keyword">switch</strong> (requiredAccess) {
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>                     <strong class="jxr_keyword">case</strong> READ:
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>                         ok = <strong class="jxr_keyword">true</strong>;  <em class="jxr_comment">// all access entries imply read</em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>                     <strong class="jxr_keyword">case</strong> WRITE:
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>                         ok = access.write;
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>                     <strong class="jxr_keyword">case</strong> UNREGISTER:
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>                         ok = access.unregister;
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>                         <strong class="jxr_keyword">if</strong> (!ok &amp;&amp; access.write)
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>                             newPropertyValue = <span class="jxr_string">"unregister"</span>;
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>                     <strong class="jxr_keyword">case</strong> CREATE:
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>                         ok = checkCreateAccess(access, arg);
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>                         <strong class="jxr_keyword">if</strong> (!ok &amp;&amp; access.write)
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>                             newPropertyValue = <span class="jxr_string">"create "</span> + arg;
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>                     <strong class="jxr_keyword">default</strong>:
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/AssertionError.html">AssertionError</a>();
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>                 }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>                 <strong class="jxr_keyword">if</strong> (ok)
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>                     <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>             }
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>         }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> se = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a>(<span class="jxr_string">"Access denied! Invalid "</span> +
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>                 <span class="jxr_string">"access level for requested MBeanServer operation."</span>);
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>         <em class="jxr_comment">// Add some more information to help people with deployments that</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         <em class="jxr_comment">// worked before we required explicit create clauses. We're not giving</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <em class="jxr_comment">// any information to the bad guys, other than that the access control</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         <em class="jxr_comment">// is based on a file, which they could have worked out from the stack</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         <em class="jxr_comment">// trace anyway.</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <strong class="jxr_keyword">if</strong> (newPropertyValue != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>             <a href="../../../../../java/lang/SecurityException.html">SecurityException</a> se2 = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/SecurityException.html">SecurityException</a>(<span class="jxr_string">"Access property "</span> +
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>                     <span class="jxr_string">"for this identity should be similar to: "</span> + READWRITE +
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>                     <span class="jxr_string">" "</span> + newPropertyValue);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>             se.initCause(se2);
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         }
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         <strong class="jxr_keyword">throw</strong> se;
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> checkCreateAccess(<a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> access, <a href="../../../../../java/lang/String.html">String</a> className) {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         <strong class="jxr_keyword">for</strong> (String classNamePattern : access.createPatterns) {
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>             <strong class="jxr_keyword">if</strong> (classNameMatch(classNamePattern, className))
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>                 <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         }
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>     }
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> 
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> classNameMatch(<a href="../../../../../java/lang/String.html">String</a> pattern, <a href="../../../../../java/lang/String.html">String</a> className) {
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>         <em class="jxr_comment">// We studiously avoided regexes when parsing the properties file,</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>         <em class="jxr_comment">// because that is done whenever the VM is started with the</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>         <em class="jxr_comment">// appropriate -Dcom.sun.management options, even if nobody ever</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <em class="jxr_comment">// creates an MBean.  We don't want to incur the overhead of loading</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         <em class="jxr_comment">// all the regex code whenever those options are specified, but if we</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <em class="jxr_comment">// get as far as here then the VM is already running and somebody is</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <em class="jxr_comment">// doing the very unusual operation of remotely creating an MBean.</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <em class="jxr_comment">// Because that operation is so unusual, we don't try to optimize</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <em class="jxr_comment">// by hand-matching or by caching compiled Pattern objects.</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <a href="../../../../../java/lang/StringBuilder.html">StringBuilder</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/StringBuilder.html">StringBuilder</a>();
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <a href="../../../../../java/util/StringTokenizer.html">StringTokenizer</a> stok = <strong class="jxr_keyword">new</strong> <a href="../../../../../java/util/StringTokenizer.html">StringTokenizer</a>(pattern, <span class="jxr_string">"*"</span>, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>         <strong class="jxr_keyword">while</strong> (stok.hasMoreTokens()) {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>             <a href="../../../../../java/lang/String.html">String</a> tok = stok.nextToken();
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>             <strong class="jxr_keyword">if</strong> (tok.equals(<span class="jxr_string">"*"</span>))
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 sb.append(<span class="jxr_string">"[^.]*"</span>);
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                 sb.append(Pattern.quote(tok));
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>         }
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>         <strong class="jxr_keyword">return</strong> className.matches(sb.toString());
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     }
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parseProperties(<a href="../../../../../java/util/Properties.html">Properties</a> props) {
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         <strong class="jxr_keyword">this</strong>.accessMap = <strong class="jxr_keyword">new</strong> HashMap&lt;String, Access&gt;();
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">for</strong> (Map.Entry&lt;Object, Object&gt; entry : props.entrySet()) {
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             <a href="../../../../../java/lang/String.html">String</a> identity = (String) entry.getKey();
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>             <a href="../../../../../java/lang/String.html">String</a> accessString = (String) entry.getValue();
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> access = Parser.parseAccess(identity, accessString);
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>             accessMap.put(identity, access);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     }
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Parser</a> {
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> EOS = -1;  <em class="jxr_comment">// pseudo-codepoint "end of string"</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>             assert !Character.isWhitespace(EOS);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         }
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> 
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> identity;  <em class="jxr_comment">// just for better error messages</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/String.html">String</a> s;  <em class="jxr_comment">// the string we're parsing</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> len;   <em class="jxr_comment">// s.length()</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> i;
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> c;
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         <em class="jxr_comment">// At any point, either c is s.codePointAt(i), or i == len and</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         <em class="jxr_comment">// c is EOS.  We use int rather than char because it is conceivable</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <em class="jxr_comment">// (if unlikely) that a classname in a create clause might contain</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <em class="jxr_comment">// "supplementary characters", the ones that don't fit in the original</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         <em class="jxr_comment">// 16 bits for Unicode.</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Parser</a>(<a href="../../../../../java/lang/String.html">String</a> identity, <a href="../../../../../java/lang/String.html">String</a> s) {
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>             <strong class="jxr_keyword">this</strong>.identity = identity;
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>             <strong class="jxr_keyword">this</strong>.s = s;
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>             <strong class="jxr_keyword">this</strong>.len = s.length();
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>             <strong class="jxr_keyword">this</strong>.i = 0;
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>             <strong class="jxr_keyword">if</strong> (i &lt; len)
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>                 <strong class="jxr_keyword">this</strong>.c = s.codePointAt(i);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>             <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>                 <strong class="jxr_keyword">this</strong>.c = EOS;
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         }
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> 
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <strong class="jxr_keyword">static</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> parseAccess(<a href="../../../../../java/lang/String.html">String</a> identity, <a href="../../../../../java/lang/String.html">String</a> s) {
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Parser</a>(identity, s).parseAccess();
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>         }
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> 
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> parseAccess() {
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>             skipSpace();
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>             <a href="../../../../../java/lang/String.html">String</a> type = parseWord();
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>             <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> access;
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>             <strong class="jxr_keyword">if</strong> (type.equals(READONLY))
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                 access = <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a>(false, false, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type.equals(READWRITE))
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>                 access = parseReadWrite();
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>                 <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Expected "</span> + READONLY + <span class="jxr_string">" or "</span> + READWRITE +
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>                         <span class="jxr_string">": "</span> + type);
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>             }
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>             <strong class="jxr_keyword">if</strong> (c != EOS)
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>                 <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Extra text at end of line"</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>             <strong class="jxr_keyword">return</strong> access;
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         }
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> 
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a> parseReadWrite() {
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>             List&lt;String&gt; createClasses = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>             <strong class="jxr_keyword">boolean</strong> unregister = false;
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>                 skipSpace();
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>                 <strong class="jxr_keyword">if</strong> (c == EOS)
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>                 <a href="../../../../../java/lang/String.html">String</a> type = parseWord();
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>                 <strong class="jxr_keyword">if</strong> (type.equals(UNREGISTER))
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>                     unregister = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>                 <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (type.equals(CREATE))
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>                     parseCreate(createClasses);
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>                     <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Unrecognized keyword "</span> + type);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>             }
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../com/sun/jmx/remote/security/MBeanServerFileAccessController.html">Access</a>(<strong class="jxr_keyword">true</strong>, unregister, createClasses);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> 
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parseCreate(List&lt;String&gt; createClasses) {
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>             <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>                 skipSpace();
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>                 createClasses.add(parseClassName());
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>                 skipSpace();
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>                 <strong class="jxr_keyword">if</strong> (c == ',')
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>                     next();
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>             }
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         }
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/String.html">String</a> parseClassName() {
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>             <em class="jxr_comment">// We don't check that classname components begin with suitable</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>             <em class="jxr_comment">// characters (so we accept 1.2.3 for example).  This means that</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>             <em class="jxr_comment">// there are only two states, which we can call dotOK and !dotOK</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>             <em class="jxr_comment">// according as a dot (.) is legal or not.  Initially we're in</em>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>             <em class="jxr_comment">// !dotOK since a classname can't start with a dot; after a dot</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>             <em class="jxr_comment">// we're in !dotOK again; and after any other characters we're in</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>             <em class="jxr_comment">// dotOK.  The classname is only accepted if we end in dotOK,</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>             <em class="jxr_comment">// so we reject an empty name or a name that ends with a dot.</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> start = i;
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>             <strong class="jxr_keyword">boolean</strong> dotOK = false;
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>             <strong class="jxr_keyword">while</strong> (<strong class="jxr_keyword">true</strong>) {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>                 <strong class="jxr_keyword">if</strong> (c == '.') {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>                     <strong class="jxr_keyword">if</strong> (!dotOK)
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>                         <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Bad . in class name"</span>);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>                     dotOK = false;
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (c == '*' || Character.isJavaIdentifierPart(c))
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>                     dotOK = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>                 next();
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>             }
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>             <a href="../../../../../java/lang/String.html">String</a> className = s.substring(start, i);
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <strong class="jxr_keyword">if</strong> (!dotOK)
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>                 <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Bad class name "</span> + className);
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>             <strong class="jxr_keyword">return</strong> className;
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>         }
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> 
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>         <em class="jxr_comment">// Advance c and i to the next character, unless already at EOS.</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> next() {
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>             <strong class="jxr_keyword">if</strong> (c != EOS) {
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>                 i += Character.charCount(c);
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>                 <strong class="jxr_keyword">if</strong> (i &lt; len)
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>                     c = s.codePointAt(i);
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>                 <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>                     c = EOS;
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>             }
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>         }
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> 
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> skipSpace() {
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>             <strong class="jxr_keyword">while</strong> (Character.isWhitespace(c))
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>                 next();
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         }
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> 
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/String.html">String</a> parseWord() {
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>             skipSpace();
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>             <strong class="jxr_keyword">if</strong> (c == EOS)
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>                 <strong class="jxr_keyword">throw</strong> syntax(<span class="jxr_string">"Expected word at end of line"</span>);
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> start = i;
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>             <strong class="jxr_keyword">while</strong> (c != EOS &amp;&amp; !Character.isWhitespace(c))
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>                 next();
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>             <a href="../../../../../java/lang/String.html">String</a> word = s.substring(start, i);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             skipSpace();
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>             <strong class="jxr_keyword">return</strong> word;
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>         }
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a> syntax(<a href="../../../../../java/lang/String.html">String</a> msg) {
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>                     msg + <span class="jxr_string">" ["</span> + identity + <span class="jxr_string">" "</span> + s + <span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>         }
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>     }
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> 
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>     <strong class="jxr_keyword">private</strong> Map&lt;String, Access&gt; accessMap;
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../java/util/Properties.html">Properties</a> originalProps;
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../../java/lang/String.html">String</a> accessFileName;
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

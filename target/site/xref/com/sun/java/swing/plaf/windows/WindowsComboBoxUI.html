@@ -1,0 +1,579 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>WindowsComboBoxUI xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../apidocs/com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 1997, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> com.sun.java.swing.plaf.windows;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.beans.PropertyChangeListener;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.beans.PropertyChangeEvent;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.swing.plaf.basic.*;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.swing.plaf.*;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> javax.swing.border.*;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> javax.swing.*;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> java.awt.event.*;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> java.awt.*;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.sun.java.swing.plaf.windows.TMSchema.Part;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.sun.java.swing.plaf.windows.TMSchema.State;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.sun.java.swing.plaf.windows.XPStyle.Skin;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> sun.swing.DefaultLookup;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> sun.swing.StringUIClientPropertyKey;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * Windows combo box.</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * &lt;strong&gt;Warning:&lt;/strong&gt;</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * Serialized objects of this class will not be compatible with</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * future Swing releases.  The current serialization support is appropriate</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * for short term storage or RMI between applications running the same</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * version of Swing.  A future release of Swing will provide support for</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * long term persistence.</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * @author Tom Santos</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * @author Igor Kushnirskiy</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../javax/swing/plaf/basic/BasicComboBoxUI.html">BasicComboBoxUI</a> {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../java/awt/event/MouseListener.html">MouseListener</a> rolloverListener =
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          <strong class="jxr_keyword">new</strong> <a href="../../../../../../java/awt/event/MouseAdapter.html">MouseAdapter</a>() {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> handleRollover(<a href="../../../../../../java/awt/event/MouseEvent.html">MouseEvent</a> e, <strong class="jxr_keyword">boolean</strong> isRollover) {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  <a href="../../../../../../javax/swing/JComboBox.html">JComboBox</a> comboBox = getComboBox(e);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> comboBoxUI = getWindowsComboBoxUI(e);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>                  <strong class="jxr_keyword">if</strong> (comboBox == <strong class="jxr_keyword">null</strong> || comboBoxUI == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>                      <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>                  }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>                  <strong class="jxr_keyword">if</strong> (! comboBox.isEditable()) {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>                      <em class="jxr_comment">//mouse over editable ComboBox does not switch rollover</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>                      <em class="jxr_comment">//for the arrow button</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>                      <a href="../../../../../../javax/swing/ButtonModel.html">ButtonModel</a> m = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                      <strong class="jxr_keyword">if</strong> (comboBoxUI.arrowButton != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                          m = comboBoxUI.arrowButton.getModel();
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>                      }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>                      <strong class="jxr_keyword">if</strong> (m != <strong class="jxr_keyword">null</strong> ) {
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>                          m.setRollover(isRollover);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>                      }
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>                  }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                  comboBoxUI.isRollover = isRollover;
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  comboBox.repaint();
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>              }
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>              <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> mouseEntered(<a href="../../../../../../java/awt/event/MouseEvent.html">MouseEvent</a> e) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                  handleRollover(e, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>              }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>              <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> mouseExited(<a href="../../../../../../java/awt/event/MouseEvent.html">MouseEvent</a> e) {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>                  handleRollover(e, false);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>              }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              <strong class="jxr_keyword">private</strong> <a href="../../../../../../javax/swing/JComboBox.html">JComboBox</a> getComboBox(<a href="../../../../../../java/awt/event/MouseEvent.html">MouseEvent</a> event) {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  <a href="../../../../../../java/lang/Object.html">Object</a> source = event.getSource();
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>                  <a href="../../../../../../javax/swing/JComboBox.html">JComboBox</a> rv = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>                  <strong class="jxr_keyword">if</strong> (source instanceof JComboBox) {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>                      rv = (JComboBox) source;
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>                  } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (source instanceof XPComboBoxButton) {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>                      rv = ((XPComboBoxButton) source)
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>                          .getWindowsComboBoxUI().comboBox;
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>                  }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>                 <strong class="jxr_keyword">return</strong> rv;
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>             }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>             <strong class="jxr_keyword">private</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> getWindowsComboBoxUI(<a href="../../../../../../java/awt/event/MouseEvent.html">MouseEvent</a> event) {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>                 <a href="../../../../../../javax/swing/JComboBox.html">JComboBox</a> comboBox = getComboBox(event);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>                 <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> rv = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>                 <strong class="jxr_keyword">if</strong> (comboBox != <strong class="jxr_keyword">null</strong>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>                     &amp;&amp; comboBox.getUI() instanceof WindowsComboBoxUI) {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>                     rv = (WindowsComboBoxUI) comboBox.getUI();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>                 }
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>                 <strong class="jxr_keyword">return</strong> rv;
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>             }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         };
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> isRollover = false;
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../java/beans/PropertyChangeListener.html">PropertyChangeListener</a> componentOrientationListener =
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">new</strong> <a href="../../../../../../java/beans/PropertyChangeListener.html">PropertyChangeListener</a>() {
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> propertyChange(<a href="../../../../../../java/beans/PropertyChangeEvent.html">PropertyChangeEvent</a> e) {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>                 <a href="../../../../../../java/lang/String.html">String</a> propertyName = e.getPropertyName();
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>                 <a href="../../../../../../java/lang/Object.html">Object</a> source = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>                 <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"componentOrientation"</span> == propertyName
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>                     &amp;&amp; (source = e.getSource()) instanceof JComboBox
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>                     &amp;&amp; ((JComboBox) source).getUI() instanceof
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>                       <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a>) {
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>                     <a href="../../../../../../javax/swing/JComboBox.html">JComboBox</a> comboBox = (JComboBox) source;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>                     <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> comboBoxUI = (WindowsComboBoxUI) comboBox.getUI();
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>                     <strong class="jxr_keyword">if</strong> (comboBoxUI.arrowButton instanceof XPComboBoxButton) {
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>                         ((<a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">XPComboBoxButton</a>) comboBoxUI.arrowButton).setPart(
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>                                     (comboBox.getComponentOrientation() ==
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>                                        ComponentOrientation.RIGHT_TO_LEFT)
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>                                     ? Part.CP_DROPDOWNBUTTONLEFT
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>                                     : Part.CP_DROPDOWNBUTTONRIGHT);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>                             }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                         }
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                     }
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                 };
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../javax/swing/plaf/ComponentUI.html">ComponentUI</a> createUI(<a href="../../../../../../javax/swing/JComponent.html">JComponent</a> c) {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a>();
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     }
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> installUI( JComponent c ) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">super</strong>.installUI( c );
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         isRollover = false;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         comboBox.setRequestFocusEnabled( <strong class="jxr_keyword">true</strong> );
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong> &amp;&amp; arrowButton != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>             <em class="jxr_comment">//we can not do it in installListeners because arrowButton</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>             <em class="jxr_comment">//is initialized after installListeners is invoked</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             comboBox.addMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>             arrowButton.addMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> uninstallUI(<a href="../../../../../../javax/swing/JComponent.html">JComponent</a> c ) {
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         comboBox.removeMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         <strong class="jxr_keyword">if</strong>(arrowButton != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             arrowButton.removeMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>         }
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">super</strong>.uninstallUI( c );
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     @Override
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> installListeners() {
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>         <strong class="jxr_keyword">super</strong>.installListeners();
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/XPStyle.html">XPStyle</a> xp = XPStyle.getXP();
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <em class="jxr_comment">//button glyph for LTR and RTL combobox might differ</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         <strong class="jxr_keyword">if</strong> (xp != <strong class="jxr_keyword">null</strong>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>               &amp;&amp; xp.isSkinDefined(comboBox, Part.CP_DROPDOWNBUTTONRIGHT)) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>             comboBox.addPropertyChangeListener(<span class="jxr_string">"componentOrientation"</span>,
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>                                                componentOrientationListener);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     }
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     @Override
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> uninstallListeners() {
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <strong class="jxr_keyword">super</strong>.uninstallListeners();
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         comboBox.removePropertyChangeListener(<span class="jxr_string">"componentOrientation"</span>,
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>                                               componentOrientationListener);
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     }
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> configureEditor() {
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>         <strong class="jxr_keyword">super</strong>.configureEditor();
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>             editor.addMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         }
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     }
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> unconfigureEditor() {
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         <strong class="jxr_keyword">super</strong>.unconfigureEditor();
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         editor.removeMouseListener(rolloverListener);
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>     }
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> 
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> paint(<a href="../../../../../../java/awt/Graphics.html">Graphics</a> g, <a href="../../../../../../javax/swing/JComponent.html">JComponent</a> c) {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>             paintXPComboBoxBackground(g, c);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         <strong class="jxr_keyword">super</strong>.paint(g, c);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     <a href="../../../../../../java/lang/Thread.html">State</a> getXPComboBoxState(<a href="../../../../../../javax/swing/JComponent.html">JComponent</a> c) {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <a href="../../../../../../java/lang/Thread.html">State</a> state = State.NORMAL;
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>         <strong class="jxr_keyword">if</strong> (!c.isEnabled()) {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             state = State.DISABLED;
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isPopupVisible(comboBox)) {
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>             state = State.PRESSED;
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isRollover) {
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>             state = State.HOT;
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>         }
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">return</strong> state;
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> 
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintXPComboBoxBackground(<a href="../../../../../../java/awt/Graphics.html">Graphics</a> g, <a href="../../../../../../javax/swing/JComponent.html">JComponent</a> c) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/XPStyle.html">XPStyle</a> xp = XPStyle.getXP();
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         <a href="../../../../../../java/lang/Thread.html">State</a> state = getXPComboBoxState(c);
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/XPStyle.html">Skin</a> skin = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         <strong class="jxr_keyword">if</strong> (! comboBox.isEditable()
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>               &amp;&amp; xp.isSkinDefined(c, Part.CP_READONLY)) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             skin = xp.getSkin(c, Part.CP_READONLY);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <strong class="jxr_keyword">if</strong> (skin == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>             skin = xp.getSkin(c, Part.CP_COMBOBOX);
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         skin.paintSkin(g, 0, 0, c.getWidth(), c.getHeight(), state);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     }
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     * If necessary paints the currently selected item.</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     * @param g Graphics to paint to</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * @param bounds Region to paint current value to</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * @param hasFocus whether or not the JComboBox has focus</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if any of the arguments are null.</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> paintCurrentValue(<a href="../../../../../../java/awt/Graphics.html">Graphics</a> g, <a href="../../../../../../java/awt/Rectangle.html">Rectangle</a> bounds,
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>                                   <strong class="jxr_keyword">boolean</strong> hasFocus) {
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/XPStyle.html">XPStyle</a> xp = XPStyle.getXP();
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <strong class="jxr_keyword">if</strong> ( xp != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>             bounds.x += 2;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             bounds.y += 2;
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>             bounds.width -= 4;
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>             bounds.height -= 4;
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>             bounds.x += 1;
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>             bounds.y += 1;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             bounds.width -= 2;
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>             bounds.height -= 2;
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>         }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         <strong class="jxr_keyword">if</strong> (! comboBox.isEditable()
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>             &amp;&amp; xp != <strong class="jxr_keyword">null</strong>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>             &amp;&amp; xp.isSkinDefined(comboBox, Part.CP_READONLY)) {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>             <em class="jxr_comment">// On vista for READNLY ComboBox</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>             <em class="jxr_comment">// color for currentValue is the same as for any other item</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> 
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <em class="jxr_comment">// mostly copied from javax.swing.plaf.basic.BasicComboBoxUI.paintCurrentValue</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>             <a href="../../../../../../javax/swing/ListCellRenderer.html">ListCellRenderer</a> renderer = comboBox.getRenderer();
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             <a href="../../../../../../java/awt/Component.html">Component</a> c;
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">if</strong> ( hasFocus &amp;&amp; !isPopupVisible(comboBox) ) {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>                 c = renderer.getListCellRendererComponent(
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>                         listBox,
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                         comboBox.getSelectedItem(),
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>                         -1,
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>                         <strong class="jxr_keyword">true</strong>,
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>                         false );
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>                 c = renderer.getListCellRendererComponent(
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>                         listBox,
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>                         comboBox.getSelectedItem(),
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>                         -1,
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>                         false,
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                         false );
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>             }
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>             c.setFont(comboBox.getFont());
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>             <strong class="jxr_keyword">if</strong> ( comboBox.isEnabled() ) {
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>                 c.setForeground(comboBox.getForeground());
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                 c.setBackground(comboBox.getBackground());
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>                 c.setForeground(DefaultLookup.getColor(
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>                          comboBox, <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"ComboBox.disabledForeground"</span>, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>                 c.setBackground(DefaultLookup.getColor(
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>                          comboBox, <strong class="jxr_keyword">this</strong>, <span class="jxr_string">"ComboBox.disabledBackground"</span>, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>             }
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>             <strong class="jxr_keyword">boolean</strong> shouldValidate = false;
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>             <strong class="jxr_keyword">if</strong> (c instanceof JPanel)  {
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>                 shouldValidate = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             }
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             currentValuePane.paintComponent(g, c, comboBox, bounds.x, bounds.y,
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>                                             bounds.width, bounds.height, shouldValidate);
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>             <strong class="jxr_keyword">super</strong>.paintCurrentValue(g, bounds, hasFocus);
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         }
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     }
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> paintCurrentValueBackground(<a href="../../../../../../java/awt/Graphics.html">Graphics</a> g, <a href="../../../../../../java/awt/Rectangle.html">Rectangle</a> bounds,
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>                                             <strong class="jxr_keyword">boolean</strong> hasFocus) {
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>             <strong class="jxr_keyword">super</strong>.paintCurrentValueBackground(g, bounds, hasFocus);
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         }
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../../java/awt/Dimension.html">Dimension</a> getMinimumSize( JComponent c ) {
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         <a href="../../../../../../java/awt/Dimension.html">Dimension</a> d = <strong class="jxr_keyword">super</strong>.getMinimumSize(c);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>             d.width += 5;
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>             d.width += 4;
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         }
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         d.height += 2;
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         <strong class="jxr_keyword">return</strong> d;
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>     }
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> 
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">     * Creates a layout manager for managing the components which make up the</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     * combo box.</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     * @return an instance of a layout manager</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/awt/LayoutManager.html">LayoutManager</a> createLayoutManager() {
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> BasicComboBoxUI.ComboBoxLayoutManager() {
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> layoutContainer(<a href="../../../../../../java/awt/Container.html">Container</a> parent) {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>                 <strong class="jxr_keyword">super</strong>.layoutContainer(parent);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> 
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>                 <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong> &amp;&amp; arrowButton != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>                     <a href="../../../../../../java/awt/Dimension.html">Dimension</a> d = parent.getSize();
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>                     <a href="../../../../../../java/awt/Insets.html">Insets</a> insets = getInsets();
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>                     <strong class="jxr_keyword">int</strong> buttonWidth = arrowButton.getPreferredSize().width;
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>                     arrowButton.setBounds(WindowsGraphicsUtils.isLeftToRight((JComboBox)parent)
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>                                           ? (d.width - insets.right - buttonWidth)
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>                                           : insets.left,
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                                           insets.top,
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>                                           buttonWidth, d.height - insets.top - insets.bottom);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>                 }
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>             }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>         };
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     }
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> 
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> installKeyboardActions() {
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>         <strong class="jxr_keyword">super</strong>.installKeyboardActions();
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>     }
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> 
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/plaf/basic/ComboPopup.html">ComboPopup</a> createPopup() {
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.createPopup();
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>     }
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> 
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">     * Creates the default editor that will be used in editable combo boxes.</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">     * A default editor will be used only if an editor has not been</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">     * explicitly set with &lt;code&gt;setEditor&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">     * @return a &lt;code&gt;ComboBoxEditor&lt;/code&gt; used for the combo box</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     * @see javax.swing.JComboBox#setEditor</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/ComboBoxEditor.html">ComboBoxEditor</a> createEditor() {
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxEditor</a>();
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>     }
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> 
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     * @since 1.6</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     @Override
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/ListCellRenderer.html">ListCellRenderer</a> createRenderer() {
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/XPStyle.html">XPStyle</a> xp = XPStyle.getXP();
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         <strong class="jxr_keyword">if</strong> (xp != <strong class="jxr_keyword">null</strong> &amp;&amp; xp.isSkinDefined(comboBox, Part.CP_READONLY)) {
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxRenderer</a>();
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.createRenderer();
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>         }
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>     }
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> 
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     * Creates an button which will be used as the control to show or hide</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     * the popup portion of the combo box.</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">     * @return a button which represents the popup control</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/JButton.html">JButton</a> createArrowButton() {
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>         <strong class="jxr_keyword">if</strong> (XPStyle.getXP() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">XPComboBoxButton</a>();
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.createArrowButton();
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         }
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>     }
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">XPComboBoxButton</a> <strong class="jxr_keyword">extends</strong> XPStyle.GlyphButton {
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">XPComboBoxButton</a>() {
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>             <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>                   (! XPStyle.getXP().isSkinDefined(comboBox, Part.CP_DROPDOWNBUTTONRIGHT))
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>                    ? Part.CP_DROPDOWNBUTTON
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>                    : (comboBox.getComponentOrientation() == ComponentOrientation.RIGHT_TO_LEFT)
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>                      ? Part.CP_DROPDOWNBUTTONLEFT
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>                      : Part.CP_DROPDOWNBUTTONRIGHT
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>                   );
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>             setRequestFocusEnabled(false);
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         }
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> 
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         @Override
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/lang/Thread.html">State</a> getState() {
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>             <a href="../../../../../../java/lang/Thread.html">State</a> rv;
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>             rv = <strong class="jxr_keyword">super</strong>.getState();
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>             <strong class="jxr_keyword">if</strong> (rv != State.DISABLED
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>                 &amp;&amp; comboBox != <strong class="jxr_keyword">null</strong> &amp;&amp; ! comboBox.isEditable()
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>                 &amp;&amp; XPStyle.getXP().isSkinDefined(comboBox,
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>                                                  Part.CP_DROPDOWNBUTTONRIGHT)) {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>                 <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> <em class="jxr_comment">                 * for non editable ComboBoxes Vista seems to have the</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_comment">                 * same glyph for all non DISABLED states</em>
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_comment">                 */</em>
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>                 rv = State.NORMAL;
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>             }
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>             <strong class="jxr_keyword">return</strong> rv;
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         }
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> 
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../../java/awt/Dimension.html">Dimension</a> getPreferredSize() {
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../java/awt/Dimension.html">Dimension</a>(17, 21);
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         }
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> 
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         <strong class="jxr_keyword">void</strong> setPart(<a href="../../../../../../com/sun/java/swing/plaf/windows/TMSchema.html">Part</a> part) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>             setPart(comboBox, part);
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         }
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> 
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxUI</a> getWindowsComboBoxUI() {
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>             <strong class="jxr_keyword">return</strong> WindowsComboBoxUI.<strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         }
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>     }
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> 
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> 
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">     * Subclassed to add Windows specific Key Bindings.</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">     * This class is now obsolete and doesn't do anything.</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> <em class="jxr_javadoccomment">     * Only included for backwards API compatibility.</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">     * Do not call or override.</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     * @deprecated As of Java 2 platform v1.4.</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>     @Deprecated
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboPopup</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../javax/swing/plaf/basic/BasicComboPopup.html">BasicComboPopup</a> {
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> 
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboPopup</a>( JComboBox cBox ) {
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>             <strong class="jxr_keyword">super</strong>( cBox );
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         }
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> 
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../../../../java/awt/event/KeyListener.html">KeyListener</a> createKeyListener() {
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../javax/swing/plaf/basic/BasicComboPopup.html">InvocationKeyHandler</a>();
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         }
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../javax/swing/plaf/basic/BasicComboPopup.html">InvocationKeyHandler</a> <strong class="jxr_keyword">extends</strong> BasicComboPopup.InvocationKeyHandler {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>             <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/plaf/basic/BasicComboPopup.html">InvocationKeyHandler</a>() {
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                 WindowsComboPopup.<strong class="jxr_keyword">this</strong>.<strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>             }
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         }
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>     }
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">     * Subclassed to highlight selected item in an editable combo box.</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxEditor</a>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>         <strong class="jxr_keyword">extends</strong> BasicComboBoxEditor.UIResource {
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> 
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">         * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">         * @since 1.6</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">protected</strong> <a href="../../../../../../javax/swing/JTextField.html">JTextField</a> createEditorComponent() {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>             <a href="../../../../../../javax/swing/JTextField.html">JTextField</a> editor = <strong class="jxr_keyword">super</strong>.createEditorComponent();
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <a href="../../../../../../javax/swing/border/Border.html">Border</a> border = (Border)UIManager.get(<span class="jxr_string">"ComboBox.editorBorder"</span>);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>             <strong class="jxr_keyword">if</strong> (border != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>                 editor.setBorder(border);
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>             }
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>             editor.setOpaque(false);
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>             <strong class="jxr_keyword">return</strong> editor;
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>         }
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> 
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setItem(<a href="../../../../../../java/lang/Object.html">Object</a> item) {
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>             <strong class="jxr_keyword">super</strong>.setItem(item);
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             <a href="../../../../../../java/lang/Object.html">Object</a> focus = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>             <strong class="jxr_keyword">if</strong> ((focus == editor) || (focus == editor.getParent())) {
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>                 editor.selectAll();
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>             }
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>         }
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>     }
+<a class="jxr_linenumber" name="L508" href="#L508">508</a> 
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> <em class="jxr_javadoccomment">     * Subclassed to set opacity {@code false} on the renderer</em>
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> <em class="jxr_javadoccomment">     * and to show border for focused cells.</em>
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sun/java/swing/plaf/windows/WindowsComboBoxUI.html">WindowsComboBoxRenderer</a>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>           <strong class="jxr_keyword">extends</strong> BasicComboBoxRenderer.UIResource {
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../java/lang/Object.html">Object</a> BORDER_KEY
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>             = <strong class="jxr_keyword">new</strong> StringUIClientPropertyKey(<span class="jxr_string">"BORDER_KEY"</span>);
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../javax/swing/border/Border.html">Border</a> NULL_BORDER = <strong class="jxr_keyword">new</strong> <a href="../../../../../../javax/swing/border/EmptyBorder.html">EmptyBorder</a>(0, 0, 0, 0);
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">         * {@inheritDoc}</em>
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         @Override
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../../java/awt/Component.html">Component</a> getListCellRendererComponent(
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>                                                  <a href="../../../../../../javax/swing/JList.html">JList</a> list,
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>                                                  <a href="../../../../../../java/lang/Object.html">Object</a> value,
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>                                                  <strong class="jxr_keyword">int</strong> index,
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>                                                  <strong class="jxr_keyword">boolean</strong> isSelected,
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>                                                  <strong class="jxr_keyword">boolean</strong> cellHasFocus) {
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>             <a href="../../../../../../java/awt/Component.html">Component</a> rv =
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>                 <strong class="jxr_keyword">super</strong>.getListCellRendererComponent(list, value, index,
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>                                                    isSelected, cellHasFocus);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             <strong class="jxr_keyword">if</strong> (rv instanceof JComponent) {
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>                 <a href="../../../../../../javax/swing/JComponent.html">JComponent</a> component = (JComponent) rv;
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>                 <strong class="jxr_keyword">if</strong> (index == -1 &amp;&amp; isSelected) {
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>                     <a href="../../../../../../javax/swing/border/Border.html">Border</a> border = component.getBorder();
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>                     <a href="../../../../../../javax/swing/border/Border.html">Border</a> dashedBorder =
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>                         <strong class="jxr_keyword">new</strong> WindowsBorders.DashedBorder(list.getForeground());
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>                     component.setBorder(dashedBorder);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>                     <em class="jxr_comment">//store current border in client property if needed</em>
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>                     <strong class="jxr_keyword">if</strong> (component.getClientProperty(BORDER_KEY) == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>                         component.putClientProperty(BORDER_KEY,
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>                                        (border == <strong class="jxr_keyword">null</strong>) ? NULL_BORDER : border);
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>                     }
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>                     <strong class="jxr_keyword">if</strong> (component.getBorder() instanceof
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>                           WindowsBorders.DashedBorder) {
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>                         <a href="../../../../../../java/lang/Object.html">Object</a> storedBorder = component.getClientProperty(BORDER_KEY);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>                         <strong class="jxr_keyword">if</strong> (storedBorder instanceof Border) {
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>                             component.setBorder(
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>                                 (storedBorder == NULL_BORDER) ? <strong class="jxr_keyword">null</strong>
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>                                     : (Border) storedBorder);
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>                         }
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>                         component.putClientProperty(BORDER_KEY, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>                     }
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>                 }
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>                 <strong class="jxr_keyword">if</strong> (index == -1) {
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>                     component.setOpaque(false);
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>                     component.setForeground(list.getForeground());
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>                     component.setOpaque(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>                 }
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>             }
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>             <strong class="jxr_keyword">return</strong> rv;
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>         }
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> 
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>     }
+<a class="jxr_linenumber" name="L566" href="#L566">566</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

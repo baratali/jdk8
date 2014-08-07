@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>JoinRowSet xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/javax/sql/rowset/JoinRowSet.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2003, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> javax.sql.rowset;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.sql.*;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> javax.sql.*;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.naming.*;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.io.*;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.math.*;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> java.util.*;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> javax.sql.rowset.*;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * The &lt;code&gt;JoinRowSet&lt;/code&gt; interface provides a mechanism for combining related</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * data from different &lt;code&gt;RowSet&lt;/code&gt; objects into one &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * object, which represents an SQL &lt;code&gt;JOIN&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * In other words, a &lt;code&gt;JoinRowSet&lt;/code&gt; object acts as a</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * container for the data from &lt;code&gt;RowSet&lt;/code&gt; objects that form an SQL</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;JOIN&lt;/code&gt; relationship.</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * The &lt;code&gt;Joinable&lt;/code&gt; interface provides the methods for setting,</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * retrieving, and unsetting a match column, the basis for</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * establishing an SQL &lt;code&gt;JOIN&lt;/code&gt; relationship. The match column may</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * alternatively be set by supplying it to the appropriate version of the</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;JointRowSet&lt;/code&gt; method &lt;code&gt;addRowSet&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * &lt;h3&gt;1.0 Overview&lt;/h3&gt;</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * Disconnected &lt;code&gt;RowSet&lt;/code&gt; objects (&lt;code&gt;CachedRowSet&lt;/code&gt; objects</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * and implementations extending the &lt;code&gt;CachedRowSet&lt;/code&gt; interface)</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * do not have a standard way to establish an SQL &lt;code&gt;JOIN&lt;/code&gt; between</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;RowSet&lt;/code&gt; objects without the expensive operation of</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * reconnecting to the data source. The &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * interface is specifically designed to address this need.</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * Any &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * can be added to a &lt;code&gt;JoinRowSet&lt;/code&gt; object to become</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * part of an SQL &lt;code&gt;JOIN&lt;/code&gt; relationship. This means that both connected</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * and disconnected &lt;code&gt;RowSet&lt;/code&gt; objects can be part of a &lt;code&gt;JOIN&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;RowSet&lt;/code&gt; objects operating in a connected environment</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * (&lt;code&gt;JdbcRowSet&lt;/code&gt; objects) are</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * encouraged to use the database to which they are already</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * connected to establish SQL &lt;code&gt;JOIN&lt;/code&gt; relationships between</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * tables directly. However, it is possible for a</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;JdbcRowSet&lt;/code&gt; object to be added to a &lt;code&gt;JoinRowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * if necessary.</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * Any number of &lt;code&gt;RowSet&lt;/code&gt; objects can be added to an</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * instance of &lt;code&gt;JoinRowSet&lt;/code&gt; provided that they</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * can be related in an SQL &lt;code&gt;JOIN&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * By definition, the SQL &lt;code&gt;JOIN&lt;/code&gt; statement is used to</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * combine the data contained in two or more relational database tables based</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * upon a common attribute. The &lt;code&gt;Joinable&lt;/code&gt; interface provides the methods</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * for establishing a common attribute, which is done by setting a</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> * &lt;i&gt;match column&lt;/i&gt;. The match column commonly coincides with</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * the primary key, but there is</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> * no requirement that the match column be the same as the primary key.</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * By establishing and then enforcing column matches,</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> * a &lt;code&gt;JoinRowSet&lt;/code&gt; object establishes &lt;code&gt;JOIN&lt;/code&gt; relationships</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> * between &lt;code&gt;RowSet&lt;/code&gt; objects without the assistance of an available</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * relational database.</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * The type of &lt;code&gt;JOIN&lt;/code&gt; to be established is determined by setting</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> * one of the &lt;code&gt;JoinRowSet&lt;/code&gt; constants using the method</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;setJoinType&lt;/code&gt;. The following SQL &lt;code&gt;JOIN&lt;/code&gt; types can be set:</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> * &lt;UL&gt;</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> *  &lt;LI&gt;&lt;code&gt;CROSS_JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> *  &lt;LI&gt;&lt;code&gt;FULL_JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> *  &lt;LI&gt;&lt;code&gt;INNER_JOIN&lt;/code&gt; - the default if no &lt;code&gt;JOIN&lt;/code&gt; type has been set</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> *  &lt;LI&gt;&lt;code&gt;LEFT_OUTER_JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> *  &lt;LI&gt;&lt;code&gt;RIGHT_OUTER_JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> * &lt;/UL&gt;</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> * Note that if no type is set, the &lt;code&gt;JOIN&lt;/code&gt; will automatically be an</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> * inner join. The comments for the fields in the</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;JoinRowSet&lt;/code&gt; interface explain these &lt;code&gt;JOIN&lt;/code&gt; types, which are</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> * standard SQL &lt;code&gt;JOIN&lt;/code&gt; types.</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> * &lt;h3&gt;2.0 Using a &lt;code&gt;JoinRowSet&lt;/code&gt; Object for Creating a &lt;code&gt;JOIN&lt;/code&gt;&lt;/h3&gt;</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * When a &lt;code&gt;JoinRowSet&lt;/code&gt; object is created, it is empty.</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> * The first &lt;code&gt;RowSet&lt;/code&gt; object to be added becomes the basis for the</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> * &lt;code&gt;JOIN&lt;/code&gt; relationship.</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment"> * Applications must determine which column in each of the</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment"> * &lt;code&gt;RowSet&lt;/code&gt; objects to be added to the &lt;code&gt;JoinRowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment"> * should be the match column. All of the</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment"> * &lt;code&gt;RowSet&lt;/code&gt; objects must contain a match column, and the values in</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment"> * each match column must be ones that can be compared to values in the other match</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment"> * columns. The columns do not have to have the same name, though they often do,</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment"> * and they do not have to store the exact same data type as long as the data types</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment"> * can be compared.</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment"> * A match column can be be set in two ways:</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment"> *  &lt;li&gt;By calling the &lt;code&gt;Joinable&lt;/code&gt; method &lt;code&gt;setMatchColumn&lt;/code&gt;&lt;br&gt;</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment"> *  This is the only method that can set the match column before a &lt;code&gt;RowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment"> *  object is added to a &lt;code&gt;JoinRowSet&lt;/code&gt; object. The &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment"> *  must have implemented the &lt;code&gt;Joinable&lt;/code&gt; interface in order to use the method</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment"> *  &lt;code&gt;setMatchColumn&lt;/code&gt;. Once the match column value</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment"> *  has been set, this method can be used to reset the match column at any time.</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment"> *  &lt;li&gt;By calling one of the versions of the &lt;code&gt;JoinRowSet&lt;/code&gt; method</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment"> *  &lt;code&gt;addRowSet&lt;/code&gt; that takes a column name or number (or an array of</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment"> *  column names or numbers)&lt;BR&gt;</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment"> *  Four of the five &lt;code&gt;addRowSet&lt;/code&gt; methods take a match column as a parameter.</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment"> *  These four methods set or reset the match column at the time a &lt;code&gt;RowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment"> *  object is being added to a &lt;code&gt;JoinRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment"> * &lt;h3&gt;3.0 Sample Usage&lt;/h3&gt;</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment"> * The following code fragment adds two &lt;code&gt;CachedRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment"> * objects to a &lt;code&gt;JoinRowSet&lt;/code&gt; object. Note that in this example,</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment"> * no SQL &lt;code&gt;JOIN&lt;/code&gt; type is set, so the default &lt;code&gt;JOIN&lt;/code&gt; type,</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment"> * which is &lt;i&gt;INNER_JOIN&lt;/i&gt;, is established.</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment"> * In the following code fragment, the table &lt;code&gt;EMPLOYEES&lt;/code&gt;, whose match</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment"> * column is set to the first column (&lt;code&gt;EMP_ID&lt;/code&gt;), is added to the</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment"> * &lt;code&gt;JoinRowSet&lt;/code&gt; object &lt;i&gt;jrs&lt;/i&gt;. Then</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment"> * the table &lt;code&gt;ESSP_BONUS_PLAN&lt;/code&gt;, whose match column is likewise</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment"> * the &lt;code&gt;EMP_ID&lt;/code&gt; column, is added. When this second</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment"> * table is added to &lt;i&gt;jrs&lt;/i&gt;, only the rows in</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment"> * &lt;code&gt;ESSP_BONUS_PLAN&lt;/code&gt; whose &lt;code&gt;EMP_ID&lt;/code&gt; value matches an</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment"> * &lt;code&gt;EMP_ID&lt;/code&gt; value in the &lt;code&gt;EMPLOYEES&lt;/code&gt; table are added.</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment"> * In this case, everyone in the bonus plan is an employee, so all of the rows</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment"> * in the table &lt;code&gt;ESSP_BONUS_PLAN&lt;/code&gt; are added to the &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment"> * object.  In this example, both &lt;code&gt;CachedRowSet&lt;/code&gt; objects being added</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment"> * have implemented the &lt;code&gt;Joinable&lt;/code&gt; interface and can therefore call</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment"> * the &lt;code&gt;Joinable&lt;/code&gt; method &lt;code&gt;setMatchColumn&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment"> * &lt;PRE&gt;</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment"> *     JoinRowSet jrs = new JoinRowSetImpl();</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment"> *     ResultSet rs1 = stmt.executeQuery("SELECT * FROM EMPLOYEES");</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment"> *     CachedRowSet empl = new CachedRowSetImpl();</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment"> *     empl.populate(rs1);</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment"> *     empl.setMatchColumn(1);</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment"> *     jrs.addRowSet(empl);</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment"> *     ResultSet rs2 = stmt.executeQuery("SELECT * FROM ESSP_BONUS_PLAN");</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment"> *     CachedRowSet bonus = new CachedRowSetImpl();</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment"> *     bonus.populate(rs2);</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment"> *     bonus.setMatchColumn(1); // EMP_ID is the first column</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment"> *     jrs.addRowSet(bonus);</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment"> * &lt;/PRE&gt;</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment"> * At this point, &lt;i&gt;jrs&lt;/i&gt; is an inside JOIN of the two &lt;code&gt;RowSet&lt;/code&gt; objects</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment"> * based on their &lt;code&gt;EMP_ID&lt;/code&gt; columns. The application can now browse the</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment"> * combined data as if it were browsing one single &lt;code&gt;RowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment"> * Because &lt;i&gt;jrs&lt;/i&gt; is itself a &lt;code&gt;RowSet&lt;/code&gt; object, an application can</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment"> * navigate or modify it using &lt;code&gt;RowSet&lt;/code&gt; methods.</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment"> * &lt;PRE&gt;</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment"> *     jrs.first();</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment"> *     int employeeID = jrs.getInt(1);</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment"> *     String employeeName = jrs.getString(2);</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment"> * &lt;/PRE&gt;</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment"> * Note that because the SQL &lt;code&gt;JOIN&lt;/code&gt; must be enforced when an application</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment"> * adds a second or subsequent &lt;code&gt;RowSet&lt;/code&gt; object, there</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment"> * may be an initial degradation in performance while the &lt;code&gt;JOIN&lt;/code&gt; is</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment"> * being performed.</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment"> * The following code fragment adds an additional &lt;code&gt;CachedRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment"> * In this case, the match column (&lt;code&gt;EMP_ID&lt;/code&gt;) is set when the</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment"> * &lt;code&gt;CachedRowSet&lt;/code&gt; object is added to the &lt;code&gt;JoinRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment"> * &lt;PRE&gt;</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment"> *     ResultSet rs3 = stmt.executeQuery("SELECT * FROM 401K_CONTRIB");</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment"> *     CachedRowSet fourO1k = new CachedRowSetImpl();</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment"> *     four01k.populate(rs3);</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment"> *     jrs.addRowSet(four01k, 1);</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment"> * &lt;/PRE&gt;</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment"> * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment"> * The &lt;code&gt;JoinRowSet&lt;/code&gt; object &lt;i&gt;jrs&lt;/i&gt; now contains values from all three</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment"> * tables. The data in each row in &lt;i&gt;four01k&lt;/i&gt; in which the value for the</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment"> * &lt;code&gt;EMP_ID&lt;/code&gt; column matches a value for the &lt;code&gt;EMP_ID&lt;/code&gt; column</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment"> * in &lt;i&gt;jrs&lt;/i&gt; has been added to &lt;i&gt;jrs&lt;/i&gt;.</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment"> * &lt;h3&gt;4.0 &lt;code&gt;JoinRowSet&lt;/code&gt; Methods&lt;/h3&gt;</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment"> * The &lt;code&gt;JoinRowSet&lt;/code&gt; interface supplies several methods for adding</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment"> * &lt;code&gt;RowSet&lt;/code&gt; objects and for getting information about the</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment"> * &lt;code&gt;JoinRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment"> * &lt;UL&gt;</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment"> *   &lt;LI&gt;Methods for adding one or more &lt;code&gt;RowSet&lt;/code&gt; objects&lt;BR&gt;</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment"> *       These methods allow an application to add one &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment"> *       at a time or to add multiple &lt;code&gt;RowSet&lt;/code&gt; objects at one time. In</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment"> *       either case, the methods may specify the match column for each</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment"> *       &lt;code&gt;RowSet&lt;/code&gt; object being added.</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment"> *   &lt;LI&gt;Methods for getting information&lt;BR&gt;</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment"> *       One method retrieves the &lt;code&gt;RowSet&lt;/code&gt; objects in the</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment"> *       &lt;code&gt;JoinRowSet&lt;/code&gt; object, and another method retrieves the</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment"> *       &lt;code&gt;RowSet&lt;/code&gt; names.  A third method retrieves either the SQL</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment"> *       &lt;code&gt;WHERE&lt;/code&gt; clause used behind the scenes to form the</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment"> *       &lt;code&gt;JOIN&lt;/code&gt; or a text description of what the &lt;code&gt;WHERE&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment"> *       clause does.</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment"> *   &lt;LI&gt;Methods related to the type of &lt;code&gt;JOIN&lt;/code&gt;&lt;BR&gt;</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment"> *       One method sets the &lt;code&gt;JOIN&lt;/code&gt; type, and five methods find out whether</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment"> *       the &lt;code&gt;JoinRowSet&lt;/code&gt; object supports a given type.</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment"> *   &lt;LI&gt;A method to make a separate copy of the &lt;code&gt;JoinRowSet&lt;/code&gt; object&lt;BR&gt;</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment"> *       This method creates a copy that can be persisted to the data source.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment"> * &lt;/UL&gt;</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../javax/sql/rowset/JoinRowSet.html">JoinRowSet</a> <strong class="jxr_keyword">extends</strong> <a href="../../../javax/sql/rowset/WebRowSet.html">WebRowSet</a> {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> 
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     * Adds the given &lt;code&gt;RowSet&lt;/code&gt; object to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     * object. If the &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">     * is the first to be added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">     * object, it forms the basis of the &lt;code&gt;JOIN&lt;/code&gt; relationship to be</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * established.</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * This method should be used only when the given &lt;code&gt;RowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     * object already has a match column that was set with the &lt;code&gt;Joinable&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     * method &lt;code&gt;setMatchColumn&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * Note: A &lt;code&gt;Joinable&lt;/code&gt; object is any &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * that has implemented the &lt;code&gt;Joinable&lt;/code&gt; interface.</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">     * @param rowset the &lt;code&gt;RowSet&lt;/code&gt; object that is to be added to this</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;JoinRowSet&lt;/code&gt; object; it must implement the</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;Joinable&lt;/code&gt; interface and have a match column set</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * @throws SQLException if (1) an empty rowset is added to the to this</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;JoinRowSet&lt;/code&gt; object, (2) a match column has not been</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     *         set for &lt;i&gt;rowset&lt;/i&gt;, or (3) &lt;i&gt;rowset&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     *         violates the active &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     * @see Joinable#setMatchColumn</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addRowSet(<a href="../../../javax/sql/rowset/Joinable.html">Joinable</a> rowset) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> 
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * Adds the given &lt;code&gt;RowSet&lt;/code&gt; object to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * object and sets the designated column as the match column for</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * the &lt;code&gt;RowSet&lt;/code&gt; object. If the &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * is the first to be added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * object, it forms the basis of the &lt;code&gt;JOIN&lt;/code&gt; relationship to be</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     * established.</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     * This method should be used when &lt;i&gt;RowSet&lt;/i&gt; does not already have a match</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * column set.</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     * @param rowset the &lt;code&gt;RowSet&lt;/code&gt; object that is to be added to this</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;JoinRowSet&lt;/code&gt; object; it may implement the</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;Joinable&lt;/code&gt; interface</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     * @param columnIdx an &lt;code&gt;int&lt;/code&gt; that identifies the column to become the</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     *         match column</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * @throws SQLException if (1) &lt;i&gt;rowset&lt;/i&gt; is an empty rowset or</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     *         (2) &lt;i&gt;rowset&lt;/i&gt; violates the active &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     * @see Joinable#unsetMatchColumn</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addRowSet(<a href="../../../javax/sql/RowSet.html">RowSet</a> rowset, <strong class="jxr_keyword">int</strong> columnIdx) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * Adds &lt;i&gt;rowset&lt;/i&gt; to this &lt;code&gt;JoinRowSet&lt;/code&gt; object and</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * sets the designated column as the match column. If &lt;i&gt;rowset&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * is the first to be added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * object, it forms the basis for the &lt;code&gt;JOIN&lt;/code&gt; relationship to be</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * established.</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     * This method should be used when the given &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     * does not already have a match column.</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * @param rowset the &lt;code&gt;RowSet&lt;/code&gt; object that is to be added to this</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;JoinRowSet&lt;/code&gt; object; it may implement the</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;Joinable&lt;/code&gt; interface</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     * @param columnName the &lt;code&gt;String&lt;/code&gt; object giving the name of the</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     *        column to be set as the match column</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     * @throws SQLException if (1) &lt;i&gt;rowset&lt;/i&gt; is an empty rowset or</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     *         (2) the match column for &lt;i&gt;rowset&lt;/i&gt; does not satisfy the</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     *         conditions of the &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addRowSet(<a href="../../../javax/sql/RowSet.html">RowSet</a> rowset,
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>                            <a href="../../../java/lang/String.html">String</a> columnName) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     * Adds one or more &lt;code&gt;RowSet&lt;/code&gt; objects contained in the given</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * array of &lt;code&gt;RowSet&lt;/code&gt; objects to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     * object and sets the match column for</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * each of the &lt;code&gt;RowSet&lt;/code&gt; objects to the match columns</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * in the given array of column indexes. The first element in</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     * &lt;i&gt;columnIdx&lt;/i&gt; is set as the match column for the first</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * &lt;code&gt;RowSet&lt;/code&gt; object in &lt;i&gt;rowset&lt;/i&gt;, the second element of</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     * &lt;i&gt;columnIdx&lt;/i&gt; is set as the match column for the second element</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * in &lt;i&gt;rowset&lt;/i&gt;, and so on.</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * The first &lt;code&gt;RowSet&lt;/code&gt; object added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     * object forms the basis for the &lt;code&gt;JOIN&lt;/code&gt; relationship.</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     * This method should be used when the given &lt;code&gt;RowSet&lt;/code&gt; object</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * does not already have a match column.</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * @param rowset an array of one or more &lt;code&gt;RowSet&lt;/code&gt; objects</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     *        to be added to the &lt;code&gt;JOIN&lt;/code&gt;; it may implement the</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;Joinable&lt;/code&gt; interface</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment">     * @param columnIdx an array of &lt;code&gt;int&lt;/code&gt; values indicating the index(es)</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     *        of the columns to be set as the match columns for the &lt;code&gt;RowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     *        objects in &lt;i&gt;rowset&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * @throws SQLException if (1) an empty rowset is added to this</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;JoinRowSet&lt;/code&gt; object, (2) a match column is not set</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     *         for a &lt;code&gt;RowSet&lt;/code&gt; object in &lt;i&gt;rowset&lt;/i&gt;, or (3)</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     *         a &lt;code&gt;RowSet&lt;/code&gt; object being added violates the active</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addRowSet(<a href="../../../javax/sql/RowSet.html">RowSet</a>[] rowset,
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                           <strong class="jxr_keyword">int</strong>[] columnIdx) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     * Adds one or more &lt;code&gt;RowSet&lt;/code&gt; objects contained in the given</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     * array of &lt;code&gt;RowSet&lt;/code&gt; objects to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     * object and sets the match column for</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     * each of the &lt;code&gt;RowSet&lt;/code&gt; objects to the match columns</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     * in the given array of column names. The first element in</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     * &lt;i&gt;columnName&lt;/i&gt; is set as the match column for the first</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     * &lt;code&gt;RowSet&lt;/code&gt; object in &lt;i&gt;rowset&lt;/i&gt;, the second element of</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">     * &lt;i&gt;columnName&lt;/i&gt; is set as the match column for the second element</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     * in &lt;i&gt;rowset&lt;/i&gt;, and so on.</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     * The first &lt;code&gt;RowSet&lt;/code&gt; object added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">     * object forms the basis for the &lt;code&gt;JOIN&lt;/code&gt; relationship.</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     * This method should be used when the given &lt;code&gt;RowSet&lt;/code&gt; object(s)</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     * does not already have a match column.</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     * @param rowset an array of one or more &lt;code&gt;RowSet&lt;/code&gt; objects</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     *        to be added to the &lt;code&gt;JOIN&lt;/code&gt;; it may implement the</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;Joinable&lt;/code&gt; interface</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     * @param columnName an array of &lt;code&gt;String&lt;/code&gt; values indicating the</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     *        names of the columns to be set as the match columns for the</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;RowSet&lt;/code&gt; objects in &lt;i&gt;rowset&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     * @throws SQLException if (1) an empty rowset is added to this</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;JoinRowSet&lt;/code&gt; object, (2) a match column is not set</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     *         for a &lt;code&gt;RowSet&lt;/code&gt; object in &lt;i&gt;rowset&lt;/i&gt;, or (3)</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">     *         a &lt;code&gt;RowSet&lt;/code&gt; object being added violates the active</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addRowSet(<a href="../../../javax/sql/RowSet.html">RowSet</a>[] rowset,
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                           <a href="../../../java/lang/String.html">String</a>[] columnName) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     * Returns a &lt;code&gt;Collection&lt;/code&gt; object containing the</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     * &lt;code&gt;RowSet&lt;/code&gt; objects that have been added to this</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     * &lt;code&gt;JoinRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     * This should return the 'n' number of RowSet contained</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     * within the &lt;code&gt;JOIN&lt;/code&gt; and maintain any updates that have occurred while in</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     * this union.</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * @return a &lt;code&gt;Collection&lt;/code&gt; object consisting of the</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     *        &lt;code&gt;RowSet&lt;/code&gt; objects added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     *        object</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     * @throws SQLException if an error occurs generating the</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;Collection&lt;/code&gt; object to be returned</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     <strong class="jxr_keyword">public</strong> Collection&lt;?&gt; getRowSets() <strong class="jxr_keyword">throws</strong> java.sql.SQLException;
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> 
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">     * Returns a &lt;code&gt;String&lt;/code&gt; array containing the names of the</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;RowSet&lt;/code&gt; objects added to this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     *         object.</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">     * @return a &lt;code&gt;String&lt;/code&gt; array of the names of the</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">     *         &lt;code&gt;RowSet&lt;/code&gt; objects in this &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">     *         object</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">     * @throws SQLException if an error occurs retrieving the names of</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     *         the &lt;code&gt;RowSet&lt;/code&gt; objects</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     * @see CachedRowSet#setTableName</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a>[] getRowSetNames() <strong class="jxr_keyword">throws</strong> java.sql.SQLException;
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> 
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     * Creates a new &lt;code&gt;CachedRowSet&lt;/code&gt; object containing the</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * data in this &lt;code&gt;JoinRowSet&lt;/code&gt; object, which can be saved</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     * to a data source using the &lt;code&gt;SyncProvider&lt;/code&gt; object for</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     * the &lt;code&gt;CachedRowSet&lt;/code&gt; object.</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     * &lt;P&gt;</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     * If any updates or modifications have been applied to the JoinRowSet</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     * the CachedRowSet returned by the method will not be able to persist</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     * it's changes back to the originating rows and tables in the</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     * in the datasource. The CachedRowSet instance returned should not</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     * contain modification data and it should clear all properties of</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     * it's originating SQL statement. An application should reset the</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     * SQL statement using the &lt;code&gt;RowSet.setCommand&lt;/code&gt; method.</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">     * In order to allow changes to be persisted back to the datasource</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> <em class="jxr_javadoccomment">     * to the originating tables, the &lt;code&gt;acceptChanges&lt;/code&gt; method</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     * should be used and called on a JoinRowSet object instance. Implementations</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     * can leverage the internal data and update tracking in their</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * implementations to interact with the SyncProvider to persist any</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     * changes.</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     * @return a CachedRowSet containing the contents of the JoinRowSet</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     * @throws SQLException if an error occurs assembling the CachedRowSet</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     * object</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     * @see javax.sql.RowSet</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     * @see javax.sql.rowset.CachedRowSet</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">     * @see javax.sql.rowset.spi.SyncProvider</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>     <strong class="jxr_keyword">public</strong> <a href="../../../javax/sql/rowset/CachedRowSet.html">CachedRowSet</a> toCachedRowSet() <strong class="jxr_keyword">throws</strong> java.sql.SQLException;
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">     * Indicates if CROSS_JOIN is supported by a JoinRowSet</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">     * implementation</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">     * @return true if the CROSS_JOIN is supported; false otherwise</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> supportsCrossJoin();
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> 
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">     * Indicates if INNER_JOIN is supported by a JoinRowSet</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">     * implementation</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> <em class="jxr_javadoccomment">     * @return true is the INNER_JOIN is supported; false otherwise</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> supportsInnerJoin();
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> 
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">     * Indicates if LEFT_OUTER_JOIN is supported by a JoinRowSet</em>
+<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">     * implementation</em>
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">     * @return true is the LEFT_OUTER_JOIN is supported; false otherwise</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> supportsLeftOuterJoin();
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * Indicates if RIGHT_OUTER_JOIN is supported by a JoinRowSet</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     * implementation</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">     * @return true is the RIGHT_OUTER_JOIN is supported; false otherwise</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> supportsRightOuterJoin();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> 
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> <em class="jxr_javadoccomment">     * Indicates if FULL_JOIN is supported by a JoinRowSet</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">     * implementation</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">     * @return true is the FULL_JOIN is supported; false otherwise</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> supportsFullJoin();
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> 
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     * Allow the application to adjust the type of &lt;code&gt;JOIN&lt;/code&gt; imposed</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     * on tables contained within the JoinRowSet object instance.</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     * Implementations should throw a SQLException if they do</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     * not support a given &lt;code&gt;JOIN&lt;/code&gt; type.</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     * @param joinType the standard JoinRowSet.XXX static field definition</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">     * of a SQL &lt;code&gt;JOIN&lt;/code&gt; to re-configure a JoinRowSet instance on</em>
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">     * the fly.</em>
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">     * @throws SQLException if an unsupported &lt;code&gt;JOIN&lt;/code&gt; type is set</em>
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> <em class="jxr_javadoccomment">     * @see #getJoinType</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setJoinType(<strong class="jxr_keyword">int</strong> joinType) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_javadoccomment">     * Return a SQL-like description of the WHERE clause being used</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_javadoccomment">     * in a JoinRowSet object. An implementation can describe</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> <em class="jxr_javadoccomment">     * the WHERE clause of the SQL &lt;code&gt;JOIN&lt;/code&gt; by supplying a SQL</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_javadoccomment">     * strings description of &lt;code&gt;JOIN&lt;/code&gt; or provide a textual</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_javadoccomment">     * description to assist applications using a &lt;code&gt;JoinRowSet&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">     * @return whereClause a textual or SQL description of the logical</em>
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">     * WHERE clause used in the JoinRowSet instance</em>
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">     * @throws SQLException if an error occurs in generating a representation</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">     * of the WHERE clause.</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> getWhereClause() <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     * Returns a &lt;code&gt;int&lt;/code&gt; describing the set SQL &lt;code&gt;JOIN&lt;/code&gt; type</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">     * governing this JoinRowSet instance. The returned type will be one of</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">     * standard JoinRowSet types: &lt;code&gt;CROSS_JOIN&lt;/code&gt;, &lt;code&gt;INNER_JOIN&lt;/code&gt;,</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">     * &lt;code&gt;LEFT_OUTER_JOIN&lt;/code&gt;, &lt;code&gt;RIGHT_OUTER_JOIN&lt;/code&gt; or</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">     * &lt;code&gt;FULL_JOIN&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">     * @return joinType one of the standard JoinRowSet static field</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> <em class="jxr_javadoccomment">     *     definitions of a SQL &lt;code&gt;JOIN&lt;/code&gt;. &lt;code&gt;JoinRowSet.INNER_JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> <em class="jxr_javadoccomment">     *     is returned as the default &lt;code&gt;JOIN&lt;/code&gt; type is no type has been</em>
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> <em class="jxr_javadoccomment">     *     explicitly set.</em>
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> <em class="jxr_javadoccomment">     * @throws SQLException if an error occurs determining the SQL &lt;code&gt;JOIN&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> <em class="jxr_javadoccomment">     *     type supported by the JoinRowSet instance.</em>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> <em class="jxr_javadoccomment">     * @see #setJoinType</em>
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getJoinType() <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     * An ANSI-style &lt;code&gt;JOIN&lt;/code&gt; providing a cross product of two tables</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> CROSS_JOIN = 0;
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> 
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a> <em class="jxr_javadoccomment">     * An ANSI-style &lt;code&gt;JOIN&lt;/code&gt; providing a inner join between two tables. Any</em>
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> <em class="jxr_javadoccomment">     * unmatched rows in either table of the join should be discarded.</em>
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> INNER_JOIN = 1;
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> 
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> <em class="jxr_javadoccomment">     * An ANSI-style &lt;code&gt;JOIN&lt;/code&gt; providing a left outer join between two</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">     * tables. In SQL, this is described where all records should be</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">     * returned from the left side of the JOIN statement.</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> LEFT_OUTER_JOIN = 2;
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> 
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">     * An ANSI-style &lt;code&gt;JOIN&lt;/code&gt; providing a right outer join between</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     * two tables. In SQL, this is described where all records from the</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">     * table on the right side of the JOIN statement even if the table</em>
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">     * on the left has no matching record.</em>
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> RIGHT_OUTER_JOIN = 3;
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> 
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_javadoccomment">     * An ANSI-style &lt;code&gt;JOIN&lt;/code&gt; providing a a full JOIN. Specifies that all</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_javadoccomment">     * rows from either table be returned regardless of matching</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> <em class="jxr_javadoccomment">     * records on the other table.</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> FULL_JOIN = 4;
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> 
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

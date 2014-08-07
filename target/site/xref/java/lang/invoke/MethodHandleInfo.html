@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>MethodHandleInfo xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/java/lang/invoke/MethodHandleInfo.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> java.lang.invoke;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.lang.reflect.*;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.*;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.lang.invoke.MethodHandleNatives.Constants;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.lang.invoke.MethodHandles.Lookup;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> java.lang.invoke.MethodHandleStatics.*;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * A symbolic reference obtained by cracking a direct method handle</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * into its consitutent symbolic parts.</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * To crack a direct method handle, call {@link Lookup#revealDirect Lookup.revealDirect}.</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * &lt;h1&gt;&lt;a name="directmh"&gt;&lt;/a&gt;Direct Method Handles&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * A &lt;em&gt;direct method handle&lt;/em&gt; represents a method, constructor, or field without</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * any intervening argument bindings or other transformations.</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * The method, constructor, or field referred to by a direct method handle is called</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * its &lt;em&gt;underlying member&lt;/em&gt;.</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * Direct method handles may be obtained in any of these ways:</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;By executing an {@code ldc} instruction on a {@code CONSTANT_MethodHandle} constant.</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> *     (See the Java Virtual Machine Specification, sections 4.4.8 and 5.4.3.)</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;By calling one of the &lt;a href="MethodHandles.Lookup.html#lookups"&gt;Lookup Factory Methods&lt;/a&gt;,</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> *     such as {@link Lookup#findVirtual Lookup.findVirtual},</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> *     to resolve a symbolic reference into a method handle.</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *     A symbolic reference consists of a class, name string, and type.</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;By calling the factory method {@link Lookup#unreflect Lookup.unreflect}</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> *     or {@link Lookup#unreflectSpecial Lookup.unreflectSpecial}</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> *     to convert a {@link Method} into a method handle.</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;By calling the factory method {@link Lookup#unreflectConstructor Lookup.unreflectConstructor}</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> *     to convert a {@link Constructor} into a method handle.</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;By calling the factory method {@link Lookup#unreflectGetter Lookup.unreflectGetter}</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> *     or {@link Lookup#unreflectSetter Lookup.unreflectSetter}</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> *     to convert a {@link Field} into a method handle.</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * &lt;h1&gt;Restrictions on Cracking&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * Given a suitable {@code Lookup} object, it is possible to crack any direct method handle</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * to recover a symbolic reference for the underlying method, constructor, or field.</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * Cracking must be done via a {@code Lookup} object equivalent to that which created</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * the target method handle, or which has enough access permissions to recreate</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * an equivalent method handle.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * If the underlying method is &lt;a href="MethodHandles.Lookup.html#callsens"&gt;caller sensitive&lt;/a&gt;,</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * the direct method handle will have been "bound" to a particular caller class, the</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * {@linkplain java.lang.invoke.MethodHandles.Lookup#lookupClass() lookup class}</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * of the lookup object used to create it.</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * Cracking this method handle with a different lookup class will fail</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * even if the underlying method is public (like {@code Class.forName}).</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * The requirement of lookup object matching provides a "fast fail" behavior</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * for programs which may otherwise trust erroneous revelation of a method</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * handle with symbolic information (or caller binding) from an unexpected scope.</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> * Use {@link java.lang.invoke.MethodHandles#reflectAs} to override this limitation.</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> * &lt;h1&gt;&lt;a name="refkinds"&gt;&lt;/a&gt;Reference kinds&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * The &lt;a href="MethodHandles.Lookup.html#lookups"&gt;Lookup Factory Methods&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> * correspond to all major use cases for methods, constructors, and fields.</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> * These use cases may be distinguished using small integers as follows:</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * &lt;table border=1 cellpadding=5 summary="reference kinds"&gt;</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * &lt;tr&gt;&lt;th&gt;reference kind&lt;/th&gt;&lt;th&gt;descriptive name&lt;/th&gt;&lt;th&gt;scope&lt;/th&gt;&lt;th&gt;member&lt;/th&gt;&lt;th&gt;behavior&lt;/th&gt;&lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 1}&lt;/td&gt;&lt;td&gt;{@code REF_getField}&lt;/td&gt;&lt;td&gt;{@code class}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code FT f;}&lt;/td&gt;&lt;td&gt;{@code (T) this.f;}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 2}&lt;/td&gt;&lt;td&gt;{@code REF_getStatic}&lt;/td&gt;&lt;td&gt;{@code class} or {@code interface}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code static}&lt;br&gt;{@code FT f;}&lt;/td&gt;&lt;td&gt;{@code (T) C.f;}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 3}&lt;/td&gt;&lt;td&gt;{@code REF_putField}&lt;/td&gt;&lt;td&gt;{@code class}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code FT f;}&lt;/td&gt;&lt;td&gt;{@code this.f = x;}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 4}&lt;/td&gt;&lt;td&gt;{@code REF_putStatic}&lt;/td&gt;&lt;td&gt;{@code class}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code static}&lt;br&gt;{@code FT f;}&lt;/td&gt;&lt;td&gt;{@code C.f = arg;}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 5}&lt;/td&gt;&lt;td&gt;{@code REF_invokeVirtual}&lt;/td&gt;&lt;td&gt;{@code class}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code T m(A*);}&lt;/td&gt;&lt;td&gt;{@code (T) this.m(arg*);}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 6}&lt;/td&gt;&lt;td&gt;{@code REF_invokeStatic}&lt;/td&gt;&lt;td&gt;{@code class} or {@code interface}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code static}&lt;br&gt;{@code T m(A*);}&lt;/td&gt;&lt;td&gt;{@code (T) C.m(arg*);}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 7}&lt;/td&gt;&lt;td&gt;{@code REF_invokeSpecial}&lt;/td&gt;&lt;td&gt;{@code class} or {@code interface}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code T m(A*);}&lt;/td&gt;&lt;td&gt;{@code (T) super.m(arg*);}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 8}&lt;/td&gt;&lt;td&gt;{@code REF_newInvokeSpecial}&lt;/td&gt;&lt;td&gt;{@code class}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code C(A*);}&lt;/td&gt;&lt;td&gt;{@code new C(arg*);}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code 9}&lt;/td&gt;&lt;td&gt;{@code REF_invokeInterface}&lt;/td&gt;&lt;td&gt;{@code interface}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment"> *     &lt;td&gt;{@code T m(A*);}&lt;/td&gt;&lt;td&gt;{@code (T) this.m(arg*);}&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment"> * &lt;/table&gt;</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment"> * @since 1.8</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <strong class="jxr_keyword">public</strong>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <strong class="jxr_keyword">interface</strong> <a href="../../../java/lang/invoke/MethodHandleInfo.html">MethodHandleInfo</a> {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     * A direct method handle reference kind,</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     * as defined in the &lt;a href="MethodHandleInfo.html#refkinds"&gt;table above&lt;/a&gt;.</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         REF_getField                = Constants.REF_getField,
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         REF_getStatic               = Constants.REF_getStatic,
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         REF_putField                = Constants.REF_putField,
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         REF_putStatic               = Constants.REF_putStatic,
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         REF_invokeVirtual           = Constants.REF_invokeVirtual,
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         REF_invokeStatic            = Constants.REF_invokeStatic,
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         REF_invokeSpecial           = Constants.REF_invokeSpecial,
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         REF_newInvokeSpecial        = Constants.REF_newInvokeSpecial,
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         REF_invokeInterface         = Constants.REF_invokeInterface;
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * Returns the reference kind of the cracked method handle, which in turn</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     * determines whether the method handle's underlying member was a constructor, method, or field.</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     * See the &lt;a href="MethodHandleInfo.html#refkinds"&gt;table above&lt;/a&gt; for definitions.</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * @return the integer code for the kind of reference used to access the underlying member</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getReferenceKind();
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Returns the class in which the cracked method handle's underlying member was defined.</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     * @return the declaring class of the underlying member</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getDeclaringClass();
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * Returns the name of the cracked method handle's underlying member.</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * This is {@code "&amp;lt;init&amp;gt;"} if the underlying member was a constructor,</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * else it is a simple method name or field name.</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * @return the simple name of the underlying member</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> getName();
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * Returns the nominal type of the cracked symbolic reference, expressed as a method type.</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     * If the reference is to a constructor, the return type will be {@code void}.</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     * If it is to a non-static method, the method type will not mention the {@code this} parameter.</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     * If it is to a field and the requested access is to read the field,</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * the method type will have no parameters and return the field type.</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     * If it is to a field and the requested access is to write the field,</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * the method type will have one parameter of the field type and return {@code void}.</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * Note that original direct method handle may include a leading {@code this} parameter,</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * or (in the case of a constructor) will replace the {@code void} return type</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * with the constructed class.</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * The nominal type does not include any {@code this} parameter,</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * and (in the case of a constructor) will return {@code void}.</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * @return the type of the underlying member, expressed as a method type</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> getMethodType();
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <em class="jxr_comment">// Utility methods.</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <em class="jxr_comment">// NOTE: class/name/type and reference kind constitute a symbolic reference</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <em class="jxr_comment">// member and modifiers are an add-on, derived from Core Reflection (or the equivalent)</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     * Reflects the underlying member as a method, constructor, or field object.</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     * If the underlying member is public, it is reflected as if by</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * {@code getMethod}, {@code getConstructor}, or {@code getField}.</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * Otherwise, it is reflected as if by</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * {@code getDeclaredMethod}, {@code getDeclaredConstructor}, or {@code getDeclaredField}.</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     * The underlying member must be accessible to the given lookup object.</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; the desired type of the result, either {@link Member} or a subtype</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">     * @param expected a class object representing the desired result type {@code T}</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">     * @param lookup the lookup object that created this MethodHandleInfo, or one with equivalent access privileges</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">     * @return a reference to the method, constructor, or field object</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">     * @exception ClassCastException if the member is not of the expected type</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     * @exception NullPointerException if either argument is {@code null}</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if the underlying member is not accessible to the given lookup object</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>     <strong class="jxr_keyword">public</strong> &lt;T <strong class="jxr_keyword">extends</strong> Member&gt; <a href="../../../java/lang/invoke/MethodHandleImpl.html">T</a> reflectAs(Class&lt;T&gt; expected, <a href="../../../java/lang/invoke/MethodHandles.html">Lookup</a> lookup);
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * Returns the access modifiers of the underlying member.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * @return the Java language modifiers for underlying member,</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     *         or -1 if the member cannot be accessed</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * @see Modifier</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     * @see #reflectAs</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getModifiers();
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> 
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">     * Determines if the underlying member was a variable arity method or constructor.</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">     * Such members are represented by method handles that are varargs collectors.</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * @implSpec</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * This produces a result equivalent to:</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     *     getReferenceKind() &gt;= REF_invokeVirtual &amp;&amp; Modifier.isTransient(getModifiers())</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * @return {@code true} if and only if the underlying member was declared with variable arity.</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>     <em class="jxr_comment">// spelling derived from java.lang.reflect.Executable, not MethodHandle.isVarargsCollector</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">boolean</strong> isVarArgs()  {
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         <em class="jxr_comment">// fields are never varargs:</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>         <strong class="jxr_keyword">if</strong> (MethodHandleNatives.refKindIsField((byte) getReferenceKind()))
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>             <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <em class="jxr_comment">// not in the public API: Modifier.VARARGS</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> ACC_VARARGS = 0x00000080;  <em class="jxr_comment">// from JVMS 4.6 (Table 4.20)</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         assert(ACC_VARARGS == Modifier.TRANSIENT);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         <strong class="jxr_keyword">return</strong> Modifier.isTransient(getModifiers());
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     }
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> 
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * Returns the descriptive name of the given reference kind,</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     * as defined in the &lt;a href="MethodHandleInfo.html#refkinds"&gt;table above&lt;/a&gt;.</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">     * The conventional prefix "REF_" is omitted.</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">     * @param referenceKind an integer code for a kind of reference used to access a class member</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     * @return a mixed-case string such as {@code "getField"}</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if the argument is not a valid</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     *            &lt;a href="MethodHandleInfo.html#refkinds"&gt;reference kind number&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../java/lang/String.html">String</a> referenceKindToString(<strong class="jxr_keyword">int</strong> referenceKind) {
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         <strong class="jxr_keyword">if</strong> (!MethodHandleNatives.refKindIsValid(referenceKind))
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>             <strong class="jxr_keyword">throw</strong> newIllegalArgumentException(<span class="jxr_string">"invalid reference kind"</span>, referenceKind);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>         <strong class="jxr_keyword">return</strong> MethodHandleNatives.refKindName((byte)referenceKind);
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     }
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * Returns a string representation for a {@code MethodHandleInfo},</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * given the four parts of its symbolic reference.</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * This is defined to be of the form {@code "RK C.N:MT"}, where {@code RK} is the</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * {@linkplain #referenceKindToString reference kind string} for {@code kind},</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     * {@code C} is the {@linkplain java.lang.Class#getName name} of {@code defc}</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">     * {@code N} is the {@code name}, and</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     * {@code MT} is the {@code type}.</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * These four values may be obtained from the</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     * {@linkplain #getReferenceKind reference kind},</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     * {@linkplain #getDeclaringClass declaring class},</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     * {@linkplain #getName member name},</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     * and {@linkplain #getMethodType method type}</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     * of a {@code MethodHandleInfo} object.</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * @implSpec</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     * This produces a result equivalent to:</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     *     String.format("%s %s.%s:%s", referenceKindToString(kind), defc.getName(), name, type)</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     * @param kind the {@linkplain #getReferenceKind reference kind} part of the symbolic reference</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * @param defc the {@linkplain #getDeclaringClass declaring class} part of the symbolic reference</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * @param name the {@linkplain #getName member name} part of the symbolic reference</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * @param type the {@linkplain #getMethodType method type} part of the symbolic reference</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * @return a string of the form {@code "RK C.N:MT"}</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * @exception IllegalArgumentException if the first argument is not a valid</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     *            &lt;a href="MethodHandleInfo.html#refkinds"&gt;reference kind number&lt;/a&gt;</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     * @exception NullPointerException if any reference argument is {@code null}</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../java/lang/String.html">String</a> toString(<strong class="jxr_keyword">int</strong> kind, Class&lt;?&gt; defc, <a href="../../../java/lang/String.html">String</a> name, <a href="../../../java/lang/invoke/MethodType.html">MethodType</a> type) {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         Objects.requireNonNull(name); Objects.requireNonNull(type);
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">return</strong> String.format(<span class="jxr_string">"%s %s.%s:%s"</span>, referenceKindToString(kind), defc.getName(), name, type);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

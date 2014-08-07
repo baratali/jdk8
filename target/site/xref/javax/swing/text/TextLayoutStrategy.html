@@ -1,0 +1,568 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TextLayoutStrategy xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/javax/swing/text/TextLayoutStrategy.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 1999, 2008, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">package</strong> javax.swing.text;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.*;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.awt.*;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.text.AttributedCharacterIterator;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.text.BreakIterator;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.awt.font.*;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.awt.geom.AffineTransform;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> javax.swing.JComponent;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> javax.swing.event.DocumentEvent;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> sun.font.BidiUtils;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * A flow strategy that uses java.awt.font.LineBreakMeasureer to</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * produce java.awt.font.TextLayout for i18n capable rendering.</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * If the child view being placed into the flow is of type</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * GlyphView and can be rendered by TextLayout, a GlyphPainter</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * that uses TextLayout is plugged into the GlyphView.</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * @author  Timothy Prinzing</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">class</strong> <a href="../../../javax/swing/text/TextLayoutStrategy.html">TextLayoutStrategy</a> <strong class="jxr_keyword">extends</strong> FlowView.FlowStrategy {
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">     * Constructs a layout strategy for paragraphs based</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">     * upon java.awt.font.LineBreakMeasurer.</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">public</strong> <a href="../../../javax/swing/text/TextLayoutStrategy.html">TextLayoutStrategy</a>() {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          text = <strong class="jxr_keyword">new</strong> <a href="../../../javax/swing/text/TextLayoutStrategy.html">AttributedSegment</a>();
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <em class="jxr_comment">// --- FlowStrategy methods --------------------------------------------</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">     * Gives notification that something was inserted into the document</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">     * in a location that the given flow view is responsible for.  The</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">     * strategy should update the appropriate changed region (which</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">     * depends upon the strategy used for repair).</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">     * @param e the change information from the associated document</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">     * @param alloc the current allocation of the view inside of the insets.</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">     *   This value will be null if the view has not yet been displayed.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">     * @see View#insertUpdate</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> insertUpdate(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <a href="../../../javax/swing/event/DocumentEvent.html">DocumentEvent</a> e, <a href="../../../java/awt/Rectangle.html">Rectangle</a> alloc) {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          sync(fv);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">super</strong>.insertUpdate(fv, e, alloc);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">     * Gives notification that something was removed from the document</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">     * in a location that the given flow view is responsible for.</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment">     * @param e the change information from the associated document</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">     * @param alloc the current allocation of the view inside of the insets.</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * @see View#removeUpdate</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> removeUpdate(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <a href="../../../javax/swing/event/DocumentEvent.html">DocumentEvent</a> e, <a href="../../../java/awt/Rectangle.html">Rectangle</a> alloc) {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          sync(fv);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">super</strong>.removeUpdate(fv, e, alloc);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">     * Gives notification from the document that attributes were changed</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">     * in a location that this view is responsible for.</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">     * @param changes the change information from the associated document</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">     * @param a the current allocation of the view</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">     * @param f the factory to use to rebuild if the view has children</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">     * @see View#changedUpdate</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> changedUpdate(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <a href="../../../javax/swing/event/DocumentEvent.html">DocumentEvent</a> e, <a href="../../../java/awt/Rectangle.html">Rectangle</a> alloc) {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          sync(fv);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>          <strong class="jxr_keyword">super</strong>.changedUpdate(fv, e, alloc);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      }
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     * Does a a full layout on the given View.  This causes all of</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment">     * the rows (child views) to be rebuilt to match the given</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment">     * constraints for each row.  This is called by a FlowView.layout</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">     * to update the child views in the flow.</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">     * @param fv the view to reflow</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> layout(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv) {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">super</strong>.layout(fv);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     }
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     * Creates a row of views that will fit within the</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * layout span of the row.  This is implemented to execute the</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * superclass functionality (which fills the row with child</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * views or view fragments) and follow that with bidi reordering</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     * of the unidirectional view fragments.</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * @param row the row to fill in with views.  This is assumed</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     *   to be empty on entry.</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     * @param pos  The current position in the children of</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">     *   this views element from which to start.</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">     * @return the position to start the next row</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> layoutRow(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <strong class="jxr_keyword">int</strong> rowIndex, <strong class="jxr_keyword">int</strong> p0) {
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         <strong class="jxr_keyword">int</strong> p1 = <strong class="jxr_keyword">super</strong>.layoutRow(fv, rowIndex, p0);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <a href="../../../javax/swing/text/View.html">View</a> row = fv.getView(rowIndex);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <a href="../../../javax/swing/text/Document.html">Document</a> doc = fv.getDocument();
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <a href="../../../java/lang/Object.html">Object</a> i18nFlag = doc.getProperty(AbstractDocument.I18NProperty);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">if</strong> ((i18nFlag != <strong class="jxr_keyword">null</strong>) &amp;&amp; i18nFlag.equals(Boolean.TRUE)) {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>             <strong class="jxr_keyword">int</strong> n = row.getViewCount();
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>             <strong class="jxr_keyword">if</strong> (n &gt; 1) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 <a href="../../../javax/swing/text/AbstractDocument.html">AbstractDocument</a> d = (AbstractDocument)fv.getDocument();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>                 <a href="../../../javax/swing/text/Element.html">Element</a> bidiRoot = d.getBidiRootElement();
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>                 byte[] levels = <strong class="jxr_keyword">new</strong> byte[n];
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>                 <a href="../../../javax/swing/text/View.html">View</a>[] reorder = <strong class="jxr_keyword">new</strong> <a href="../../../javax/swing/text/View.html">View</a>[n];
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                 <strong class="jxr_keyword">for</strong>( <strong class="jxr_keyword">int</strong> i=0; i&lt;n; i++ ) {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>                     <a href="../../../javax/swing/text/View.html">View</a> v = row.getView(i);
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                     <strong class="jxr_keyword">int</strong> bidiIndex =bidiRoot.getElementIndex(v.getStartOffset());
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                     <a href="../../../javax/swing/text/Element.html">Element</a> bidiElem = bidiRoot.getElement( bidiIndex );
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>                     levels[i] = (byte)StyleConstants.getBidiLevel(bidiElem.getAttributes());
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>                     reorder[i] = v;
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                 }
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                 BidiUtils.reorderVisually( levels, reorder );
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>                 row.replace(0, n, reorder);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             }
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>         }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>         <strong class="jxr_keyword">return</strong> p1;
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * Adjusts the given row if possible to fit within the</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * layout span.  Since all adjustments were already</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * calculated by the LineBreakMeasurer, this is implemented</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * to do nothing.</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * @param r the row to adjust to the current layout</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     *  span.</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">     * @param desiredSpan the current layout span &gt;= 0</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * @param x the location r starts at.</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> adjustRow(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <strong class="jxr_keyword">int</strong> rowIndex, <strong class="jxr_keyword">int</strong> desiredSpan, <strong class="jxr_keyword">int</strong> x) {
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     * Creates a unidirectional view that can be used to represent the</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     * current chunk.  This can be either an entire view from the</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * logical view, or a fragment of the view.</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * @param fv the view holding the flow</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * @param startOffset the start location for the view being created</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * @param spanLeft the about of span left to fill in the row</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * @param rowIndex the row the view will be placed into</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../javax/swing/text/View.html">View</a> createView(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv, <strong class="jxr_keyword">int</strong> startOffset, <strong class="jxr_keyword">int</strong> spanLeft, <strong class="jxr_keyword">int</strong> rowIndex) {
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         <em class="jxr_comment">// Get the child view that contains the given starting position</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         <a href="../../../javax/swing/text/View.html">View</a> lv = getLogicalView(fv);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         <a href="../../../javax/swing/text/View.html">View</a> row = fv.getView(rowIndex);
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>         <strong class="jxr_keyword">boolean</strong> requireNextWord = (viewBuffer.size() == 0) ? false : <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         <strong class="jxr_keyword">int</strong> childIndex = lv.getViewIndex(startOffset, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <a href="../../../javax/swing/text/View.html">View</a> v = lv.getView(childIndex);
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         <strong class="jxr_keyword">int</strong> endOffset = getLimitingOffset(v, startOffset, spanLeft, requireNextWord);
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         <strong class="jxr_keyword">if</strong> (endOffset == startOffset) {
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         <a href="../../../javax/swing/text/View.html">View</a> frag;
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         <strong class="jxr_keyword">if</strong> ((startOffset==v.getStartOffset()) &amp;&amp; (endOffset == v.getEndOffset())) {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>             <em class="jxr_comment">// return the entire view</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>             frag = v;
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>             <em class="jxr_comment">// return a unidirectional fragment.</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>             frag = v.createFragment(startOffset, endOffset);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         }
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         <strong class="jxr_keyword">if</strong> ((frag instanceof GlyphView) &amp;&amp; (measurer != <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>             <em class="jxr_comment">// install a TextLayout based renderer if the view is responsible</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>             <em class="jxr_comment">// for glyphs.  If the view represents a tab, the default</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>             <em class="jxr_comment">// glyph painter is used (may want to handle tabs differently).</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>             <strong class="jxr_keyword">boolean</strong> isTab = false;
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>             <strong class="jxr_keyword">int</strong> p0 = frag.getStartOffset();
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>             <strong class="jxr_keyword">int</strong> p1 = frag.getEndOffset();
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>             <strong class="jxr_keyword">if</strong> ((p1 - p0) == 1) {
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>                 <em class="jxr_comment">// check for tab</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>                 <a href="../../../javax/swing/text/Segment.html">Segment</a> s = ((GlyphView)frag).getText(p0, p1);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                 <strong class="jxr_keyword">char</strong> ch = s.first();
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 <strong class="jxr_keyword">if</strong> (ch == '\t') {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>                     isTab = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>                 }
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>             }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>             <a href="../../../java/awt/font/TextLayout.html">TextLayout</a> tl = (isTab) ? <strong class="jxr_keyword">null</strong> :
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>                 measurer.nextLayout(spanLeft, text.toIteratorIndex(endOffset),
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>                                     requireNextWord);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>             <strong class="jxr_keyword">if</strong> (tl != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>                 ((<a href="../../../javax/swing/text/GlyphView.html">GlyphView</a>)frag).setGlyphPainter(<strong class="jxr_keyword">new</strong> <a href="../../../javax/swing/text/GlyphPainter2.html">GlyphPainter2</a>(tl));
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>             }
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         }
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>         <strong class="jxr_keyword">return</strong> frag;
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     }
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     * Calculate the limiting offset for the next view fragment.</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">     * At most this would be the entire view (i.e. the limiting</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">     * offset would be the end offset in that case).  If the range</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * contains a tab or a direction change, that will limit the</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * offset to something less.  This value is then fed to the</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * LineBreakMeasurer as a limit to consider in addition to the</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     * remaining span.</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     * @param v the logical view representing the starting offset.</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * @param startOffset the model location to start at.</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     <strong class="jxr_keyword">int</strong> getLimitingOffset(<a href="../../../javax/swing/text/View.html">View</a> v, <strong class="jxr_keyword">int</strong> startOffset, <strong class="jxr_keyword">int</strong> spanLeft, <strong class="jxr_keyword">boolean</strong> requireNextWord) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">int</strong> endOffset = v.getEndOffset();
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> 
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         <em class="jxr_comment">// check for direction change</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         <a href="../../../javax/swing/text/Document.html">Document</a> doc = v.getDocument();
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <strong class="jxr_keyword">if</strong> (doc instanceof AbstractDocument) {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>             <a href="../../../javax/swing/text/AbstractDocument.html">AbstractDocument</a> d = (AbstractDocument) doc;
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>             <a href="../../../javax/swing/text/Element.html">Element</a> bidiRoot = d.getBidiRootElement();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>             <strong class="jxr_keyword">if</strong>( bidiRoot.getElementCount() &gt; 1 ) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>                 <strong class="jxr_keyword">int</strong> bidiIndex = bidiRoot.getElementIndex( startOffset );
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>                 <a href="../../../javax/swing/text/Element.html">Element</a> bidiElem = bidiRoot.getElement( bidiIndex );
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>                 endOffset = Math.min( bidiElem.getEndOffset(), endOffset );
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>             }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <em class="jxr_comment">// check for tab</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">if</strong> (v instanceof GlyphView) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>             <a href="../../../javax/swing/text/Segment.html">Segment</a> s = ((GlyphView)v).getText(startOffset, endOffset);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>             <strong class="jxr_keyword">char</strong> ch = s.first();
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>             <strong class="jxr_keyword">if</strong> (ch == '\t') {
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                 <em class="jxr_comment">// if the first character is a tab, create a dedicated</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>                 <em class="jxr_comment">// view for just the tab</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>                 endOffset = startOffset + 1;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>                 <strong class="jxr_keyword">for</strong> (ch = s.next(); ch != Segment.DONE; ch = s.next()) {
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>                     <strong class="jxr_keyword">if</strong> (ch == '\t') {
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                         <em class="jxr_comment">// found a tab, don't include it in the text</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>                         endOffset = startOffset + s.getIndex() - s.getBeginIndex();
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                     }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>             }
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         }
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         <em class="jxr_comment">// determine limit from LineBreakMeasurer</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">int</strong> limitIndex = text.toIteratorIndex(endOffset);
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <strong class="jxr_keyword">if</strong> (measurer != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>             <strong class="jxr_keyword">int</strong> index = text.toIteratorIndex(startOffset);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">if</strong> (measurer.getPosition() != index) {
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                 measurer.setPosition(index);
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>             }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             limitIndex = measurer.nextOffset(spanLeft, limitIndex, requireNextWord);
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         }
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>         <strong class="jxr_keyword">int</strong> pos = text.toModelPosition(limitIndex);
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         <strong class="jxr_keyword">return</strong> pos;
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     }
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> 
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * Synchronize the strategy with its FlowView.  Allows the strategy</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     * to update its state to account for changes in that portion of the</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     * model represented by the FlowView.  Also allows the strategy</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     * to update the FlowView in response to these changes.</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">void</strong> sync(<a href="../../../javax/swing/text/FlowView.html">FlowView</a> fv) {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         <a href="../../../javax/swing/text/View.html">View</a> lv = getLogicalView(fv);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         text.setView(lv);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> 
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         <a href="../../../java/awt/Container.html">Container</a> container = fv.getContainer();
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         <a href="../../../java/awt/font/FontRenderContext.html">FontRenderContext</a> frc = sun.swing.SwingUtilities2.
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>                                     getFontRenderContext(container);
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         <a href="../../../java/text/BreakIterator.html">BreakIterator</a> iter;
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>         <a href="../../../java/awt/Container.html">Container</a> c = fv.getContainer();
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         <strong class="jxr_keyword">if</strong> (c != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             iter = BreakIterator.getLineInstance(c.getLocale());
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>             iter = BreakIterator.getLineInstance();
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         }
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         <a href="../../../java/lang/Object.html">Object</a> shaper = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         <strong class="jxr_keyword">if</strong> (c instanceof JComponent) {
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             shaper = ((JComponent) c).getClientProperty(
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>                                             TextAttribute.NUMERIC_SHAPING);
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         }
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         text.setShaper(shaper);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         measurer = <strong class="jxr_keyword">new</strong> <a href="../../../java/awt/font/LineBreakMeasurer.html">LineBreakMeasurer</a>(text, iter, frc);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>         <em class="jxr_comment">// If the children of the FlowView's logical view are GlyphViews, they</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <em class="jxr_comment">// need to have their painters updated.</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         <strong class="jxr_keyword">int</strong> n = lv.getViewCount();
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         <strong class="jxr_keyword">for</strong>( <strong class="jxr_keyword">int</strong> i=0; i&lt;n; i++ ) {
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             <a href="../../../javax/swing/text/View.html">View</a> child = lv.getView(i);
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>             <strong class="jxr_keyword">if</strong>( child instanceof GlyphView ) {
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>                 <strong class="jxr_keyword">int</strong> p0 = child.getStartOffset();
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>                 <strong class="jxr_keyword">int</strong> p1 = child.getEndOffset();
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>                 measurer.setPosition(text.toIteratorIndex(p0));
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>                 <a href="../../../java/awt/font/TextLayout.html">TextLayout</a> layout
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>                     = measurer.nextLayout( Float.MAX_VALUE,
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>                                            text.toIteratorIndex(p1), false );
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>                 ((<a href="../../../javax/swing/text/GlyphView.html">GlyphView</a>)child).setGlyphPainter(<strong class="jxr_keyword">new</strong> <a href="../../../javax/swing/text/GlyphPainter2.html">GlyphPainter2</a>(layout));
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>             }
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         }
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         <em class="jxr_comment">// Reset measurer.</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         measurer.setPosition(text.getBeginIndex());
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>     }
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>     <em class="jxr_comment">// --- variables -------------------------------------------------------</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> 
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>     <strong class="jxr_keyword">private</strong> <a href="../../../java/awt/font/LineBreakMeasurer.html">LineBreakMeasurer</a> measurer;
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     <strong class="jxr_keyword">private</strong> <a href="../../../javax/swing/text/TextLayoutStrategy.html">AttributedSegment</a> text;
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> 
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     * Implementation of AttributedCharacterIterator that supports</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     * the GlyphView attributes for rendering the glyphs through a</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     * TextLayout.</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../javax/swing/text/TextLayoutStrategy.html">AttributedSegment</a> <strong class="jxr_keyword">extends</strong> <a href="../../../javax/swing/text/Segment.html">Segment</a> <strong class="jxr_keyword">implements</strong> <a href="../../../java/text/AttributedCharacterIterator.html">AttributedCharacterIterator</a> {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         <a href="../../../javax/swing/text/TextLayoutStrategy.html">AttributedSegment</a>() {
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         }
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> 
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         <a href="../../../javax/swing/text/View.html">View</a> getView() {
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>             <strong class="jxr_keyword">return</strong> v;
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         }
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> 
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         <strong class="jxr_keyword">void</strong> setView(<a href="../../../javax/swing/text/View.html">View</a> v) {
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>             <strong class="jxr_keyword">this</strong>.v = v;
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>             <a href="../../../javax/swing/text/Document.html">Document</a> doc = v.getDocument();
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>             <strong class="jxr_keyword">int</strong> p0 = v.getStartOffset();
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>             <strong class="jxr_keyword">int</strong> p1 = v.getEndOffset();
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>                 doc.getText(p0, p1 - p0, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>             } <strong class="jxr_keyword">catch</strong> (BadLocationException bl) {
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(<span class="jxr_string">"Invalid view"</span>);
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>             }
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>             first();
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         }
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> 
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">         * Get a boundary position for the font.</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">         * This is implemented to assume that two fonts are</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">         * equal if their references are equal (i.e. that the</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">         * font came from a cache).</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">         *</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">         * @return the location in model coordinates.  This is</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">         *  not the same as the Segment coordinates.</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <strong class="jxr_keyword">int</strong> getFontBoundary(<strong class="jxr_keyword">int</strong> childIndex, <strong class="jxr_keyword">int</strong> dir) {
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>             <a href="../../../javax/swing/text/View.html">View</a> child = v.getView(childIndex);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>             <a href="../../../java/awt/Font.html">Font</a> f = getFont(childIndex);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>             <strong class="jxr_keyword">for</strong> (childIndex += dir; (childIndex &gt;= 0) &amp;&amp; (childIndex &lt; v.getViewCount());
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>                  childIndex += dir) {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>                 <a href="../../../java/awt/Font.html">Font</a> next = getFont(childIndex);
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>                 <strong class="jxr_keyword">if</strong> (next != f) {
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                     <em class="jxr_comment">// this run is different</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                 }
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>                 child = v.getView(childIndex);
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>             }
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>             <strong class="jxr_keyword">return</strong> (dir &lt; 0) ? child.getStartOffset() : child.getEndOffset();
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         }
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> 
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">         * Get the font at the given child index.</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <a href="../../../java/awt/Font.html">Font</a> getFont(<strong class="jxr_keyword">int</strong> childIndex) {
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             <a href="../../../javax/swing/text/View.html">View</a> child = v.getView(childIndex);
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>             <strong class="jxr_keyword">if</strong> (child instanceof GlyphView) {
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>                 <strong class="jxr_keyword">return</strong> ((GlyphView)child).getFont();
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>             }
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         <strong class="jxr_keyword">int</strong> toModelPosition(<strong class="jxr_keyword">int</strong> index) {
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>             <strong class="jxr_keyword">return</strong> v.getStartOffset() + (index - getBeginIndex());
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         }
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> 
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         <strong class="jxr_keyword">int</strong> toIteratorIndex(<strong class="jxr_keyword">int</strong> pos) {
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>             <strong class="jxr_keyword">return</strong> pos - v.getStartOffset() + getBeginIndex();
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         }
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setShaper(<a href="../../../java/lang/Object.html">Object</a> shaper) {
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>             <strong class="jxr_keyword">this</strong>.shaper = shaper;
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         }
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> 
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <em class="jxr_comment">// --- AttributedCharacterIterator methods -------------------------</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> 
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">         * Returns the index of the first character of the run</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">         * with respect to all attributes containing the current character.</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunStart() {
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>             <strong class="jxr_keyword">int</strong> pos = toModelPosition(getIndex());
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>             <strong class="jxr_keyword">int</strong> i = v.getViewIndex(pos, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>             <a href="../../../javax/swing/text/View.html">View</a> child = v.getView(i);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>             <strong class="jxr_keyword">return</strong> toIteratorIndex(child.getStartOffset());
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>         }
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> 
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">         * Returns the index of the first character of the run</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> <em class="jxr_javadoccomment">         * with respect to the given attribute containing the current character.</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunStart(AttributedCharacterIterator.Attribute attribute) {
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>             <strong class="jxr_keyword">if</strong> (attribute instanceof TextAttribute) {
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>                 <strong class="jxr_keyword">int</strong> pos = toModelPosition(getIndex());
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>                 <strong class="jxr_keyword">int</strong> i = v.getViewIndex(pos, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>                 <strong class="jxr_keyword">if</strong> (attribute == TextAttribute.FONT) {
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>                     <strong class="jxr_keyword">return</strong> toIteratorIndex(getFontBoundary(i, -1));
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                 }
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>             }
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>             <strong class="jxr_keyword">return</strong> getBeginIndex();
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>         }
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> 
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">         * Returns the index of the first character of the run</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">         * with respect to the given attributes containing the current character.</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunStart(Set&lt;? <strong class="jxr_keyword">extends</strong> Attribute&gt; attributes) {
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>             <strong class="jxr_keyword">int</strong> index = getBeginIndex();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>             <a href="../../../java/lang/Object.html">Object</a>[] a = attributes.toArray();
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; a.length; i++) {
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>                 <a href="../../../java/awt/font/TextAttribute.html">TextAttribute</a> attr = (TextAttribute) a[i];
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>                 index = Math.max(getRunStart(attr), index);
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             }
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>             <strong class="jxr_keyword">return</strong> Math.min(getIndex(), index);
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         }
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> 
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">         * Returns the index of the first character following the run</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">         * with respect to all attributes containing the current character.</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunLimit() {
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>             <strong class="jxr_keyword">int</strong> pos = toModelPosition(getIndex());
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>             <strong class="jxr_keyword">int</strong> i = v.getViewIndex(pos, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>             <a href="../../../javax/swing/text/View.html">View</a> child = v.getView(i);
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>             <strong class="jxr_keyword">return</strong> toIteratorIndex(child.getEndOffset());
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> 
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">         * Returns the index of the first character following the run</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> <em class="jxr_javadoccomment">         * with respect to the given attribute containing the current character.</em>
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunLimit(AttributedCharacterIterator.Attribute attribute) {
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <strong class="jxr_keyword">if</strong> (attribute instanceof TextAttribute) {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>                 <strong class="jxr_keyword">int</strong> pos = toModelPosition(getIndex());
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>                 <strong class="jxr_keyword">int</strong> i = v.getViewIndex(pos, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>                 <strong class="jxr_keyword">if</strong> (attribute == TextAttribute.FONT) {
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>                     <strong class="jxr_keyword">return</strong> toIteratorIndex(getFontBoundary(i, 1));
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>                 }
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>             }
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>             <strong class="jxr_keyword">return</strong> getEndIndex();
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         }
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> 
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">         * Returns the index of the first character following the run</em>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">         * with respect to the given attributes containing the current character.</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getRunLimit(Set&lt;? <strong class="jxr_keyword">extends</strong> Attribute&gt; attributes) {
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>             <strong class="jxr_keyword">int</strong> index = getEndIndex();
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <a href="../../../java/lang/Object.html">Object</a>[] a = attributes.toArray();
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; a.length; i++) {
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>                 <a href="../../../java/awt/font/TextAttribute.html">TextAttribute</a> attr = (TextAttribute) a[i];
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>                 index = Math.min(getRunLimit(attr), index);
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>             }
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>             <strong class="jxr_keyword">return</strong> Math.max(getIndex(), index);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>         }
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> <em class="jxr_javadoccomment">         * Returns a map with the attributes defined on the current</em>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> <em class="jxr_javadoccomment">         * character.</em>
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>         <strong class="jxr_keyword">public</strong> Map&lt;Attribute, Object&gt; getAttributes() {
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>             <a href="../../../java/lang/Object.html">Object</a>[] ka = keys.toArray();
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>             Hashtable&lt;Attribute, Object&gt; h = <strong class="jxr_keyword">new</strong> Hashtable&lt;Attribute, Object&gt;();
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; ka.length; i++) {
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>                 <a href="../../../java/awt/font/TextAttribute.html">TextAttribute</a> a = (TextAttribute) ka[i];
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>                 <a href="../../../java/lang/Object.html">Object</a> value = getAttribute(a);
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>                 <strong class="jxr_keyword">if</strong> (value != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>                     h.put(a, value);
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>                 }
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>             }
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>             <strong class="jxr_keyword">return</strong> h;
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>         }
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> 
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> <em class="jxr_javadoccomment">         * Returns the value of the named attribute for the current character.</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">         * Returns null if the attribute is not defined.</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">         * @param attribute the key of the attribute whose value is requested.</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>         <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/Object.html">Object</a> getAttribute(AttributedCharacterIterator.Attribute attribute) {
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>             <strong class="jxr_keyword">int</strong> pos = toModelPosition(getIndex());
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>             <strong class="jxr_keyword">int</strong> childIndex = v.getViewIndex(pos, Position.Bias.Forward);
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>             <strong class="jxr_keyword">if</strong> (attribute == TextAttribute.FONT) {
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>                 <strong class="jxr_keyword">return</strong> getFont(childIndex);
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong>( attribute == TextAttribute.RUN_DIRECTION ) {
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>                 <strong class="jxr_keyword">return</strong>
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>                     v.getDocument().getProperty(TextAttribute.RUN_DIRECTION);
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (attribute == TextAttribute.NUMERIC_SHAPING) {
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>                 <strong class="jxr_keyword">return</strong> shaper;
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>             }
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>         }
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> 
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a> <em class="jxr_javadoccomment">         * Returns the keys of all attributes defined on the</em>
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> <em class="jxr_javadoccomment">         * iterator's text range. The set is empty if no</em>
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> <em class="jxr_javadoccomment">         * attributes are defined.</em>
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         <strong class="jxr_keyword">public</strong> Set&lt;Attribute&gt; getAllAttributeKeys() {
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>             <strong class="jxr_keyword">return</strong> keys;
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         }
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> 
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>         <a href="../../../javax/swing/text/View.html">View</a> v;
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>         <strong class="jxr_keyword">static</strong> Set&lt;Attribute&gt; keys;
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> 
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>         <strong class="jxr_keyword">static</strong> {
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>             keys = <strong class="jxr_keyword">new</strong> HashSet&lt;Attribute&gt;();
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>             keys.add(TextAttribute.FONT);
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>             keys.add(TextAttribute.RUN_DIRECTION);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>             keys.add(TextAttribute.NUMERIC_SHAPING);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         }
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         <strong class="jxr_keyword">private</strong> <a href="../../../java/lang/Object.html">Object</a> shaper = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>     }
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> 
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

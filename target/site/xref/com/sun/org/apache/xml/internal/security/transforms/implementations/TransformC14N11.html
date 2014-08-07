@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>TransformC14N11 xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../../../apidocs/com/sun/org/apache/xml/internal/security/transforms/implementations/TransformC14N11.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2008-2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> * Licensed to the Apache Software Foundation (ASF) under one</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> * or more contributor license agreements. See the NOTICE file</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * distributed with this work for additional information</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> * regarding copyright ownership. The ASF licenses this file</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> * to you under the Apache License, Version 2.0 (the</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * "License"); you may not use this file except in compliance</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> * with the License. You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> * <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * Unless required by applicable law or agreed to in writing,</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * software distributed under the License is distributed on an</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * KIND, either express or implied. See the License for the</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * specific language governing permissions and limitations</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * under the License.</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">package</strong> com.sun.org.apache.xml.internal.security.transforms.implementations;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.io.OutputStream;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.c14n.CanonicalizationException;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.c14n.implementations.Canonicalizer11_OmitComments;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.signature.XMLSignatureInput;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.transforms.Transform;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.transforms.TransformSpi;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.sun.org.apache.xml.internal.security.transforms.Transforms;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * Implements the &lt;CODE&gt;<a href="http://www.w3.org/2006/12/xml-c14n11&lt;/CODE&gt" target="alexandria_uri">http://www.w3.org/2006/12/xml-c14n11&lt;/CODE&gt</a>;</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * (C14N 1.1) transform.</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * @author Sean Mullan</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/transforms/implementations/TransformC14N11.html">TransformC14N11</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/transforms/TransformSpi.html">TransformSpi</a> {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> engineGetURI() {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          <strong class="jxr_keyword">return</strong> Transforms.TRANSFORM_C14N11_OMIT_COMMENTS;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/signature/XMLSignatureInput.html">XMLSignatureInput</a> enginePerformTransform(
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/signature/XMLSignatureInput.html">XMLSignatureInput</a> input, <a href="../../../../../../../../../java/io/OutputStream.html">OutputStream</a> os, <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/transforms/Transform.html">Transform</a> transform
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      ) <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/c14n/CanonicalizationException.html">CanonicalizationException</a> {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/c14n/implementations/Canonicalizer11_OmitComments.html">Canonicalizer11_OmitComments</a> c14n = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/c14n/implementations/Canonicalizer11_OmitComments.html">Canonicalizer11_OmitComments</a>();
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">if</strong> (os != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>              c14n.setWriter(os);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>          }
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          byte[] result = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>          result = c14n.engineCanonicalize(input);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/signature/XMLSignatureInput.html">XMLSignatureInput</a> output = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xml/internal/security/signature/XMLSignatureInput.html">XMLSignatureInput</a>(result);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          <strong class="jxr_keyword">if</strong> (os != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>              output.setOutputStream(os);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">return</strong> output;
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

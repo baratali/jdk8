@@ -1,0 +1,1058 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>InternalFrameTitlePaneMaximizeButtonPainter xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../apidocs/javax/swing/plaf/nimbus/InternalFrameTitlePaneMaximizeButtonPainter.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2005, 2006, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">package</strong> javax.swing.plaf.nimbus;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.awt.*;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.awt.geom.*;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.awt.image.*;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.swing.*;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.swing.Painter;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../javax/swing/plaf/nimbus/InternalFrameTitlePaneMaximizeButtonPainter.html">InternalFrameTitlePaneMaximizeButtonPainter</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../javax/swing/plaf/nimbus/AbstractRegionPainter.html">AbstractRegionPainter</a> {
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <em class="jxr_comment">//package private integers representing the available states that</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <em class="jxr_comment">//this painter will paint. These are used when creating a new instance</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <em class="jxr_comment">//of InternalFrameTitlePaneMaximizeButtonPainter to determine which region/state is being painted</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <em class="jxr_comment">//by that instance.</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_DISABLED_WINDOWMAXIMIZED = 1;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_ENABLED_WINDOWMAXIMIZED = 2;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_MOUSEOVER_WINDOWMAXIMIZED = 3;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_PRESSED_WINDOWMAXIMIZED = 4;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_ENABLED_WINDOWNOTFOCUSED_WINDOWMAXIMIZED = 5;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_MOUSEOVER_WINDOWNOTFOCUSED_WINDOWMAXIMIZED = 6;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_PRESSED_WINDOWNOTFOCUSED_WINDOWMAXIMIZED = 7;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_DISABLED = 8;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_ENABLED = 9;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_MOUSEOVER = 10;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_PRESSED = 11;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_ENABLED_WINDOWNOTFOCUSED = 12;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_MOUSEOVER_WINDOWNOTFOCUSED = 13;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> BACKGROUND_PRESSED_WINDOWNOTFOCUSED = 14;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> state; <em class="jxr_comment">//refers to one of the static final ints above</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/PaintContext.html">PaintContext</a> ctx;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <em class="jxr_comment">//the following 4 variables are reused during the painting code of the layers</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Path2D.html">Path2D</a> path = <strong class="jxr_keyword">new</strong> Path2D.Float();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> rect = <strong class="jxr_keyword">new</strong> Rectangle2D.Float(0, 0, 0, 0);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/RoundRectangle2D.html">RoundRectangle2D</a> roundRect = <strong class="jxr_keyword">new</strong> RoundRectangle2D.Float(0, 0, 0, 0, 0, 0);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Ellipse2D.html">Ellipse2D</a> ellipse = <strong class="jxr_keyword">new</strong> Ellipse2D.Float(0, 0, 0, 0);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <em class="jxr_comment">//All Colors used for painting are stored here. Ideally, only those colors being used</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <em class="jxr_comment">//by a particular instance of InternalFrameTitlePaneMaximizeButtonPainter would be created. For the moment at least,</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <em class="jxr_comment">//however, all are created for each instance.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color1 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.43362403f, -0.6792196f, 0.054901958f, 0);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color2 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.631913f, -0.039215684f, 0);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color3 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.67475206f, 0.06666666f, 0);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color4 = <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>(255, 200, 0, 255);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color5 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.4355179f, -0.6581704f, -0.011764705f, 0);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color6 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44484192f, -0.644647f, -0.031372547f, 0);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color7 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44484192f, -0.6480447f, 0.0f, 0);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color8 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.4366002f, -0.6368381f, -0.04705882f, 0);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color9 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44484192f, -0.6423572f, -0.05098039f, 0);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color10 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0055555105f, -0.062449392f, 0.07058823f, 0);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color11 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, -0.008547008f, -0.04174325f, -0.0039215684f, -13);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color12 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.049920253f, 0.031372547f, 0);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color13 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0055555105f, -0.0029994324f, -0.38039216f, -185);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color14 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.1627907f, 0.2793296f, -0.6431373f, 0);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color15 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.025363803f, 0.2454313f, -0.2392157f, 0);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color16 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.02642706f, -0.3456704f, -0.011764705f, 0);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color17 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.025363803f, 0.2373128f, -0.23529413f, 0);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color18 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.025363803f, 0.0655365f, -0.13333333f, 0);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color19 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, -0.0087068975f, -0.009330213f, -0.32156864f, 0);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color20 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.110526316f, 0.25490195f, -13);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color21 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.110526316f, 0.25490195f, -33);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color22 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.1627907f, 0.2793296f, -0.627451f, 0);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color23 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.04572721f, 0.2793296f, -0.37254903f, 0);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color24 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.009822637f, -0.34243205f, 0.054901958f, 0);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color25 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.010559708f, 0.13167858f, -0.11764705f, 0);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color26 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.010559708f, 0.12599629f, -0.11372548f, 0);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color27 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.010559708f, 9.2053413E-4f, -0.011764705f, 0);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color28 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.015249729f, 0.2793296f, -0.22352943f, -49);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color29 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.01279068f, 0.2793296f, -0.19215685f, 0);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color30 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.013319805f, 0.2793296f, -0.20784315f, 0);
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color31 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.009604409f, 0.2793296f, -0.16862744f, 0);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color32 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.011600211f, 0.2793296f, -0.15294117f, 0);
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color33 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.011939123f, 0.2793296f, -0.16470587f, 0);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color34 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.009506017f, 0.257901f, -0.15294117f, 0);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color35 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, -0.17054264f, -0.7206704f, -0.7019608f, 0);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color36 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.07804492f, 0.2793296f, -0.47058827f, 0);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color37 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.03592503f, -0.23865601f, -0.15686274f, 0);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color38 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.035979107f, 0.23766291f, -0.3254902f, 0);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color39 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.03690417f, 0.2793296f, -0.33333334f, 0);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color40 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.09681849f, 0.2793296f, -0.5137255f, 0);
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color41 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.06535478f, 0.2793296f, -0.44705883f, 0);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color42 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.0675526f, 0.2793296f, -0.454902f, 0);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color43 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.060800627f, 0.2793296f, -0.4392157f, 0);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color44 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.06419912f, 0.2793296f, -0.42352942f, 0);
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color45 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.06375685f, 0.2793296f, -0.43137255f, 0);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color46 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.048207358f, 0.2793296f, -0.3882353f, 0);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color47 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.057156876f, 0.2793296f, -0.42352942f, 0);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color48 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.62133265f, -0.109803915f, 0);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color49 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.5843068f, -0.27058825f, 0);
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color50 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.4294573f, -0.698349f, 0.17647058f, 0);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color51 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.45066953f, -0.665394f, 0.07843137f, 0);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color52 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.65913194f, 0.062745094f, 0);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color53 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.6609689f, 0.086274505f, 0);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color54 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.6578432f, 0.04705882f, 0);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color55 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.4355179f, -0.6633787f, 0.05098039f, 0);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color56 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.4355179f, -0.664548f, 0.06666666f, 0);
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color57 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.029445238f, -0.30980393f, -13);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color58 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.027957506f, -0.31764707f, -33);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color59 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.43202144f, -0.64722407f, -0.007843137f, 0);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color60 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.44056845f, -0.6339652f, -0.02352941f, 0);
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color61 = <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>(165, 169, 176, 255);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color62 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, -0.00505054f, -0.057128258f, 0.062745094f, 0);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color63 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, -0.003968239f, -0.035257496f, -0.015686274f, 0);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color64 = <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>(64, 88, 0, 255);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color65 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.110526316f, 0.25490195f, 0);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color66 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.004830897f, -0.00920473f, 0.14509803f, -101);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color67 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.009564877f, 0.100521624f, -0.109803915f, 0);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color68 = <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>(113, 125, 0, 255);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color69 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0025252104f, -0.0067527294f, 0.086274505f, -65);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color70 = decodeColor(<span class="jxr_string">"nimbusGreen"</span>, 0.03129223f, 0.2793296f, -0.27450982f, 0);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color71 = <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>(19, 48, 0, 255);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Color.html">Color</a> color72 = decodeColor(<span class="jxr_string">"nimbusBlueGrey"</span>, 0.0f, -0.029445238f, -0.30980393f, 0);
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <em class="jxr_comment">//Array of current component colors, updated in each paint call</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/lang/Object.html">Object</a>[] componentColors;
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../javax/swing/plaf/nimbus/InternalFrameTitlePaneMaximizeButtonPainter.html">InternalFrameTitlePaneMaximizeButtonPainter</a>(<a href="../../../../java/awt/PaintContext.html">PaintContext</a> ctx, <strong class="jxr_keyword">int</strong> state) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         <strong class="jxr_keyword">super</strong>();
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">this</strong>.state = state;
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">this</strong>.ctx = ctx;
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     @Override
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> doPaint(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g, <a href="../../../../javax/swing/JComponent.html">JComponent</a> c, <strong class="jxr_keyword">int</strong> width, <strong class="jxr_keyword">int</strong> height, <a href="../../../../java/lang/Object.html">Object</a>[] extendedCacheKeys) {
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>         <em class="jxr_comment">//populate componentColors array with colors calculated in getExtendedCacheKeys call</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>         componentColors = extendedCacheKeys;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         <em class="jxr_comment">//generate this entire method. Each state/bg/fg/border combo that has</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         <em class="jxr_comment">//been painted gets its own KEY and paint method.</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         <strong class="jxr_keyword">switch</strong>(state) {
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_DISABLED_WINDOWMAXIMIZED: paintBackgroundDisabledAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_ENABLED_WINDOWMAXIMIZED: paintBackgroundEnabledAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_MOUSEOVER_WINDOWMAXIMIZED: paintBackgroundMouseOverAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_PRESSED_WINDOWMAXIMIZED: paintBackgroundPressedAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_ENABLED_WINDOWNOTFOCUSED_WINDOWMAXIMIZED: paintBackgroundEnabledAndWindowNotFocusedAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_MOUSEOVER_WINDOWNOTFOCUSED_WINDOWMAXIMIZED: paintBackgroundMouseOverAndWindowNotFocusedAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_PRESSED_WINDOWNOTFOCUSED_WINDOWMAXIMIZED: paintBackgroundPressedAndWindowNotFocusedAndWindowMaximized(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_DISABLED: paintBackgroundDisabled(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_ENABLED: paintBackgroundEnabled(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_MOUSEOVER: paintBackgroundMouseOver(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_PRESSED: paintBackgroundPressed(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_ENABLED_WINDOWNOTFOCUSED: paintBackgroundEnabledAndWindowNotFocused(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_MOUSEOVER_WINDOWNOTFOCUSED: paintBackgroundMouseOverAndWindowNotFocused(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>             <strong class="jxr_keyword">case</strong> BACKGROUND_PRESSED_WINDOWNOTFOCUSED: paintBackgroundPressedAndWindowNotFocused(g); <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     @Override
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../java/awt/PaintContext.html">PaintContext</a> getPaintContext() {
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         <strong class="jxr_keyword">return</strong> ctx;
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     }
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> 
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundDisabledAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         g.setPaint(decodeGradient1(roundRect));
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         g.setPaint(decodeGradient2(roundRect));
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         g.setPaint(color5);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         g.setPaint(color6);
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>         g.setPaint(color6);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         g.setPaint(color7);
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>         rect = decodeRect6();
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>         g.setPaint(color8);
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         g.setPaint(color9);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         g.setPaint(color7);
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         g.setPaint(decodeGradient3(path));
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         g.fill(path);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         g.setPaint(color12);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         g.fill(path);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     }
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundEnabledAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>         g.setPaint(decodeGradient4(roundRect));
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>         g.setPaint(decodeGradient5(roundRect));
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>         rect = decodeRect9();
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         rect = decodeRect10();
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         g.setPaint(color19);
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         g.setPaint(color20);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>         g.fill(path);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         g.setPaint(color21);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         g.fill(path);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundMouseOverAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>         g.setPaint(decodeGradient6(roundRect));
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         g.setPaint(decodeGradient7(roundRect));
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         g.setPaint(color28);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         g.setPaint(color29);
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>         g.setPaint(color30);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         g.setPaint(color31);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         rect = decodeRect9();
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         g.setPaint(color32);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         g.setPaint(color33);
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>         rect = decodeRect10();
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         g.setPaint(color34);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         g.setPaint(color31);
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         g.setPaint(color20);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>         g.fill(path);
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         g.setPaint(color21);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         g.fill(path);
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>     }
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundPressedAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         g.setPaint(decodeGradient8(roundRect));
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         g.setPaint(decodeGradient9(roundRect));
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         g.setPaint(color40);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         g.setPaint(color41);
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         g.setPaint(color42);
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>         g.setPaint(color43);
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>         rect = decodeRect6();
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>         g.setPaint(color44);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>         g.setPaint(color45);
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>         rect = decodeRect10();
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>         g.setPaint(color46);
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         g.setPaint(color47);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         g.setPaint(color20);
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         g.fill(path);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         g.setPaint(color21);
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         g.fill(path);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> 
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundEnabledAndWindowNotFocusedAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         g.setPaint(decodeGradient10(roundRect));
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>         g.setPaint(decodeGradient11(roundRect));
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>         g.setPaint(color54);
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         g.setPaint(color55);
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>         g.setPaint(color56);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>         g.setPaint(color57);
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         g.fill(path);
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         g.setPaint(color58);
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         g.fill(path);
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> 
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     }
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> 
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundMouseOverAndWindowNotFocusedAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>         g.setPaint(decodeGradient6(roundRect));
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         g.setPaint(decodeGradient7(roundRect));
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>         g.setPaint(color28);
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>         g.setPaint(color29);
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         g.setPaint(color30);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>         g.setPaint(color31);
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         rect = decodeRect9();
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         g.setPaint(color32);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>         g.setPaint(color33);
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>         rect = decodeRect10();
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>         g.setPaint(color34);
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>         g.setPaint(color31);
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         g.setPaint(color20);
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         g.fill(path);
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         g.setPaint(color21);
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>         g.fill(path);
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> 
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>     }
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> 
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundPressedAndWindowNotFocusedAndWindowMaximized(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         g.setPaint(decodeGradient8(roundRect));
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>         g.setPaint(decodeGradient9(roundRect));
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         rect = decodeRect2();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         g.setPaint(color40);
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         rect = decodeRect3();
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         g.setPaint(color41);
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>         rect = decodeRect4();
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         g.setPaint(color42);
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         rect = decodeRect5();
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         g.setPaint(color43);
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         rect = decodeRect6();
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         g.setPaint(color44);
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         rect = decodeRect7();
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         g.setPaint(color45);
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         rect = decodeRect10();
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         g.setPaint(color46);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         rect = decodeRect8();
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         g.setPaint(color47);
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         path = decodePath1();
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         g.setPaint(color20);
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         g.fill(path);
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         path = decodePath2();
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         g.setPaint(color21);
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         g.fill(path);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>     }
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundDisabled(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>         g.setPaint(decodeGradient1(roundRect));
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         g.setPaint(decodeGradient12(roundRect));
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         g.setPaint(color61);
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>         g.fill(path);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>         g.setPaint(decodeGradient13(path));
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>         g.fill(path);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> 
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     }
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundEnabled(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>         g.setPaint(color13);
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>         g.setPaint(decodeGradient4(roundRect));
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>         g.setPaint(decodeGradient5(roundRect));
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>         g.setPaint(color64);
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         g.fill(path);
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L516" href="#L516">516</a>         g.setPaint(color65);
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>         g.fill(path);
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> 
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>     }
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> 
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundMouseOver(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>         g.setPaint(color66);
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>         g.setPaint(decodeGradient6(roundRect));
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>         g.setPaint(decodeGradient14(roundRect));
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         g.setPaint(color68);
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>         g.fill(path);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>         g.setPaint(color65);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         g.fill(path);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> 
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>     }
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundPressed(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>         g.setPaint(color69);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>         g.setPaint(decodeGradient8(roundRect));
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>         g.setPaint(decodeGradient15(roundRect));
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L555" href="#L555">555</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>         g.setPaint(color71);
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>         g.fill(path);
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>         g.setPaint(color65);
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>         g.fill(path);
+<a class="jxr_linenumber" name="L562" href="#L562">562</a> 
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>     }
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> 
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundEnabledAndWindowNotFocused(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>         g.setPaint(decodeGradient10(roundRect));
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>         g.setPaint(decodeGradient16(roundRect));
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L576" href="#L576">576</a>         g.setPaint(color72);
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>         g.fill(path);
+<a class="jxr_linenumber" name="L578" href="#L578">578</a> 
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>     }
+<a class="jxr_linenumber" name="L580" href="#L580">580</a> 
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundMouseOverAndWindowNotFocused(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L583" href="#L583">583</a>         g.setPaint(color66);
+<a class="jxr_linenumber" name="L584" href="#L584">584</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>         g.setPaint(decodeGradient6(roundRect));
+<a class="jxr_linenumber" name="L587" href="#L587">587</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L588" href="#L588">588</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>         g.setPaint(decodeGradient14(roundRect));
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L593" href="#L593">593</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>         g.setPaint(color68);
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>         g.fill(path);
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>         g.setPaint(color65);
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>         g.fill(path);
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> 
+<a class="jxr_linenumber" name="L601" href="#L601">601</a>     }
+<a class="jxr_linenumber" name="L602" href="#L602">602</a> 
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paintBackgroundPressedAndWindowNotFocused(<a href="../../../../java/awt/Graphics2D.html">Graphics2D</a> g) {
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         roundRect = decodeRoundRect3();
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>         g.setPaint(color69);
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>         roundRect = decodeRoundRect1();
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>         g.setPaint(decodeGradient8(roundRect));
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>         roundRect = decodeRoundRect2();
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>         g.setPaint(decodeGradient15(roundRect));
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>         g.fill(roundRect);
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>         rect = decodeRect1();
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>         g.setPaint(color4);
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>         g.fill(rect);
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>         path = decodePath3();
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         g.setPaint(color71);
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>         g.fill(path);
+<a class="jxr_linenumber" name="L619" href="#L619">619</a>         path = decodePath4();
+<a class="jxr_linenumber" name="L620" href="#L620">620</a>         g.setPaint(color65);
+<a class="jxr_linenumber" name="L621" href="#L621">621</a>         g.fill(path);
+<a class="jxr_linenumber" name="L622" href="#L622">622</a> 
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>     }
+<a class="jxr_linenumber" name="L624" href="#L624">624</a> 
+<a class="jxr_linenumber" name="L625" href="#L625">625</a> 
+<a class="jxr_linenumber" name="L626" href="#L626">626</a> 
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/RoundRectangle2D.html">RoundRectangle2D</a> decodeRoundRect1() {
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>         roundRect.setRoundRect(decodeX(1.0f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>                                decodeY(1.0f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L630" href="#L630">630</a>                                decodeX(2.0f) - decodeX(1.0f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>                                decodeY(1.9444444f) - decodeY(1.0f), <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>                                8.6f, 8.6f); <em class="jxr_comment">//rounding</em>
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>         <strong class="jxr_keyword">return</strong> roundRect;
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>     }
+<a class="jxr_linenumber" name="L635" href="#L635">635</a> 
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/RoundRectangle2D.html">RoundRectangle2D</a> decodeRoundRect2() {
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>         roundRect.setRoundRect(decodeX(1.0526316f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>                                decodeY(1.0555556f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L639" href="#L639">639</a>                                decodeX(1.9473684f) - decodeX(1.0526316f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>                                decodeY(1.8888888f) - decodeY(1.0555556f), <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a>                                6.75f, 6.75f); <em class="jxr_comment">//rounding</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a>         <strong class="jxr_keyword">return</strong> roundRect;
+<a class="jxr_linenumber" name="L643" href="#L643">643</a>     }
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> 
+<a class="jxr_linenumber" name="L645" href="#L645">645</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect1() {
+<a class="jxr_linenumber" name="L646" href="#L646">646</a>             rect.setRect(decodeX(1.0f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a>                          decodeY(1.0f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a>                          decodeX(1.0f) - decodeX(1.0f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a>                          decodeY(1.0f) - decodeY(1.0f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>     }
+<a class="jxr_linenumber" name="L652" href="#L652">652</a> 
+<a class="jxr_linenumber" name="L653" href="#L653">653</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect2() {
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>             rect.setRect(decodeX(1.2165072f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L655" href="#L655">655</a>                          decodeY(1.2790405f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L656" href="#L656">656</a>                          decodeX(1.6746411f) - decodeX(1.2165072f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L657" href="#L657">657</a>                          decodeY(1.3876263f) - decodeY(1.2790405f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>     }
+<a class="jxr_linenumber" name="L660" href="#L660">660</a> 
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect3() {
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>             rect.setRect(decodeX(1.2212919f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>                          decodeY(1.6047981f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L664" href="#L664">664</a>                          decodeX(1.270335f) - decodeX(1.2212919f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L665" href="#L665">665</a>                          decodeY(1.3876263f) - decodeY(1.6047981f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L666" href="#L666">666</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L667" href="#L667">667</a>     }
+<a class="jxr_linenumber" name="L668" href="#L668">668</a> 
+<a class="jxr_linenumber" name="L669" href="#L669">669</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect4() {
+<a class="jxr_linenumber" name="L670" href="#L670">670</a>             rect.setRect(decodeX(1.2643541f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L671" href="#L671">671</a>                          decodeY(1.5542929f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L672" href="#L672">672</a>                          decodeX(1.6315789f) - decodeX(1.2643541f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L673" href="#L673">673</a>                          decodeY(1.5997474f) - decodeY(1.5542929f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L674" href="#L674">674</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L675" href="#L675">675</a>     }
+<a class="jxr_linenumber" name="L676" href="#L676">676</a> 
+<a class="jxr_linenumber" name="L677" href="#L677">677</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect5() {
+<a class="jxr_linenumber" name="L678" href="#L678">678</a>             rect.setRect(decodeX(1.6267943f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L679" href="#L679">679</a>                          decodeY(1.3888888f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L680" href="#L680">680</a>                          decodeX(1.673445f) - decodeX(1.6267943f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L681" href="#L681">681</a>                          decodeY(1.6085858f) - decodeY(1.3888888f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>     }
+<a class="jxr_linenumber" name="L684" href="#L684">684</a> 
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect6() {
+<a class="jxr_linenumber" name="L686" href="#L686">686</a>             rect.setRect(decodeX(1.3684211f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L687" href="#L687">687</a>                          decodeY(1.6111112f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L688" href="#L688">688</a>                          decodeX(1.4210527f) - decodeX(1.3684211f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L689" href="#L689">689</a>                          decodeY(1.7777778f) - decodeY(1.6111112f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L690" href="#L690">690</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L691" href="#L691">691</a>     }
+<a class="jxr_linenumber" name="L692" href="#L692">692</a> 
+<a class="jxr_linenumber" name="L693" href="#L693">693</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect7() {
+<a class="jxr_linenumber" name="L694" href="#L694">694</a>             rect.setRect(decodeX(1.4389952f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L695" href="#L695">695</a>                          decodeY(1.7209597f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L696" href="#L696">696</a>                          decodeX(1.7882775f) - decodeX(1.4389952f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a>                          decodeY(1.7765152f) - decodeY(1.7209597f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L698" href="#L698">698</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L699" href="#L699">699</a>     }
+<a class="jxr_linenumber" name="L700" href="#L700">700</a> 
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect8() {
+<a class="jxr_linenumber" name="L702" href="#L702">702</a>             rect.setRect(decodeX(1.5645933f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L703" href="#L703">703</a>                          decodeY(1.4078283f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>                          decodeX(1.7870812f) - decodeX(1.5645933f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L705" href="#L705">705</a>                          decodeY(1.5239899f) - decodeY(1.4078283f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L706" href="#L706">706</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L707" href="#L707">707</a>     }
+<a class="jxr_linenumber" name="L708" href="#L708">708</a> 
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Path2D.html">Path2D</a> decodePath1() {
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>         path.reset();
+<a class="jxr_linenumber" name="L711" href="#L711">711</a>         path.moveTo(decodeX(1.2105263f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>         path.lineTo(decodeX(1.6315789f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>         path.lineTo(decodeX(1.6315789f), decodeY(1.5555556f));
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.5555556f));
+<a class="jxr_linenumber" name="L715" href="#L715">715</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L716" href="#L716">716</a>         path.lineTo(decodeX(1.2631578f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L717" href="#L717">717</a>         path.lineTo(decodeX(1.2631578f), decodeY(1.5f));
+<a class="jxr_linenumber" name="L718" href="#L718">718</a>         path.lineTo(decodeX(1.5789473f), decodeY(1.5f));
+<a class="jxr_linenumber" name="L719" href="#L719">719</a>         path.lineTo(decodeX(1.5789473f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L720" href="#L720">720</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L721" href="#L721">721</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L722" href="#L722">722</a>         path.closePath();
+<a class="jxr_linenumber" name="L723" href="#L723">723</a>         <strong class="jxr_keyword">return</strong> path;
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>     }
+<a class="jxr_linenumber" name="L725" href="#L725">725</a> 
+<a class="jxr_linenumber" name="L726" href="#L726">726</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Path2D.html">Path2D</a> decodePath2() {
+<a class="jxr_linenumber" name="L727" href="#L727">727</a>         path.reset();
+<a class="jxr_linenumber" name="L728" href="#L728">728</a>         path.moveTo(decodeX(1.6842105f), decodeY(1.3888888f));
+<a class="jxr_linenumber" name="L729" href="#L729">729</a>         path.lineTo(decodeX(1.6842105f), decodeY(1.5f));
+<a class="jxr_linenumber" name="L730" href="#L730">730</a>         path.lineTo(decodeX(1.7368422f), decodeY(1.5f));
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>         path.lineTo(decodeX(1.7368422f), decodeY(1.6666667f));
+<a class="jxr_linenumber" name="L732" href="#L732">732</a>         path.lineTo(decodeX(1.4210527f), decodeY(1.6666667f));
+<a class="jxr_linenumber" name="L733" href="#L733">733</a>         path.lineTo(decodeX(1.4210527f), decodeY(1.6111112f));
+<a class="jxr_linenumber" name="L734" href="#L734">734</a>         path.lineTo(decodeX(1.3684211f), decodeY(1.6111112f));
+<a class="jxr_linenumber" name="L735" href="#L735">735</a>         path.lineTo(decodeX(1.3684211f), decodeY(1.7222222f));
+<a class="jxr_linenumber" name="L736" href="#L736">736</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.7222222f));
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.3888888f));
+<a class="jxr_linenumber" name="L738" href="#L738">738</a>         path.lineTo(decodeX(1.6842105f), decodeY(1.3888888f));
+<a class="jxr_linenumber" name="L739" href="#L739">739</a>         path.closePath();
+<a class="jxr_linenumber" name="L740" href="#L740">740</a>         <strong class="jxr_keyword">return</strong> path;
+<a class="jxr_linenumber" name="L741" href="#L741">741</a>     }
+<a class="jxr_linenumber" name="L742" href="#L742">742</a> 
+<a class="jxr_linenumber" name="L743" href="#L743">743</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/RoundRectangle2D.html">RoundRectangle2D</a> decodeRoundRect3() {
+<a class="jxr_linenumber" name="L744" href="#L744">744</a>         roundRect.setRoundRect(decodeX(1.0f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L745" href="#L745">745</a>                                decodeY(1.6111112f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a>                                decodeX(2.0f) - decodeX(1.0f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L747" href="#L747">747</a>                                decodeY(2.0f) - decodeY(1.6111112f), <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a>                                6.0f, 6.0f); <em class="jxr_comment">//rounding</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a>         <strong class="jxr_keyword">return</strong> roundRect;
+<a class="jxr_linenumber" name="L750" href="#L750">750</a>     }
+<a class="jxr_linenumber" name="L751" href="#L751">751</a> 
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect9() {
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>             rect.setRect(decodeX(1.3815789f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>                          decodeY(1.6111112f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L755" href="#L755">755</a>                          decodeX(1.4366028f) - decodeX(1.3815789f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L756" href="#L756">756</a>                          decodeY(1.7739899f) - decodeY(1.6111112f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L757" href="#L757">757</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L758" href="#L758">758</a>     }
+<a class="jxr_linenumber" name="L759" href="#L759">759</a> 
+<a class="jxr_linenumber" name="L760" href="#L760">760</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> decodeRect10() {
+<a class="jxr_linenumber" name="L761" href="#L761">761</a>             rect.setRect(decodeX(1.7918661f), <em class="jxr_comment">//x</em>
+<a class="jxr_linenumber" name="L762" href="#L762">762</a>                          decodeY(1.7752526f), <em class="jxr_comment">//y</em>
+<a class="jxr_linenumber" name="L763" href="#L763">763</a>                          decodeX(1.8349283f) - decodeX(1.7918661f), <em class="jxr_comment">//width</em>
+<a class="jxr_linenumber" name="L764" href="#L764">764</a>                          decodeY(1.4217172f) - decodeY(1.7752526f)); <em class="jxr_comment">//height</em>
+<a class="jxr_linenumber" name="L765" href="#L765">765</a>         <strong class="jxr_keyword">return</strong> rect;
+<a class="jxr_linenumber" name="L766" href="#L766">766</a>     }
+<a class="jxr_linenumber" name="L767" href="#L767">767</a> 
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Path2D.html">Path2D</a> decodePath3() {
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>         path.reset();
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>         path.moveTo(decodeX(1.1913875f), decodeY(1.2916666f));
+<a class="jxr_linenumber" name="L771" href="#L771">771</a>         path.lineTo(decodeX(1.1925838f), decodeY(1.7462121f));
+<a class="jxr_linenumber" name="L772" href="#L772">772</a>         path.lineTo(decodeX(1.8157895f), decodeY(1.7449496f));
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>         path.lineTo(decodeX(1.819378f), decodeY(1.2916666f));
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>         path.lineTo(decodeX(1.722488f), decodeY(1.2916666f));
+<a class="jxr_linenumber" name="L775" href="#L775">775</a>         path.lineTo(decodeX(1.7320573f), decodeY(1.669192f));
+<a class="jxr_linenumber" name="L776" href="#L776">776</a>         path.lineTo(decodeX(1.2799044f), decodeY(1.6565657f));
+<a class="jxr_linenumber" name="L777" href="#L777">777</a>         path.lineTo(decodeX(1.284689f), decodeY(1.3863636f));
+<a class="jxr_linenumber" name="L778" href="#L778">778</a>         path.lineTo(decodeX(1.7260766f), decodeY(1.385101f));
+<a class="jxr_linenumber" name="L779" href="#L779">779</a>         path.lineTo(decodeX(1.722488f), decodeY(1.2904041f));
+<a class="jxr_linenumber" name="L780" href="#L780">780</a>         path.lineTo(decodeX(1.1913875f), decodeY(1.2916666f));
+<a class="jxr_linenumber" name="L781" href="#L781">781</a>         path.closePath();
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>         <strong class="jxr_keyword">return</strong> path;
+<a class="jxr_linenumber" name="L783" href="#L783">783</a>     }
+<a class="jxr_linenumber" name="L784" href="#L784">784</a> 
+<a class="jxr_linenumber" name="L785" href="#L785">785</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/geom/Path2D.html">Path2D</a> decodePath4() {
+<a class="jxr_linenumber" name="L786" href="#L786">786</a>         path.reset();
+<a class="jxr_linenumber" name="L787" href="#L787">787</a>         path.moveTo(decodeX(1.2105263f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L788" href="#L788">788</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.7222222f));
+<a class="jxr_linenumber" name="L789" href="#L789">789</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.7222222f));
+<a class="jxr_linenumber" name="L790" href="#L790">790</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L791" href="#L791">791</a>         path.lineTo(decodeX(1.7368422f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L792" href="#L792">792</a>         path.lineTo(decodeX(1.7368422f), decodeY(1.6666667f));
+<a class="jxr_linenumber" name="L793" href="#L793">793</a>         path.lineTo(decodeX(1.2631578f), decodeY(1.6666667f));
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>         path.lineTo(decodeX(1.2631578f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.3333334f));
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>         path.lineTo(decodeX(1.7894738f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L797" href="#L797">797</a>         path.lineTo(decodeX(1.2105263f), decodeY(1.2222222f));
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>         path.closePath();
+<a class="jxr_linenumber" name="L799" href="#L799">799</a>         <strong class="jxr_keyword">return</strong> path;
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>     }
+<a class="jxr_linenumber" name="L801" href="#L801">801</a> 
+<a class="jxr_linenumber" name="L802" href="#L802">802</a> 
+<a class="jxr_linenumber" name="L803" href="#L803">803</a> 
+<a class="jxr_linenumber" name="L804" href="#L804">804</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient1(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L806" href="#L806">806</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L810" href="#L810">810</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.24868421f * w) + x, (0.0014705883f * h) + y, (0.24868421f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L811" href="#L811">811</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color1,
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>                             decodeColor(color1,color2,0.5f),
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>                             color2});
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>     }
+<a class="jxr_linenumber" name="L816" href="#L816">816</a> 
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient2(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L818" href="#L818">818</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L819" href="#L819">819</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L820" href="#L820">820</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L821" href="#L821">821</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L822" href="#L822">822</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L823" href="#L823">823</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L824" href="#L824">824</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L825" href="#L825">825</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color3,
+<a class="jxr_linenumber" name="L826" href="#L826">826</a>                             decodeColor(color3,color2,0.5f),
+<a class="jxr_linenumber" name="L827" href="#L827">827</a>                             color2});
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>     }
+<a class="jxr_linenumber" name="L829" href="#L829">829</a> 
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient3(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L831" href="#L831">831</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L833" href="#L833">833</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L834" href="#L834">834</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L835" href="#L835">835</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L836" href="#L836">836</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.5f * w) + x, (0.0f * h) + y, (0.5f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color10,
+<a class="jxr_linenumber" name="L839" href="#L839">839</a>                             decodeColor(color10,color11,0.5f),
+<a class="jxr_linenumber" name="L840" href="#L840">840</a>                             color11});
+<a class="jxr_linenumber" name="L841" href="#L841">841</a>     }
+<a class="jxr_linenumber" name="L842" href="#L842">842</a> 
+<a class="jxr_linenumber" name="L843" href="#L843">843</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient4(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L844" href="#L844">844</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L845" href="#L845">845</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L846" href="#L846">846</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L847" href="#L847">847</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L848" href="#L848">848</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L849" href="#L849">849</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.24868421f * w) + x, (0.0014705883f * h) + y, (0.24868421f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L851" href="#L851">851</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color14,
+<a class="jxr_linenumber" name="L852" href="#L852">852</a>                             decodeColor(color14,color15,0.5f),
+<a class="jxr_linenumber" name="L853" href="#L853">853</a>                             color15});
+<a class="jxr_linenumber" name="L854" href="#L854">854</a>     }
+<a class="jxr_linenumber" name="L855" href="#L855">855</a> 
+<a class="jxr_linenumber" name="L856" href="#L856">856</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient5(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L857" href="#L857">857</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L858" href="#L858">858</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L859" href="#L859">859</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L860" href="#L860">860</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L861" href="#L861">861</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L862" href="#L862">862</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L863" href="#L863">863</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.5951705f,0.6505682f,0.8252841f,1.0f },
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color16,
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>                             decodeColor(color16,color15,0.5f),
+<a class="jxr_linenumber" name="L866" href="#L866">866</a>                             color15,
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>                             decodeColor(color15,color17,0.5f),
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>                             color17,
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>                             decodeColor(color17,color18,0.5f),
+<a class="jxr_linenumber" name="L870" href="#L870">870</a>                             color18});
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>     }
+<a class="jxr_linenumber" name="L872" href="#L872">872</a> 
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient6(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L874" href="#L874">874</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L875" href="#L875">875</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L877" href="#L877">877</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L878" href="#L878">878</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.24868421f * w) + x, (0.0014705883f * h) + y, (0.24868421f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L880" href="#L880">880</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L881" href="#L881">881</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color22,
+<a class="jxr_linenumber" name="L882" href="#L882">882</a>                             decodeColor(color22,color23,0.5f),
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>                             color23});
+<a class="jxr_linenumber" name="L884" href="#L884">884</a>     }
+<a class="jxr_linenumber" name="L885" href="#L885">885</a> 
+<a class="jxr_linenumber" name="L886" href="#L886">886</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient7(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L890" href="#L890">890</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L891" href="#L891">891</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L892" href="#L892">892</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L893" href="#L893">893</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.5951705f,0.6505682f,0.8252841f,1.0f },
+<a class="jxr_linenumber" name="L894" href="#L894">894</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color24,
+<a class="jxr_linenumber" name="L895" href="#L895">895</a>                             decodeColor(color24,color25,0.5f),
+<a class="jxr_linenumber" name="L896" href="#L896">896</a>                             color25,
+<a class="jxr_linenumber" name="L897" href="#L897">897</a>                             decodeColor(color25,color26,0.5f),
+<a class="jxr_linenumber" name="L898" href="#L898">898</a>                             color26,
+<a class="jxr_linenumber" name="L899" href="#L899">899</a>                             decodeColor(color26,color27,0.5f),
+<a class="jxr_linenumber" name="L900" href="#L900">900</a>                             color27});
+<a class="jxr_linenumber" name="L901" href="#L901">901</a>     }
+<a class="jxr_linenumber" name="L902" href="#L902">902</a> 
+<a class="jxr_linenumber" name="L903" href="#L903">903</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient8(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L904" href="#L904">904</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L905" href="#L905">905</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L906" href="#L906">906</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L907" href="#L907">907</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L908" href="#L908">908</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L909" href="#L909">909</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.24868421f * w) + x, (0.0014705883f * h) + y, (0.24868421f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color35,
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>                             decodeColor(color35,color36,0.5f),
+<a class="jxr_linenumber" name="L913" href="#L913">913</a>                             color36});
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>     }
+<a class="jxr_linenumber" name="L915" href="#L915">915</a> 
+<a class="jxr_linenumber" name="L916" href="#L916">916</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient9(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L917" href="#L917">917</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L918" href="#L918">918</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L923" href="#L923">923</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.5951705f,0.6505682f,0.8252841f,1.0f },
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color37,
+<a class="jxr_linenumber" name="L925" href="#L925">925</a>                             decodeColor(color37,color38,0.5f),
+<a class="jxr_linenumber" name="L926" href="#L926">926</a>                             color38,
+<a class="jxr_linenumber" name="L927" href="#L927">927</a>                             decodeColor(color38,color39,0.5f),
+<a class="jxr_linenumber" name="L928" href="#L928">928</a>                             color39,
+<a class="jxr_linenumber" name="L929" href="#L929">929</a>                             decodeColor(color39,color18,0.5f),
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>                             color18});
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>     }
+<a class="jxr_linenumber" name="L932" href="#L932">932</a> 
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient10(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L935" href="#L935">935</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L936" href="#L936">936</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L938" href="#L938">938</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L939" href="#L939">939</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.24868421f * w) + x, (0.0014705883f * h) + y, (0.24868421f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L940" href="#L940">940</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.5f,1.0f },
+<a class="jxr_linenumber" name="L941" href="#L941">941</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color48,
+<a class="jxr_linenumber" name="L942" href="#L942">942</a>                             decodeColor(color48,color49,0.5f),
+<a class="jxr_linenumber" name="L943" href="#L943">943</a>                             color49});
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>     }
+<a class="jxr_linenumber" name="L945" href="#L945">945</a> 
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient11(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L948" href="#L948">948</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L949" href="#L949">949</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.5951705f,0.6505682f,0.8252841f,1.0f },
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color50,
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>                             decodeColor(color50,color51,0.5f),
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>                             color51,
+<a class="jxr_linenumber" name="L957" href="#L957">957</a>                             decodeColor(color51,color52,0.5f),
+<a class="jxr_linenumber" name="L958" href="#L958">958</a>                             color52,
+<a class="jxr_linenumber" name="L959" href="#L959">959</a>                             decodeColor(color52,color53,0.5f),
+<a class="jxr_linenumber" name="L960" href="#L960">960</a>                             color53});
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>     }
+<a class="jxr_linenumber" name="L962" href="#L962">962</a> 
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient12(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L966" href="#L966">966</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L967" href="#L967">967</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L968" href="#L968">968</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L969" href="#L969">969</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L970" href="#L970">970</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.6082097f,0.6766467f,0.83832335f,1.0f },
+<a class="jxr_linenumber" name="L971" href="#L971">971</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color3,
+<a class="jxr_linenumber" name="L972" href="#L972">972</a>                             decodeColor(color3,color59,0.5f),
+<a class="jxr_linenumber" name="L973" href="#L973">973</a>                             color59,
+<a class="jxr_linenumber" name="L974" href="#L974">974</a>                             decodeColor(color59,color60,0.5f),
+<a class="jxr_linenumber" name="L975" href="#L975">975</a>                             color60,
+<a class="jxr_linenumber" name="L976" href="#L976">976</a>                             decodeColor(color60,color2,0.5f),
+<a class="jxr_linenumber" name="L977" href="#L977">977</a>                             color2});
+<a class="jxr_linenumber" name="L978" href="#L978">978</a>     }
+<a class="jxr_linenumber" name="L979" href="#L979">979</a> 
+<a class="jxr_linenumber" name="L980" href="#L980">980</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient13(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L981" href="#L981">981</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L982" href="#L982">982</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L983" href="#L983">983</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L984" href="#L984">984</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L985" href="#L985">985</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L986" href="#L986">986</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.5f * w) + x, (0.0f * h) + y, (0.5f * w) + x, (1.0f * h) + y,
+<a class="jxr_linenumber" name="L987" href="#L987">987</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.26047903f,0.6302395f,1.0f },
+<a class="jxr_linenumber" name="L988" href="#L988">988</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color62,
+<a class="jxr_linenumber" name="L989" href="#L989">989</a>                             decodeColor(color62,color63,0.5f),
+<a class="jxr_linenumber" name="L990" href="#L990">990</a>                             color63});
+<a class="jxr_linenumber" name="L991" href="#L991">991</a>     }
+<a class="jxr_linenumber" name="L992" href="#L992">992</a> 
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient14(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L995" href="#L995">995</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L996" href="#L996">996</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L997" href="#L997">997</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L998" href="#L998">998</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L999" href="#L999">999</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.5951705f,0.6505682f,0.8252841f,1.0f },
+<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color24,
+<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>                             decodeColor(color24,color67,0.5f),
+<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a>                             color67,
+<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a>                             decodeColor(color67,color25,0.5f),
+<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a>                             color25,
+<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a>                             decodeColor(color25,color27,0.5f),
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>                             color27});
+<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a>     }
+<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a> 
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient15(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.66659296f,0.79341316f,0.8967066f,1.0f },
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color37,
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>                             decodeColor(color37,color38,0.5f),
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>                             color38,
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>                             decodeColor(color38,color39,0.5f),
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>                             color39,
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>                             decodeColor(color39,color70,0.5f),
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>                             color70});
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>     }
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a> 
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a>     <strong class="jxr_keyword">private</strong> <a href="../../../../java/awt/Paint.html">Paint</a> decodeGradient16(<a href="../../../../java/awt/Shape.html">Shape</a> s) {
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a>         <a href="../../../../java/awt/geom/Rectangle2D.html">Rectangle2D</a> bounds = s.getBounds2D();
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a>         <strong class="jxr_keyword">float</strong> x = (<strong class="jxr_keyword">float</strong>)bounds.getX();
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a>         <strong class="jxr_keyword">float</strong> y = (<strong class="jxr_keyword">float</strong>)bounds.getY();
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a>         <strong class="jxr_keyword">float</strong> w = (<strong class="jxr_keyword">float</strong>)bounds.getWidth();
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a>         <strong class="jxr_keyword">float</strong> h = (<strong class="jxr_keyword">float</strong>)bounds.getHeight();
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a>         <strong class="jxr_keyword">return</strong> decodeGradient((0.25f * w) + x, (0.0f * h) + y, (0.25441176f * w) + x, (1.0016667f * h) + y,
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a>                 <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">float</strong>[] { 0.0f,0.26988637f,0.53977275f,0.6291678f,0.7185629f,0.8592814f,1.0f },
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a>                 <strong class="jxr_keyword">new</strong> <a href="../../../../java/awt/Color.html">Color</a>[] { color50,
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>                             decodeColor(color50,color52,0.5f),
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>                             color52,
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>                             decodeColor(color52,color52,0.5f),
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a>                             color52,
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a>                             decodeColor(color52,color53,0.5f),
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>                             color53});
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>     }
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a> 
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a> 
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+          "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+          "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <!--
+      If you set the basedir property below, then all reported file
+      names will be relative to the specified directory. See
+      http://checkstyle.sourceforge.net/5.x/config.html#Checker
+
+      <property name="basedir" value="${basedir}"/>
+  -->
+
+  <metadata name="com.atlas-sw.eclipse" value="I like Sydney"/>
+
+  <property name="severity" value="error"/>
+
+  <module name="TreeWalker">
+    <property name="tabWidth" value="4"/>
+
+    <module name="SimpleJavadoc"/>
+    
+  </module>
+</module>

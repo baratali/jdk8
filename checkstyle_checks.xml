@@ -16,6 +16,10 @@
 
   <property name="severity" value="error"/>
 
+  <module name="SuppressionFilter">
+    <property name="file" value="suppressions.xml"/>
+  </module>
+
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
 

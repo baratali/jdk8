@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress checks="." files=".*openjdk[\\/]hotspot[\\/]test.*\.java"/>
+    <suppress checks="." files=".*openjdk[\\/]jdk[\\/]test.*\.java"/>
+    <suppress checks="." files=".*openjdk[\\/]langtools[\\/]test.*\.java"/>
+    <suppress checks="." files=".*openjdk[\\/]nashorn[\\/]test.*\.java"/>
+</suppressions>

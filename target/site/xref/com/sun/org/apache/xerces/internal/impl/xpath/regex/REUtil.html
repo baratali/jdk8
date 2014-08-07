@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>REUtil xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../../../apidocs/com/sun/org/apache/xerces/internal/impl/xpath/regex/REUtil.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2007-2012, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Copyright 1999-2002,2004 The Apache Software Foundation.</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *      <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">package</strong> com.sun.org.apache.xerces.internal.impl.xpath.regex;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.text.CharacterIterator;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * @xerces.internal</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/REUtil.html">REUtil</a> {
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/REUtil.html">REUtil</a>() {
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> composeFromSurrogates(<strong class="jxr_keyword">int</strong> high, <strong class="jxr_keyword">int</strong> low) {
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          <strong class="jxr_keyword">return</strong> 0x10000 + ((high-0xd800)&lt;&lt;10) + low-0xdc00;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> isLowSurrogate(<strong class="jxr_keyword">int</strong> ch) {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          <strong class="jxr_keyword">return</strong> (ch &amp; 0xfc00) == 0xdc00;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> isHighSurrogate(<strong class="jxr_keyword">int</strong> ch) {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          <strong class="jxr_keyword">return</strong> (ch &amp; 0xfc00) == 0xd800;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> decomposeToSurrogates(<strong class="jxr_keyword">int</strong> ch) {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          <strong class="jxr_keyword">char</strong>[] chs = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[2];
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          ch -= 0x10000;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          chs[0] = (<strong class="jxr_keyword">char</strong>)((ch&gt;&gt;10)+0xd800);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          chs[1] = (<strong class="jxr_keyword">char</strong>)((ch&amp;0x3ff)+0xdc00);
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/lang/String.html">String</a>(chs);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> substring(<a href="../../../../../../../../../java/text/CharacterIterator.html">CharacterIterator</a> iterator, <strong class="jxr_keyword">int</strong> begin, <strong class="jxr_keyword">int</strong> end) {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>          <strong class="jxr_keyword">char</strong>[] src = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[end-begin];
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; src.length;  i ++)
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>              src[i] = iterator.setIndex(i+begin);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/lang/String.html">String</a>(src);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <em class="jxr_comment">// ================================================================</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> getOptionValue(<strong class="jxr_keyword">int</strong> ch) {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">int</strong> ret = 0;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">switch</strong> (ch) {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>            <strong class="jxr_keyword">case</strong> 'i':
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>              ret = RegularExpression.IGNORE_CASE;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>            <strong class="jxr_keyword">case</strong> 'm':
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>              ret = RegularExpression.MULTIPLE_LINES;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>            <strong class="jxr_keyword">case</strong> 's':
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>              ret = RegularExpression.SINGLE_LINE;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>            <strong class="jxr_keyword">case</strong> 'x':
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>              ret = RegularExpression.EXTENDED_COMMENT;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>            <strong class="jxr_keyword">case</strong> 'u':
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>              ret = RegularExpression.USE_UNICODE_CATEGORY;
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>            <strong class="jxr_keyword">case</strong> 'w':
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>              ret = RegularExpression.UNICODE_WORD_BOUNDARY;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>            <strong class="jxr_keyword">case</strong> 'F':
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>              ret = RegularExpression.PROHIBIT_FIXED_STRING_OPTIMIZATION;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>            <strong class="jxr_keyword">case</strong> 'H':
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>              ret = RegularExpression.PROHIBIT_HEAD_CHARACTER_OPTIMIZATION;
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>            <strong class="jxr_keyword">case</strong> 'X':
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>              ret = RegularExpression.XMLSCHEMA_MODE;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>            <strong class="jxr_keyword">case</strong> ',':
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>              ret = RegularExpression.SPECIAL_COMMA;
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>              <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>            <strong class="jxr_keyword">default</strong>:
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>          }
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">return</strong> ret;
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      }
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> parseOptions(<a href="../../../../../../../../../java/lang/String.html">String</a> opts) <strong class="jxr_keyword">throws</strong> ParseException {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">if</strong> (opts == <strong class="jxr_keyword">null</strong>)  <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">int</strong> options = 0;
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; opts.length();  i ++) {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>             <strong class="jxr_keyword">int</strong> v = getOptionValue(opts.charAt(i));
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>             <strong class="jxr_keyword">if</strong> (v == 0)
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/text/ParseException.html">ParseException</a>(<span class="jxr_string">"Unknown Option: "</span>+opts.substring(i), -1);
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>             options |= v;
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         }
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">return</strong> options;
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     }
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> createOptionString(<strong class="jxr_keyword">int</strong> options) {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a>(9);
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.PROHIBIT_FIXED_STRING_OPTIMIZATION) != 0)
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>             sb.append((<strong class="jxr_keyword">char</strong>)'F');
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.PROHIBIT_HEAD_CHARACTER_OPTIMIZATION) != 0)
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             sb.append((<strong class="jxr_keyword">char</strong>)'H');
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.XMLSCHEMA_MODE) != 0)
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>             sb.append((<strong class="jxr_keyword">char</strong>)'X');
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.IGNORE_CASE) != 0)
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>             sb.append((<strong class="jxr_keyword">char</strong>)'i');
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.MULTIPLE_LINES) != 0)
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>             sb.append((<strong class="jxr_keyword">char</strong>)'m');
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.SINGLE_LINE) != 0)
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>             sb.append((<strong class="jxr_keyword">char</strong>)'s');
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.USE_UNICODE_CATEGORY) != 0)
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>             sb.append((<strong class="jxr_keyword">char</strong>)'u');
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.UNICODE_WORD_BOUNDARY) != 0)
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             sb.append((<strong class="jxr_keyword">char</strong>)'w');
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.EXTENDED_COMMENT) != 0)
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>             sb.append((<strong class="jxr_keyword">char</strong>)'x');
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">if</strong> ((options &amp; RegularExpression.SPECIAL_COMMA) != 0)
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>             sb.append((<strong class="jxr_keyword">char</strong>)',');
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">return</strong> sb.toString().intern();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     }
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     <em class="jxr_comment">// ================================================================</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">static</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> stripExtendedComment(<a href="../../../../../../../../../java/lang/String.html">String</a> regex) {
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         <strong class="jxr_keyword">int</strong> len = regex.length();
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a> buffer = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a>(len);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         <strong class="jxr_keyword">int</strong> offset = 0;
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">while</strong> (offset &lt; len) {
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>             <strong class="jxr_keyword">int</strong> ch = regex.charAt(offset++);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>                                                 <em class="jxr_comment">// Skips a white space.</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>             <strong class="jxr_keyword">if</strong> (ch == '\t' || ch == '\n' || ch == '\f' || ch == '\r' || ch == ' ')
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <strong class="jxr_keyword">if</strong> (ch == '#') {                    <em class="jxr_comment">// Skips chracters between '#' and a line end.</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>                 <strong class="jxr_keyword">while</strong> (offset &lt; len) {
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>                     ch = regex.charAt(offset++);
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>                     <strong class="jxr_keyword">if</strong> (ch == '\r' || ch == '\n')
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>                         <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>                 }
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>                 <strong class="jxr_keyword">continue</strong>;
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>             }
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>             <strong class="jxr_keyword">int</strong> next;                           <em class="jxr_comment">// Strips an escaped white space.</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>             <strong class="jxr_keyword">if</strong> (ch == '&#92;&#92;' &amp;&amp; offset &lt; len) {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>                 <strong class="jxr_keyword">if</strong> ((next = regex.charAt(offset)) == '#'
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>                     || next == '\t' || next == '\n' || next == '\f'
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                     || next == '\r' || next == ' ') {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                     buffer.append((<strong class="jxr_keyword">char</strong>)next);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                     offset ++;
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>                 } <strong class="jxr_keyword">else</strong> {                        <em class="jxr_comment">// Other escaped character.</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>                     buffer.append((<strong class="jxr_keyword">char</strong>)'&#92;&#92;');
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>                     buffer.append((<strong class="jxr_keyword">char</strong>)next);
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>                     offset ++;
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>                 }
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>             } <strong class="jxr_keyword">else</strong>                              <em class="jxr_comment">// As is.</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>                 buffer.append((<strong class="jxr_keyword">char</strong>)ch);
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>         }
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">return</strong> buffer.toString();
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     }
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <em class="jxr_comment">// ================================================================</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> 
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * Sample entry.</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     * &lt;div&gt;Usage: &lt;KBD&gt;com.sun.org.apache.xerces.internal.utils.regex.REUtil &amp;lt;regex&amp;gt; &amp;lt;string&amp;gt;&lt;/KBD&gt;&lt;/div&gt;</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(<a href="../../../../../../../../../java/lang/String.html">String</a>[] argv) {
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>         <a href="../../../../../../../../../java/lang/String.html">String</a> pattern = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>             <a href="../../../../../../../../../java/lang/String.html">String</a> options = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>             <a href="../../../../../../../../../java/lang/String.html">String</a> target = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>             <strong class="jxr_keyword">if</strong>( argv.length == 0 ) {
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>                 System.out.println( <span class="jxr_string">"Error:Usage: java REUtil -i|-m|-s|-u|-w|-X regularExpression String"</span> );
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>                 System.exit( 0 );
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>             }
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; argv.length;  i ++) {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>                 <strong class="jxr_keyword">if</strong> (argv[i].length() == 0 || argv[i].charAt(0) != '-') {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>                     <strong class="jxr_keyword">if</strong> (pattern == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>                         pattern = argv[i];
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>                     <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (target == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>                         target = argv[i];
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>                     <strong class="jxr_keyword">else</strong>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>                         System.err.println(<span class="jxr_string">"Unnecessary: "</span>+argv[i]);
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-i"</span>)) {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>                     options += <span class="jxr_string">"i"</span>;
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-m"</span>)) {
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>                     options += <span class="jxr_string">"m"</span>;
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-s"</span>)) {
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>                     options += <span class="jxr_string">"s"</span>;
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-u"</span>)) {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                     options += <span class="jxr_string">"u"</span>;
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-w"</span>)) {
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>                     options += <span class="jxr_string">"w"</span>;
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (argv[i].equals(<span class="jxr_string">"-X"</span>)) {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>                     options += <span class="jxr_string">"X"</span>;
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>                     System.err.println(<span class="jxr_string">"Unknown option: "</span>+argv[i]);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>                 }
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>             }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>             <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a> reg = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a>(pattern, options);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>             System.out.println(<span class="jxr_string">"RegularExpression: "</span>+reg);
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>             <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/Match.html">Match</a> match = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/Match.html">Match</a>();
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>             reg.matches(target, match);
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; match.getNumberOfGroups();  i ++) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>                 <strong class="jxr_keyword">if</strong> (i == 0 )  System.out.print(<span class="jxr_string">"Matched range for the whole pattern: "</span>);
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>                 <strong class="jxr_keyword">else</strong> System.out.print(<span class="jxr_string">"["</span>+i+<span class="jxr_string">"]: "</span>);
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>                 <strong class="jxr_keyword">if</strong> (match.getBeginning(i) &lt; 0)
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>                     System.out.println(<span class="jxr_string">"-1"</span>);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>                 <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>                     System.out.print(match.getBeginning(i)+<span class="jxr_string">", "</span>+match.getEnd(i)+<span class="jxr_string">", "</span>);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>                     System.out.println(<span class="jxr_string">"\&quot;"</span>+match.getCapturedText(i)+<span class="jxr_string">"\&quot;"</span>);
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>                 }
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>             }
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         } <strong class="jxr_keyword">catch</strong> (ParseException pe) {
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>             <strong class="jxr_keyword">if</strong> (pattern == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>                 pe.printStackTrace();
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>                 System.err.println(<span class="jxr_string">"com.sun.org.apache.xerces.internal.utils.regex.ParseException: "</span>+pe.getMessage());
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>                 <a href="../../../../../../../../../java/lang/String.html">String</a> indent = <span class="jxr_string">"        "</span>;
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>                 System.err.println(indent+pattern);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>                 <strong class="jxr_keyword">int</strong> loc = pe.getLocation();
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>                 <strong class="jxr_keyword">if</strong> (loc &gt;= 0) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>                     System.err.print(indent);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; loc;  i ++)  System.err.print(<span class="jxr_string">"-"</span>);
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>                     System.err.println(<span class="jxr_string">"^"</span>);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>                 }
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>             }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>             e.printStackTrace();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     }
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> CACHESIZE = 20;
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a>[] regexCache = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a>[CACHESIZE];
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     * Creates a RegularExpression instance.</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * This method caches created instances.</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     * @see RegularExpression#RegularExpression(java.lang.String, java.lang.String)</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a> createRegex(<a href="../../../../../../../../../java/lang/String.html">String</a> pattern, <a href="../../../../../../../../../java/lang/String.html">String</a> options)
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <strong class="jxr_keyword">throws</strong> <a href="../../../../../../../../../java/text/ParseException.html">ParseException</a> {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a> re = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         <strong class="jxr_keyword">int</strong> intOptions = REUtil.parseOptions(options);
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         <strong class="jxr_keyword">synchronized</strong> (REUtil.regexCache) {
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>             <strong class="jxr_keyword">int</strong> i;
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>             <strong class="jxr_keyword">for</strong> (i = 0;  i &lt; REUtil.CACHESIZE;  i ++) {
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                 <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a> cached = REUtil.regexCache[i];
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>                 <strong class="jxr_keyword">if</strong> (cached == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>                     i = -1;
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>                 }
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>                 <strong class="jxr_keyword">if</strong> (cached.equals(pattern, intOptions)) {
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>                     re = cached;
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>                     <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>                 }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>             }
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>             <strong class="jxr_keyword">if</strong> (re != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>                 <strong class="jxr_keyword">if</strong> (i != 0) {
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>                     System.arraycopy(REUtil.regexCache, 0, REUtil.regexCache, 1, i);
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>                     REUtil.regexCache[0] = re;
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>                 }
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>                 re = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../com/sun/org/apache/xerces/internal/impl/xpath/regex/RegularExpression.html">RegularExpression</a>(pattern, options);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>                 System.arraycopy(REUtil.regexCache, 0, REUtil.regexCache, 1, REUtil.CACHESIZE-1);
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>                 REUtil.regexCache[0] = re;
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>             }
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         }
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         <strong class="jxr_keyword">return</strong> re;
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     * @see RegularExpression#matches(java.lang.String)</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> matches(<a href="../../../../../../../../../java/lang/String.html">String</a> regex, <a href="../../../../../../../../../java/lang/String.html">String</a> target) <strong class="jxr_keyword">throws</strong> ParseException {
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         <strong class="jxr_keyword">return</strong> REUtil.createRegex(regex, <strong class="jxr_keyword">null</strong>).matches(target);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     }
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> 
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * @see RegularExpression#matches(java.lang.String)</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> matches(<a href="../../../../../../../../../java/lang/String.html">String</a> regex, <a href="../../../../../../../../../java/lang/String.html">String</a> options, <a href="../../../../../../../../../java/lang/String.html">String</a> target) <strong class="jxr_keyword">throws</strong> ParseException {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         <strong class="jxr_keyword">return</strong> REUtil.createRegex(regex, options).matches(target);
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>     }
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>     <em class="jxr_comment">// ================================================================</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../../../../../java/lang/String.html">String</a> quoteMeta(<a href="../../../../../../../../../java/lang/String.html">String</a> literal) {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         <strong class="jxr_keyword">int</strong> len = literal.length();
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a> buffer = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; len;  i ++) {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>             <strong class="jxr_keyword">int</strong> ch = literal.charAt(i);
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>             <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".*+?{[()|&#92;&#92;^$"</span>.indexOf(ch) &gt;= 0) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>                 <strong class="jxr_keyword">if</strong> (buffer == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>                     buffer = <strong class="jxr_keyword">new</strong> <a href="../../../../../../../../../java/lang/StringBuffer.html">StringBuffer</a>(i+(len-i)*2);
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>                     <strong class="jxr_keyword">if</strong> (i &gt; 0)  buffer.append(literal.substring(0, i));
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>                 }
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>                 buffer.append((<strong class="jxr_keyword">char</strong>)'&#92;&#92;');
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>                 buffer.append((<strong class="jxr_keyword">char</strong>)ch);
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (buffer != <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>                 buffer.append((<strong class="jxr_keyword">char</strong>)ch);
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         }
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         <strong class="jxr_keyword">return</strong> buffer != <strong class="jxr_keyword">null</strong> ? buffer.toString() : literal;
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>     }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>     <em class="jxr_comment">// ================================================================</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> 
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> dumpString(<a href="../../../../../../../../../java/lang/String.html">String</a> v) {
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0;  i &lt; v.length();  i ++) {
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>             System.out.print(Integer.toHexString(v.charAt(i)));
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>             System.out.print(<span class="jxr_string">" "</span>);
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>         }
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         System.out.println();
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>     }
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

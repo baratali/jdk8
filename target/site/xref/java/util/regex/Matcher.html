@@ -1,0 +1,1332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Matcher xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/java/util/regex/Matcher.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 1999, 2013, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> java.util.regex;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.Objects;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * An engine that performs match operations on a {@linkplain java.lang.CharSequence</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * character sequence} by interpreting a {@link Pattern}.</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; A matcher is created from a pattern by invoking the pattern's {@link</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * Pattern#matcher matcher} method.  Once created, a matcher can be used to</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * perform three different kinds of match operations:</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> *   &lt;li&gt;&lt;p&gt; The {@link #matches matches} method attempts to match the entire</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> *   input sequence against the pattern.  &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> *   &lt;li&gt;&lt;p&gt; The {@link #lookingAt lookingAt} method attempts to match the</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> *   input sequence, starting at the beginning, against the pattern.  &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> *   &lt;li&gt;&lt;p&gt; The {@link #find find} method scans the input sequence looking for</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> *   the next subsequence that matches the pattern.  &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; Each of these methods returns a boolean indicating success or failure.</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * More information about a successful match can be obtained by querying the</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * state of the matcher.</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; A matcher finds matches in a subset of its input called the</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * &lt;i&gt;region&lt;/i&gt;. By default, the region contains all of the matcher's input.</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * The region can be modified via the{@link #region region} method and queried</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * via the {@link #regionStart regionStart} and {@link #regionEnd regionEnd}</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * methods. The way that the region boundaries interact with some pattern</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * constructs can be changed. See {@link #useAnchoringBounds</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * useAnchoringBounds} and {@link #useTransparentBounds useTransparentBounds}</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * for more details.</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; This class also defines methods for replacing matched subsequences with</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * new strings whose contents can, if desired, be computed from the match</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * result.  The {@link #appendReplacement appendReplacement} and {@link</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * #appendTail appendTail} methods can be used in tandem in order to collect</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * the result into an existing string buffer, or the more convenient {@link</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * #replaceAll replaceAll} method can be used to create a string in which every</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * matching subsequence in the input sequence is replaced.</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; The explicit state of a matcher includes the start and end indices of</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * the most recent successful match.  It also includes the start and end</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * indices of the input subsequence captured by each &lt;a</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * href="Pattern.html#cg"&gt;capturing group&lt;/a&gt; in the pattern as well as a total</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * count of such subsequences.  As a convenience, methods are also provided for</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * returning these captured subsequences in string form.</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; The explicit state of a matcher is initially undefined; attempting to</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> * query any part of it before a successful match will cause an {@link</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * IllegalStateException} to be thrown.  The explicit state of a matcher is</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> * recomputed by every match operation.</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; The implicit state of a matcher includes the input character sequence as</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * well as the &lt;i&gt;append position&lt;/i&gt;, which is initially zero and is updated</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * by the {@link #appendReplacement appendReplacement} method.</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; A matcher may be reset explicitly by invoking its {@link #reset()}</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> * method or, if a new input sequence is desired, its {@link</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> * #reset(java.lang.CharSequence) reset(CharSequence)} method.  Resetting a</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> * matcher discards its explicit state information and sets the append position</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> * to zero.</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; Instances of this class are not safe for use by multiple concurrent</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> * threads. &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * @author      Mike McCloskey</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> * @author      Mark Reinhold</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> * @author      JSR-51 Expert Group</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> * @since       1.4</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * @spec        JSR-51</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> <strong class="jxr_keyword">implements</strong> <a href="../../../java/util/regex/MatchResult.html">MatchResult</a> {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">     * The Pattern object that created this Matcher.</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <a href="../../../java/util/regex/Pattern.html">Pattern</a> parentPattern;
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * The storage used by groups. They may contain invalid values if</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     * a group was skipped during the matching.</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">int</strong>[] groups;
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * The range within the sequence that is to be matched. Anchors</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     * will match at these "hard" boundaries. Changing the region</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     * changes these values.</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">int</strong> from, to;
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * Lookbehind uses this value to ensure that the subexpression</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * match ends at the point where the lookbehind was encountered.</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">int</strong> lookbehindTo;
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * The original string being matched.</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <a href="../../../java/lang/CharSequence.html">CharSequence</a> text;
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * Matcher state used by the last node. NOANCHOR is used when a</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * match does not have to consume all of the input. ENDANCHOR is</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * the mode used for matching all the input.</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> ENDANCHOR = 1;
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> NOANCHOR = 0;
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">int</strong> acceptMode = NOANCHOR;
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     * The range of string that last matched the pattern. If the last</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     * match failed then first is -1; last initially holds 0 then it</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">     * holds the index of the end of the last match (which is where the</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     * next search starts).</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     <strong class="jxr_keyword">int</strong> first = -1, last = 0;
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * The end index of what matched in the last match operation.</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <strong class="jxr_keyword">int</strong> oldLast = -1;
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * The index of the last position appended in a substitution.</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     <strong class="jxr_keyword">int</strong> lastAppendPosition = 0;
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> 
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     * Storage used by nodes to tell what repetition they are on in</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * a pattern, and where groups begin. The nodes themselves are stateless,</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     * so they rely on this field to hold state during a match.</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>     <strong class="jxr_keyword">int</strong>[] locals;
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * Boolean indicating whether or not more input could change</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * the results of the last match.</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     * If hitEnd is true, and a match was found, then more input</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">     * might cause a different match to be found.</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">     * If hitEnd is true and a match was not found, then more</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * input could cause a match to be found.</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * If hitEnd is false and a match was found, then more input</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     * will not change the match.</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     * If hitEnd is false and a match was not found, then more</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     * input will not cause a match to be found.</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">boolean</strong> hitEnd;
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">     * Boolean indicating whether or not more input could change</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">     * a positive match into a negative one.</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * If requireEnd is true, and a match was found, then more</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * input could cause the match to be lost.</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * If requireEnd is false and a match was found, then more</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     * input might change the match but the match won't be lost.</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">     * If a match was not found, then requireEnd has no meaning.</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     <strong class="jxr_keyword">boolean</strong> requireEnd;
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     * If transparentBounds is true then the boundaries of this</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     * matcher's region are transparent to lookahead, lookbehind,</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * and boundary matching constructs that try to see beyond them.</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">boolean</strong> transparentBounds = false;
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * If anchoringBounds is true then the boundaries of this</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * matcher's region match anchors such as ^ and $.</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">boolean</strong> anchoringBounds = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> 
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">     * No default constructor.</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <a href="../../../java/util/regex/Matcher.html">Matcher</a>() {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     }
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> 
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * All matchers have the state used by Pattern during a match.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <a href="../../../java/util/regex/Matcher.html">Matcher</a>(<a href="../../../java/util/regex/Pattern.html">Pattern</a> parent, <a href="../../../java/lang/CharSequence.html">CharSequence</a> text) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">this</strong>.parentPattern = parent;
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <strong class="jxr_keyword">this</strong>.text = text;
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         <em class="jxr_comment">// Allocate state storage</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         <strong class="jxr_keyword">int</strong> parentGroupCount = Math.max(parent.capturingGroupCount, 10);
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         groups = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[parentGroupCount * 2];
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>         locals = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[parent.localCount];
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>         <em class="jxr_comment">// Put fields into initial states</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         reset();
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> 
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     * Returns the pattern that is interpreted by this matcher.</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * @return  The pattern for which this matcher was created</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Pattern.html">Pattern</a> pattern() {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">return</strong> parentPattern;
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     * Returns the match state of this matcher as a {@link MatchResult}.</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     * The result is unaffected by subsequent operations performed upon this</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> <em class="jxr_javadoccomment">     * matcher.</em>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     * @return  a &lt;code&gt;MatchResult&lt;/code&gt; with the state of this matcher</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/MatchResult.html">MatchResult</a> toMatchResult() {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         <a href="../../../java/util/regex/Matcher.html">Matcher</a> result = <strong class="jxr_keyword">new</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a>(<strong class="jxr_keyword">this</strong>.parentPattern, text.toString());
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>         result.first = <strong class="jxr_keyword">this</strong>.first;
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         result.last = <strong class="jxr_keyword">this</strong>.last;
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         result.groups = <strong class="jxr_keyword">this</strong>.groups.clone();
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     }
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">      * Changes the &lt;tt&gt;Pattern&lt;/tt&gt; that this &lt;tt&gt;Matcher&lt;/tt&gt; uses to</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">      * find matches with.</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">      *</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">      * &lt;p&gt; This method causes this matcher to lose information</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">      * about the groups of the last match that occurred. The</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">      * matcher's position in the input is maintained and its</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">      * last append position is unaffected.&lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">      *</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">      * @param  newPattern</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">      *         The new pattern used by this matcher</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">      * @return  This matcher</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">      * @throws  IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">      *          If newPattern is &lt;tt&gt;null&lt;/tt&gt;</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">      * @since 1.5</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">      */</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> usePattern(<a href="../../../java/util/regex/Pattern.html">Pattern</a> newPattern) {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">if</strong> (newPattern == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(<span class="jxr_string">"Pattern cannot be null"</span>);
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         parentPattern = newPattern;
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         <em class="jxr_comment">// Reallocate state storage</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         <strong class="jxr_keyword">int</strong> parentGroupCount = Math.max(newPattern.capturingGroupCount, 10);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>         groups = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[parentGroupCount * 2];
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>         locals = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[newPattern.localCount];
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; groups.length; i++)
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>             groups[i] = -1;
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; locals.length; i++)
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>             locals[i] = -1;
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     }
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> 
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     * Resets this matcher.</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Resetting a matcher discards all of its explicit state information</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">     * and sets its append position to zero. The matcher's region is set to the</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     * default region, which is its entire character sequence. The anchoring</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * and transparency of this matcher's region boundaries are unaffected.</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * @return  This matcher</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> reset() {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         first = -1;
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         last = 0;
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         oldLast = -1;
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> i=0; i&lt;groups.length; i++)
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>             groups[i] = -1;
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> i=0; i&lt;locals.length; i++)
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             locals[i] = -1;
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>         lastAppendPosition = 0;
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>         from = 0;
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         to = getTextLength();
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     * Resets this matcher with a new input sequence.</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Resetting a matcher discards all of its explicit state information</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * and sets its append position to zero.  The matcher's region is set to</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     * the default region, which is its entire character sequence.  The</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     * anchoring and transparency of this matcher's region boundaries are</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     * unaffected.</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> <em class="jxr_javadoccomment">     * @param  input</em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment">     *         The new input character sequence</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">     * @return  This matcher</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> reset(<a href="../../../java/lang/CharSequence.html">CharSequence</a> input) {
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         text = input;
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>         <strong class="jxr_keyword">return</strong> reset();
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     }
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">     * Returns the start index of the previous match.</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * @return  The index of the first character matched</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> start() {
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match available"</span>);
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <strong class="jxr_keyword">return</strong> first;
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>     }
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> 
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     * Returns the start index of the subsequence captured by the given group</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     * during the previous match operation.</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">     * &lt;p&gt; &lt;a href="Pattern.html#cg"&gt;Capturing groups&lt;/a&gt; are indexed from left</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     * to right, starting at one.  Group zero denotes the entire pattern, so</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     * the expression &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;start(0)&lt;/tt&gt; is equivalent to</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">     * &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;start()&lt;/tt&gt;.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> <em class="jxr_javadoccomment">     * @param  group</em>
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> <em class="jxr_javadoccomment">     *         The index of a capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     * @return  The index of the first character captured by the group,</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     *          or &lt;tt&gt;-1&lt;/tt&gt; if the match was successful but the group</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     *          itself did not match anything</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     *          with the given index</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> start(<strong class="jxr_keyword">int</strong> group) {
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match available"</span>);
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         <strong class="jxr_keyword">if</strong> (group &lt; 0 || group &gt; groupCount())
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"No group "</span> + group);
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>         <strong class="jxr_keyword">return</strong> groups[group * 2];
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>     }
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> 
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">     * Returns the start index of the subsequence captured by the given</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">     * &lt;a href="Pattern.html#groupname"&gt;named-capturing group&lt;/a&gt; during the</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * previous match operation.</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     * @param  name</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">     *         The name of a named-capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * @return  The index of the first character captured by the group,</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     *          or {@code -1} if the match was successful but the group</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     *          itself did not match anything</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     * @throws  IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     *          with the given name</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> start(<a href="../../../java/lang/String.html">String</a> name) {
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         <strong class="jxr_keyword">return</strong> groups[getMatchedGroupIndex(name) * 2];
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     }
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * Returns the offset after the last character matched.</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     * @return  The offset after the last character matched</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> end() {
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match available"</span>);
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>         <strong class="jxr_keyword">return</strong> last;
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>     }
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> 
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">     * Returns the offset after the last character of the subsequence</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">     * captured by the given group during the previous match operation.</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">     * &lt;p&gt; &lt;a href="Pattern.html#cg"&gt;Capturing groups&lt;/a&gt; are indexed from left</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">     * to right, starting at one.  Group zero denotes the entire pattern, so</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">     * the expression &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;end(0)&lt;/tt&gt; is equivalent to</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">     * &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;end()&lt;/tt&gt;.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">     * @param  group</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> <em class="jxr_javadoccomment">     *         The index of a capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> <em class="jxr_javadoccomment">     * @return  The offset after the last character captured by the group,</em>
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_javadoccomment">     *          or &lt;tt&gt;-1&lt;/tt&gt; if the match was successful</em>
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">     *          but the group itself did not match anything</em>
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     *          with the given index</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> end(<strong class="jxr_keyword">int</strong> group) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match available"</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         <strong class="jxr_keyword">if</strong> (group &lt; 0 || group &gt; groupCount())
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"No group "</span> + group);
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         <strong class="jxr_keyword">return</strong> groups[group * 2 + 1];
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>     }
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">     * Returns the offset after the last character of the subsequence</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">     * captured by the given &lt;a href="Pattern.html#groupname"&gt;named-capturing</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">     * group&lt;/a&gt; during the previous match operation.</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> <em class="jxr_javadoccomment">     * @param  name</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">     *         The name of a named-capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     * @return  The offset after the last character captured by the group,</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     *          or {@code -1} if the match was successful</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     *          but the group itself did not match anything</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> <em class="jxr_javadoccomment">     * @throws  IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> <em class="jxr_javadoccomment">     *          with the given name</em>
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> end(<a href="../../../java/lang/String.html">String</a> name) {
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         <strong class="jxr_keyword">return</strong> groups[getMatchedGroupIndex(name) * 2 + 1];
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>     }
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> 
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">     * Returns the input subsequence matched by the previous match.</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">     * &lt;p&gt; For a matcher &lt;i&gt;m&lt;/i&gt; with input sequence &lt;i&gt;s&lt;/i&gt;,</em>
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">     * the expressions &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;group()&lt;/tt&gt; and</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">     * &lt;i&gt;s.&lt;/i&gt;&lt;tt&gt;substring(&lt;/tt&gt;&lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;start(),&lt;/tt&gt;&amp;nbsp;&lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;end())&lt;/tt&gt;</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     * are equivalent.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Note that some patterns, for example &lt;tt&gt;a*&lt;/tt&gt;, match the empty</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">     * string.  This method will return the empty string when the pattern</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     * successfully matches the empty string in the input.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">     * @return The (possibly empty) subsequence matched by the previous match,</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> <em class="jxr_javadoccomment">     *         in string form</em>
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> group() {
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>         <strong class="jxr_keyword">return</strong> group(0);
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     }
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> <em class="jxr_javadoccomment">     * Returns the input subsequence captured by the given group during the</em>
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> <em class="jxr_javadoccomment">     * previous match operation.</em>
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     * &lt;p&gt; For a matcher &lt;i&gt;m&lt;/i&gt;, input sequence &lt;i&gt;s&lt;/i&gt;, and group index</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">     * &lt;i&gt;g&lt;/i&gt;, the expressions &lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;group(&lt;/tt&gt;&lt;i&gt;g&lt;/i&gt;&lt;tt&gt;)&lt;/tt&gt; and</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a> <em class="jxr_javadoccomment">     * &lt;i&gt;s.&lt;/i&gt;&lt;tt&gt;substring(&lt;/tt&gt;&lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;start(&lt;/tt&gt;&lt;i&gt;g&lt;/i&gt;&lt;tt&gt;),&lt;/tt&gt;&amp;nbsp;&lt;i&gt;m.&lt;/i&gt;&lt;tt&gt;end(&lt;/tt&gt;&lt;i&gt;g&lt;/i&gt;&lt;tt&gt;))&lt;/tt&gt;</em>
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> <em class="jxr_javadoccomment">     * are equivalent.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a> <em class="jxr_javadoccomment">     * &lt;p&gt; &lt;a href="Pattern.html#cg"&gt;Capturing groups&lt;/a&gt; are indexed from left</em>
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> <em class="jxr_javadoccomment">     * to right, starting at one.  Group zero denotes the entire pattern, so</em>
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> <em class="jxr_javadoccomment">     * the expression &lt;tt&gt;m.group(0)&lt;/tt&gt; is equivalent to &lt;tt&gt;m.group()&lt;/tt&gt;.</em>
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> <em class="jxr_javadoccomment">     * &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L513" href="#L513">513</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match was successful but the group specified failed to match</em>
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> <em class="jxr_javadoccomment">     * any part of the input sequence, then &lt;tt&gt;null&lt;/tt&gt; is returned. Note</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">     * that some groups, for example &lt;tt&gt;(a*)&lt;/tt&gt;, match the empty string.</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">     * This method will return the empty string when such a group successfully</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">     * matches the empty string in the input.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">     * @param  group</em>
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> <em class="jxr_javadoccomment">     *         The index of a capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     * @return  The (possibly empty) subsequence captured by the group</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">     *          during the previous match, or &lt;tt&gt;null&lt;/tt&gt; if the group</em>
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">     *          failed to match part of the input</em>
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> <em class="jxr_javadoccomment">     *          with the given index</em>
+<a class="jxr_linenumber" name="L533" href="#L533">533</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> group(<strong class="jxr_keyword">int</strong> group) {
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match found"</span>);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         <strong class="jxr_keyword">if</strong> (group &lt; 0 || group &gt; groupCount())
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"No group "</span> + group);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         <strong class="jxr_keyword">if</strong> ((groups[group*2] == -1) || (groups[group*2+1] == -1))
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>         <strong class="jxr_keyword">return</strong> getSubSequence(groups[group * 2], groups[group * 2 + 1]).toString();
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>     }
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> 
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L545" href="#L545">545</a> <em class="jxr_javadoccomment">     * Returns the input subsequence captured by the given</em>
+<a class="jxr_linenumber" name="L546" href="#L546">546</a> <em class="jxr_javadoccomment">     * &lt;a href="Pattern.html#groupname"&gt;named-capturing group&lt;/a&gt; during the previous</em>
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> <em class="jxr_javadoccomment">     * match operation.</em>
+<a class="jxr_linenumber" name="L548" href="#L548">548</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L549" href="#L549">549</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match was successful but the group specified failed to match</em>
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> <em class="jxr_javadoccomment">     * any part of the input sequence, then &lt;tt&gt;null&lt;/tt&gt; is returned. Note</em>
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> <em class="jxr_javadoccomment">     * that some groups, for example &lt;tt&gt;(a*)&lt;/tt&gt;, match the empty string.</em>
+<a class="jxr_linenumber" name="L552" href="#L552">552</a> <em class="jxr_javadoccomment">     * This method will return the empty string when such a group successfully</em>
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> <em class="jxr_javadoccomment">     * matches the empty string in the input.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> <em class="jxr_javadoccomment">     * @param  name</em>
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> <em class="jxr_javadoccomment">     *         The name of a named-capturing group in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L558" href="#L558">558</a> <em class="jxr_javadoccomment">     * @return  The (possibly empty) subsequence captured by the named group</em>
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> <em class="jxr_javadoccomment">     *          during the previous match, or &lt;tt&gt;null&lt;/tt&gt; if the group</em>
+<a class="jxr_linenumber" name="L560" href="#L560">560</a> <em class="jxr_javadoccomment">     *          failed to match part of the input</em>
+<a class="jxr_linenumber" name="L561" href="#L561">561</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L562" href="#L562">562</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L565" href="#L565">565</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L566" href="#L566">566</a> <em class="jxr_javadoccomment">     * @throws  IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L567" href="#L567">567</a> <em class="jxr_javadoccomment">     *          If there is no capturing group in the pattern</em>
+<a class="jxr_linenumber" name="L568" href="#L568">568</a> <em class="jxr_javadoccomment">     *          with the given name</em>
+<a class="jxr_linenumber" name="L569" href="#L569">569</a> <em class="jxr_javadoccomment">     * @since 1.7</em>
+<a class="jxr_linenumber" name="L570" href="#L570">570</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> group(<a href="../../../java/lang/String.html">String</a> name) {
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>         <strong class="jxr_keyword">int</strong> group = getMatchedGroupIndex(name);
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>         <strong class="jxr_keyword">if</strong> ((groups[group*2] == -1) || (groups[group*2+1] == -1))
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L575" href="#L575">575</a>         <strong class="jxr_keyword">return</strong> getSubSequence(groups[group * 2], groups[group * 2 + 1]).toString();
+<a class="jxr_linenumber" name="L576" href="#L576">576</a>     }
+<a class="jxr_linenumber" name="L577" href="#L577">577</a> 
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L579" href="#L579">579</a> <em class="jxr_javadoccomment">     * Returns the number of capturing groups in this matcher's pattern.</em>
+<a class="jxr_linenumber" name="L580" href="#L580">580</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L581" href="#L581">581</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Group zero denotes the entire pattern by convention. It is not</em>
+<a class="jxr_linenumber" name="L582" href="#L582">582</a> <em class="jxr_javadoccomment">     * included in this count.</em>
+<a class="jxr_linenumber" name="L583" href="#L583">583</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L584" href="#L584">584</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Any non-negative integer smaller than or equal to the value</em>
+<a class="jxr_linenumber" name="L585" href="#L585">585</a> <em class="jxr_javadoccomment">     * returned by this method is guaranteed to be a valid group index for</em>
+<a class="jxr_linenumber" name="L586" href="#L586">586</a> <em class="jxr_javadoccomment">     * this matcher.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L587" href="#L587">587</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">     * @return The number of capturing groups in this matcher's pattern</em>
+<a class="jxr_linenumber" name="L589" href="#L589">589</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L590" href="#L590">590</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> groupCount() {
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>         <strong class="jxr_keyword">return</strong> parentPattern.capturingGroupCount - 1;
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>     }
+<a class="jxr_linenumber" name="L593" href="#L593">593</a> 
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">     * Attempts to match the entire region against the pattern.</em>
+<a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match succeeds then more information can be obtained via the</em>
+<a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;start&lt;/tt&gt;, &lt;tt&gt;end&lt;/tt&gt;, and &lt;tt&gt;group&lt;/tt&gt; methods.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L599" href="#L599">599</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">     * @return  &lt;tt&gt;true&lt;/tt&gt; if, and only if, the entire region sequence</em>
+<a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">     *          matches this matcher's pattern</em>
+<a class="jxr_linenumber" name="L602" href="#L602">602</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> matches() {
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>         <strong class="jxr_keyword">return</strong> match(from, ENDANCHOR);
+<a class="jxr_linenumber" name="L605" href="#L605">605</a>     }
+<a class="jxr_linenumber" name="L606" href="#L606">606</a> 
+<a class="jxr_linenumber" name="L607" href="#L607">607</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L608" href="#L608">608</a> <em class="jxr_javadoccomment">     * Attempts to find the next subsequence of the input sequence that matches</em>
+<a class="jxr_linenumber" name="L609" href="#L609">609</a> <em class="jxr_javadoccomment">     * the pattern.</em>
+<a class="jxr_linenumber" name="L610" href="#L610">610</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L611" href="#L611">611</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method starts at the beginning of this matcher's region, or, if</em>
+<a class="jxr_linenumber" name="L612" href="#L612">612</a> <em class="jxr_javadoccomment">     * a previous invocation of the method was successful and the matcher has</em>
+<a class="jxr_linenumber" name="L613" href="#L613">613</a> <em class="jxr_javadoccomment">     * not since been reset, at the first character not matched by the previous</em>
+<a class="jxr_linenumber" name="L614" href="#L614">614</a> <em class="jxr_javadoccomment">     * match.</em>
+<a class="jxr_linenumber" name="L615" href="#L615">615</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L616" href="#L616">616</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match succeeds then more information can be obtained via the</em>
+<a class="jxr_linenumber" name="L617" href="#L617">617</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;start&lt;/tt&gt;, &lt;tt&gt;end&lt;/tt&gt;, and &lt;tt&gt;group&lt;/tt&gt; methods.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L618" href="#L618">618</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L619" href="#L619">619</a> <em class="jxr_javadoccomment">     * @return  &lt;tt&gt;true&lt;/tt&gt; if, and only if, a subsequence of the input</em>
+<a class="jxr_linenumber" name="L620" href="#L620">620</a> <em class="jxr_javadoccomment">     *          sequence matches this matcher's pattern</em>
+<a class="jxr_linenumber" name="L621" href="#L621">621</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> find() {
+<a class="jxr_linenumber" name="L623" href="#L623">623</a>         <strong class="jxr_keyword">int</strong> nextSearchIndex = last;
+<a class="jxr_linenumber" name="L624" href="#L624">624</a>         <strong class="jxr_keyword">if</strong> (nextSearchIndex == first)
+<a class="jxr_linenumber" name="L625" href="#L625">625</a>             nextSearchIndex++;
+<a class="jxr_linenumber" name="L626" href="#L626">626</a> 
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>         <em class="jxr_comment">// If next search starts before region, start it at region</em>
+<a class="jxr_linenumber" name="L628" href="#L628">628</a>         <strong class="jxr_keyword">if</strong> (nextSearchIndex &lt; from)
+<a class="jxr_linenumber" name="L629" href="#L629">629</a>             nextSearchIndex = from;
+<a class="jxr_linenumber" name="L630" href="#L630">630</a> 
+<a class="jxr_linenumber" name="L631" href="#L631">631</a>         <em class="jxr_comment">// If next search starts beyond region then it fails</em>
+<a class="jxr_linenumber" name="L632" href="#L632">632</a>         <strong class="jxr_keyword">if</strong> (nextSearchIndex &gt; to) {
+<a class="jxr_linenumber" name="L633" href="#L633">633</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; groups.length; i++)
+<a class="jxr_linenumber" name="L634" href="#L634">634</a>                 groups[i] = -1;
+<a class="jxr_linenumber" name="L635" href="#L635">635</a>             <strong class="jxr_keyword">return</strong> false;
+<a class="jxr_linenumber" name="L636" href="#L636">636</a>         }
+<a class="jxr_linenumber" name="L637" href="#L637">637</a>         <strong class="jxr_keyword">return</strong> search(nextSearchIndex);
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>     }
+<a class="jxr_linenumber" name="L639" href="#L639">639</a> 
+<a class="jxr_linenumber" name="L640" href="#L640">640</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L641" href="#L641">641</a> <em class="jxr_javadoccomment">     * Resets this matcher and then attempts to find the next subsequence of</em>
+<a class="jxr_linenumber" name="L642" href="#L642">642</a> <em class="jxr_javadoccomment">     * the input sequence that matches the pattern, starting at the specified</em>
+<a class="jxr_linenumber" name="L643" href="#L643">643</a> <em class="jxr_javadoccomment">     * index.</em>
+<a class="jxr_linenumber" name="L644" href="#L644">644</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L645" href="#L645">645</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match succeeds then more information can be obtained via the</em>
+<a class="jxr_linenumber" name="L646" href="#L646">646</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;start&lt;/tt&gt;, &lt;tt&gt;end&lt;/tt&gt;, and &lt;tt&gt;group&lt;/tt&gt; methods, and subsequent</em>
+<a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">     * invocations of the {@link #find()} method will start at the first</em>
+<a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">     * character not matched by this match.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">     * @param start the index to start searching for a match</em>
+<a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">     *          If start is less than zero or if start is greater than the</em>
+<a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">     *          length of the input sequence.</em>
+<a class="jxr_linenumber" name="L654" href="#L654">654</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">     * @return  &lt;tt&gt;true&lt;/tt&gt; if, and only if, a subsequence of the input</em>
+<a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">     *          sequence starting at the given index matches this matcher's</em>
+<a class="jxr_linenumber" name="L657" href="#L657">657</a> <em class="jxr_javadoccomment">     *          pattern</em>
+<a class="jxr_linenumber" name="L658" href="#L658">658</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L659" href="#L659">659</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> find(<strong class="jxr_keyword">int</strong> start) {
+<a class="jxr_linenumber" name="L660" href="#L660">660</a>         <strong class="jxr_keyword">int</strong> limit = getTextLength();
+<a class="jxr_linenumber" name="L661" href="#L661">661</a>         <strong class="jxr_keyword">if</strong> ((start &lt; 0) || (start &gt; limit))
+<a class="jxr_linenumber" name="L662" href="#L662">662</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"Illegal start index"</span>);
+<a class="jxr_linenumber" name="L663" href="#L663">663</a>         reset();
+<a class="jxr_linenumber" name="L664" href="#L664">664</a>         <strong class="jxr_keyword">return</strong> search(start);
+<a class="jxr_linenumber" name="L665" href="#L665">665</a>     }
+<a class="jxr_linenumber" name="L666" href="#L666">666</a> 
+<a class="jxr_linenumber" name="L667" href="#L667">667</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L668" href="#L668">668</a> <em class="jxr_javadoccomment">     * Attempts to match the input sequence, starting at the beginning of the</em>
+<a class="jxr_linenumber" name="L669" href="#L669">669</a> <em class="jxr_javadoccomment">     * region, against the pattern.</em>
+<a class="jxr_linenumber" name="L670" href="#L670">670</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L671" href="#L671">671</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Like the {@link #matches matches} method, this method always starts</em>
+<a class="jxr_linenumber" name="L672" href="#L672">672</a> <em class="jxr_javadoccomment">     * at the beginning of the region; unlike that method, it does not</em>
+<a class="jxr_linenumber" name="L673" href="#L673">673</a> <em class="jxr_javadoccomment">     * require that the entire region be matched.</em>
+<a class="jxr_linenumber" name="L674" href="#L674">674</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L675" href="#L675">675</a> <em class="jxr_javadoccomment">     * &lt;p&gt; If the match succeeds then more information can be obtained via the</em>
+<a class="jxr_linenumber" name="L676" href="#L676">676</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;start&lt;/tt&gt;, &lt;tt&gt;end&lt;/tt&gt;, and &lt;tt&gt;group&lt;/tt&gt; methods.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L677" href="#L677">677</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L678" href="#L678">678</a> <em class="jxr_javadoccomment">     * @return  &lt;tt&gt;true&lt;/tt&gt; if, and only if, a prefix of the input</em>
+<a class="jxr_linenumber" name="L679" href="#L679">679</a> <em class="jxr_javadoccomment">     *          sequence matches this matcher's pattern</em>
+<a class="jxr_linenumber" name="L680" href="#L680">680</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L681" href="#L681">681</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> lookingAt() {
+<a class="jxr_linenumber" name="L682" href="#L682">682</a>         <strong class="jxr_keyword">return</strong> match(from, NOANCHOR);
+<a class="jxr_linenumber" name="L683" href="#L683">683</a>     }
+<a class="jxr_linenumber" name="L684" href="#L684">684</a> 
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L686" href="#L686">686</a> <em class="jxr_javadoccomment">     * Returns a literal replacement &lt;code&gt;String&lt;/code&gt; for the specified</em>
+<a class="jxr_linenumber" name="L687" href="#L687">687</a> <em class="jxr_javadoccomment">     * &lt;code&gt;String&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L688" href="#L688">688</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L689" href="#L689">689</a> <em class="jxr_javadoccomment">     * This method produces a &lt;code&gt;String&lt;/code&gt; that will work</em>
+<a class="jxr_linenumber" name="L690" href="#L690">690</a> <em class="jxr_javadoccomment">     * as a literal replacement &lt;code&gt;s&lt;/code&gt; in the</em>
+<a class="jxr_linenumber" name="L691" href="#L691">691</a> <em class="jxr_javadoccomment">     * &lt;code&gt;appendReplacement&lt;/code&gt; method of the {@link Matcher} class.</em>
+<a class="jxr_linenumber" name="L692" href="#L692">692</a> <em class="jxr_javadoccomment">     * The &lt;code&gt;String&lt;/code&gt; produced will match the sequence of characters</em>
+<a class="jxr_linenumber" name="L693" href="#L693">693</a> <em class="jxr_javadoccomment">     * in &lt;code&gt;s&lt;/code&gt; treated as a literal sequence. Slashes ('\') and</em>
+<a class="jxr_linenumber" name="L694" href="#L694">694</a> <em class="jxr_javadoccomment">     * dollar signs ('$') will be given no special meaning.</em>
+<a class="jxr_linenumber" name="L695" href="#L695">695</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L696" href="#L696">696</a> <em class="jxr_javadoccomment">     * @param  s The string to be literalized</em>
+<a class="jxr_linenumber" name="L697" href="#L697">697</a> <em class="jxr_javadoccomment">     * @return  A literal string replacement</em>
+<a class="jxr_linenumber" name="L698" href="#L698">698</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L700" href="#L700">700</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../java/lang/String.html">String</a> quoteReplacement(<a href="../../../java/lang/String.html">String</a> s) {
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>         <strong class="jxr_keyword">if</strong> ((s.indexOf('&#92;&#92;') == -1) &amp;&amp; (s.indexOf('$') == -1))
+<a class="jxr_linenumber" name="L702" href="#L702">702</a>             <strong class="jxr_keyword">return</strong> s;
+<a class="jxr_linenumber" name="L703" href="#L703">703</a>         <a href="../../../java/lang/StringBuilder.html">StringBuilder</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuilder.html">StringBuilder</a>();
+<a class="jxr_linenumber" name="L704" href="#L704">704</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i=0; i&lt;s.length(); i++) {
+<a class="jxr_linenumber" name="L705" href="#L705">705</a>             <strong class="jxr_keyword">char</strong> c = s.charAt(i);
+<a class="jxr_linenumber" name="L706" href="#L706">706</a>             <strong class="jxr_keyword">if</strong> (c == '&#92;&#92;' || c == '$') {
+<a class="jxr_linenumber" name="L707" href="#L707">707</a>                 sb.append('&#92;&#92;');
+<a class="jxr_linenumber" name="L708" href="#L708">708</a>             }
+<a class="jxr_linenumber" name="L709" href="#L709">709</a>             sb.append(c);
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>         }
+<a class="jxr_linenumber" name="L711" href="#L711">711</a>         <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L712" href="#L712">712</a>     }
+<a class="jxr_linenumber" name="L713" href="#L713">713</a> 
+<a class="jxr_linenumber" name="L714" href="#L714">714</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L715" href="#L715">715</a> <em class="jxr_javadoccomment">     * Implements a non-terminal append-and-replace step.</em>
+<a class="jxr_linenumber" name="L716" href="#L716">716</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L717" href="#L717">717</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method performs the following actions: &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L718" href="#L718">718</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L719" href="#L719">719</a> <em class="jxr_javadoccomment">     * &lt;ol&gt;</em>
+<a class="jxr_linenumber" name="L720" href="#L720">720</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L721" href="#L721">721</a> <em class="jxr_javadoccomment">     *   &lt;li&gt;&lt;p&gt; It reads characters from the input sequence, starting at the</em>
+<a class="jxr_linenumber" name="L722" href="#L722">722</a> <em class="jxr_javadoccomment">     *   append position, and appends them to the given string buffer.  It</em>
+<a class="jxr_linenumber" name="L723" href="#L723">723</a> <em class="jxr_javadoccomment">     *   stops after reading the last character preceding the previous match,</em>
+<a class="jxr_linenumber" name="L724" href="#L724">724</a> <em class="jxr_javadoccomment">     *   that is, the character at index {@link</em>
+<a class="jxr_linenumber" name="L725" href="#L725">725</a> <em class="jxr_javadoccomment">     *   #start()}&amp;nbsp;&lt;tt&gt;-&lt;/tt&gt;&amp;nbsp;&lt;tt&gt;1&lt;/tt&gt;.  &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L726" href="#L726">726</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L727" href="#L727">727</a> <em class="jxr_javadoccomment">     *   &lt;li&gt;&lt;p&gt; It appends the given replacement string to the string buffer.</em>
+<a class="jxr_linenumber" name="L728" href="#L728">728</a> <em class="jxr_javadoccomment">     *   &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L729" href="#L729">729</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L730" href="#L730">730</a> <em class="jxr_javadoccomment">     *   &lt;li&gt;&lt;p&gt; It sets the append position of this matcher to the index of</em>
+<a class="jxr_linenumber" name="L731" href="#L731">731</a> <em class="jxr_javadoccomment">     *   the last character matched, plus one, that is, to {@link #end()}.</em>
+<a class="jxr_linenumber" name="L732" href="#L732">732</a> <em class="jxr_javadoccomment">     *   &lt;/p&gt;&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L733" href="#L733">733</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L734" href="#L734">734</a> <em class="jxr_javadoccomment">     * &lt;/ol&gt;</em>
+<a class="jxr_linenumber" name="L735" href="#L735">735</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L736" href="#L736">736</a> <em class="jxr_javadoccomment">     * &lt;p&gt; The replacement string may contain references to subsequences</em>
+<a class="jxr_linenumber" name="L737" href="#L737">737</a> <em class="jxr_javadoccomment">     * captured during the previous match: Each occurrence of</em>
+<a class="jxr_linenumber" name="L738" href="#L738">738</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;${&lt;/tt&gt;&lt;i&gt;name&lt;/i&gt;&lt;tt&gt;}&lt;/tt&gt; or &lt;tt&gt;$&lt;/tt&gt;&lt;i&gt;g&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L739" href="#L739">739</a> <em class="jxr_javadoccomment">     * will be replaced by the result of evaluating the corresponding</em>
+<a class="jxr_linenumber" name="L740" href="#L740">740</a> <em class="jxr_javadoccomment">     * {@link #group(String) group(name)} or {@link #group(int) group(g)}</em>
+<a class="jxr_linenumber" name="L741" href="#L741">741</a> <em class="jxr_javadoccomment">     * respectively. For  &lt;tt&gt;$&lt;/tt&gt;&lt;i&gt;g&lt;/i&gt;,</em>
+<a class="jxr_linenumber" name="L742" href="#L742">742</a> <em class="jxr_javadoccomment">     * the first number after the &lt;tt&gt;$&lt;/tt&gt; is always treated as part of</em>
+<a class="jxr_linenumber" name="L743" href="#L743">743</a> <em class="jxr_javadoccomment">     * the group reference. Subsequent numbers are incorporated into g if</em>
+<a class="jxr_linenumber" name="L744" href="#L744">744</a> <em class="jxr_javadoccomment">     * they would form a legal group reference. Only the numerals '0'</em>
+<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">     * through '9' are considered as potential components of the group</em>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">     * reference. If the second group matched the string &lt;tt&gt;"foo"&lt;/tt&gt;, for</em>
+<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">     * example, then passing the replacement string &lt;tt&gt;"$2bar"&lt;/tt&gt; would</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">     * cause &lt;tt&gt;"foobar"&lt;/tt&gt; to be appended to the string buffer. A dollar</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">     * sign (&lt;tt&gt;$&lt;/tt&gt;) may be included as a literal in the replacement</em>
+<a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">     * string by preceding it with a backslash (&lt;tt&gt;\$&lt;/tt&gt;).</em>
+<a class="jxr_linenumber" name="L751" href="#L751">751</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L752" href="#L752">752</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Note that backslashes (&lt;tt&gt;\&lt;/tt&gt;) and dollar signs (&lt;tt&gt;$&lt;/tt&gt;) in</em>
+<a class="jxr_linenumber" name="L753" href="#L753">753</a> <em class="jxr_javadoccomment">     * the replacement string may cause the results to be different than if it</em>
+<a class="jxr_linenumber" name="L754" href="#L754">754</a> <em class="jxr_javadoccomment">     * were being treated as a literal replacement string. Dollar signs may be</em>
+<a class="jxr_linenumber" name="L755" href="#L755">755</a> <em class="jxr_javadoccomment">     * treated as references to captured subsequences as described above, and</em>
+<a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">     * backslashes are used to escape literal characters in the replacement</em>
+<a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">     * string.</em>
+<a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method is intended to be used in a loop together with the</em>
+<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">     * {@link #appendTail appendTail} and {@link #find find} methods.  The</em>
+<a class="jxr_linenumber" name="L761" href="#L761">761</a> <em class="jxr_javadoccomment">     * following code, for example, writes &lt;tt&gt;one dog two dogs in the</em>
+<a class="jxr_linenumber" name="L762" href="#L762">762</a> <em class="jxr_javadoccomment">     * yard&lt;/tt&gt; to the standard-output stream: &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L763" href="#L763">763</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L764" href="#L764">764</a> <em class="jxr_javadoccomment">     * &lt;blockquote&gt;&lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L765" href="#L765">765</a> <em class="jxr_javadoccomment">     * Pattern p = Pattern.compile("cat");</em>
+<a class="jxr_linenumber" name="L766" href="#L766">766</a> <em class="jxr_javadoccomment">     * Matcher m = p.matcher("one cat two cats in the yard");</em>
+<a class="jxr_linenumber" name="L767" href="#L767">767</a> <em class="jxr_javadoccomment">     * StringBuffer sb = new StringBuffer();</em>
+<a class="jxr_linenumber" name="L768" href="#L768">768</a> <em class="jxr_javadoccomment">     * while (m.find()) {</em>
+<a class="jxr_linenumber" name="L769" href="#L769">769</a> <em class="jxr_javadoccomment">     *     m.appendReplacement(sb, "dog");</em>
+<a class="jxr_linenumber" name="L770" href="#L770">770</a> <em class="jxr_javadoccomment">     * }</em>
+<a class="jxr_linenumber" name="L771" href="#L771">771</a> <em class="jxr_javadoccomment">     * m.appendTail(sb);</em>
+<a class="jxr_linenumber" name="L772" href="#L772">772</a> <em class="jxr_javadoccomment">     * System.out.println(sb.toString());&lt;/pre&gt;&lt;/blockquote&gt;</em>
+<a class="jxr_linenumber" name="L773" href="#L773">773</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L774" href="#L774">774</a> <em class="jxr_javadoccomment">     * @param  sb</em>
+<a class="jxr_linenumber" name="L775" href="#L775">775</a> <em class="jxr_javadoccomment">     *         The target string buffer</em>
+<a class="jxr_linenumber" name="L776" href="#L776">776</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L777" href="#L777">777</a> <em class="jxr_javadoccomment">     * @param  replacement</em>
+<a class="jxr_linenumber" name="L778" href="#L778">778</a> <em class="jxr_javadoccomment">     *         The replacement string</em>
+<a class="jxr_linenumber" name="L779" href="#L779">779</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L780" href="#L780">780</a> <em class="jxr_javadoccomment">     * @return  This matcher</em>
+<a class="jxr_linenumber" name="L781" href="#L781">781</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L782" href="#L782">782</a> <em class="jxr_javadoccomment">     * @throws  IllegalStateException</em>
+<a class="jxr_linenumber" name="L783" href="#L783">783</a> <em class="jxr_javadoccomment">     *          If no match has yet been attempted,</em>
+<a class="jxr_linenumber" name="L784" href="#L784">784</a> <em class="jxr_javadoccomment">     *          or if the previous match operation failed</em>
+<a class="jxr_linenumber" name="L785" href="#L785">785</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L786" href="#L786">786</a> <em class="jxr_javadoccomment">     * @throws  IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L787" href="#L787">787</a> <em class="jxr_javadoccomment">     *          If the replacement string refers to a named-capturing</em>
+<a class="jxr_linenumber" name="L788" href="#L788">788</a> <em class="jxr_javadoccomment">     *          group that does not exist in the pattern</em>
+<a class="jxr_linenumber" name="L789" href="#L789">789</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L791" href="#L791">791</a> <em class="jxr_javadoccomment">     *          If the replacement string refers to a capturing group</em>
+<a class="jxr_linenumber" name="L792" href="#L792">792</a> <em class="jxr_javadoccomment">     *          that does not exist in the pattern</em>
+<a class="jxr_linenumber" name="L793" href="#L793">793</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> appendReplacement(<a href="../../../java/lang/StringBuffer.html">StringBuffer</a> sb, <a href="../../../java/lang/String.html">String</a> replacement) {
+<a class="jxr_linenumber" name="L795" href="#L795">795</a> 
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>         <em class="jxr_comment">// If no match, return error</em>
+<a class="jxr_linenumber" name="L797" href="#L797">797</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match available"</span>);
+<a class="jxr_linenumber" name="L799" href="#L799">799</a> 
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>         <em class="jxr_comment">// Process substitution string to replace group references with groups</em>
+<a class="jxr_linenumber" name="L801" href="#L801">801</a>         <strong class="jxr_keyword">int</strong> cursor = 0;
+<a class="jxr_linenumber" name="L802" href="#L802">802</a>         <a href="../../../java/lang/StringBuilder.html">StringBuilder</a> result = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuilder.html">StringBuilder</a>();
+<a class="jxr_linenumber" name="L803" href="#L803">803</a> 
+<a class="jxr_linenumber" name="L804" href="#L804">804</a>         <strong class="jxr_keyword">while</strong> (cursor &lt; replacement.length()) {
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>             <strong class="jxr_keyword">char</strong> nextChar = replacement.charAt(cursor);
+<a class="jxr_linenumber" name="L806" href="#L806">806</a>             <strong class="jxr_keyword">if</strong> (nextChar == '&#92;&#92;') {
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>                 cursor++;
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>                 <strong class="jxr_keyword">if</strong> (cursor == replacement.length())
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L810" href="#L810">810</a>                         <span class="jxr_string">"character to be escaped is missing"</span>);
+<a class="jxr_linenumber" name="L811" href="#L811">811</a>                 nextChar = replacement.charAt(cursor);
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>                 result.append(nextChar);
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>                 cursor++;
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (nextChar == '$') {
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>                 <em class="jxr_comment">// Skip past $</em>
+<a class="jxr_linenumber" name="L816" href="#L816">816</a>                 cursor++;
+<a class="jxr_linenumber" name="L817" href="#L817">817</a>                 <em class="jxr_comment">// Throw IAE if this "$" is the last character in replacement</em>
+<a class="jxr_linenumber" name="L818" href="#L818">818</a>                 <strong class="jxr_keyword">if</strong> (cursor == replacement.length())
+<a class="jxr_linenumber" name="L819" href="#L819">819</a>                    <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L820" href="#L820">820</a>                         <span class="jxr_string">"Illegal group reference: group index is missing"</span>);
+<a class="jxr_linenumber" name="L821" href="#L821">821</a>                 nextChar = replacement.charAt(cursor);
+<a class="jxr_linenumber" name="L822" href="#L822">822</a>                 <strong class="jxr_keyword">int</strong> refNum = -1;
+<a class="jxr_linenumber" name="L823" href="#L823">823</a>                 <strong class="jxr_keyword">if</strong> (nextChar == '{') {
+<a class="jxr_linenumber" name="L824" href="#L824">824</a>                     cursor++;
+<a class="jxr_linenumber" name="L825" href="#L825">825</a>                     <a href="../../../java/lang/StringBuilder.html">StringBuilder</a> gsb = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuilder.html">StringBuilder</a>();
+<a class="jxr_linenumber" name="L826" href="#L826">826</a>                     <strong class="jxr_keyword">while</strong> (cursor &lt; replacement.length()) {
+<a class="jxr_linenumber" name="L827" href="#L827">827</a>                         nextChar = replacement.charAt(cursor);
+<a class="jxr_linenumber" name="L828" href="#L828">828</a>                         <strong class="jxr_keyword">if</strong> (ASCII.isLower(nextChar) ||
+<a class="jxr_linenumber" name="L829" href="#L829">829</a>                             ASCII.isUpper(nextChar) ||
+<a class="jxr_linenumber" name="L830" href="#L830">830</a>                             ASCII.isDigit(nextChar)) {
+<a class="jxr_linenumber" name="L831" href="#L831">831</a>                             gsb.append(nextChar);
+<a class="jxr_linenumber" name="L832" href="#L832">832</a>                             cursor++;
+<a class="jxr_linenumber" name="L833" href="#L833">833</a>                         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L834" href="#L834">834</a>                             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L835" href="#L835">835</a>                         }
+<a class="jxr_linenumber" name="L836" href="#L836">836</a>                     }
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>                     <strong class="jxr_keyword">if</strong> (gsb.length() == 0)
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L839" href="#L839">839</a>                             <span class="jxr_string">"named capturing group has 0 length name"</span>);
+<a class="jxr_linenumber" name="L840" href="#L840">840</a>                     <strong class="jxr_keyword">if</strong> (nextChar != '}')
+<a class="jxr_linenumber" name="L841" href="#L841">841</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L842" href="#L842">842</a>                             <span class="jxr_string">"named capturing group is missing trailing '}'"</span>);
+<a class="jxr_linenumber" name="L843" href="#L843">843</a>                     <a href="../../../java/lang/String.html">String</a> gname = gsb.toString();
+<a class="jxr_linenumber" name="L844" href="#L844">844</a>                     <strong class="jxr_keyword">if</strong> (ASCII.isDigit(gname.charAt(0)))
+<a class="jxr_linenumber" name="L845" href="#L845">845</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L846" href="#L846">846</a>                             <span class="jxr_string">"capturing group name {"</span> + gname +
+<a class="jxr_linenumber" name="L847" href="#L847">847</a>                             <span class="jxr_string">"} starts with digit character"</span>);
+<a class="jxr_linenumber" name="L848" href="#L848">848</a>                     <strong class="jxr_keyword">if</strong> (!parentPattern.namedGroups().containsKey(gname))
+<a class="jxr_linenumber" name="L849" href="#L849">849</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>                             <span class="jxr_string">"No group with name {"</span> + gname + <span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L851" href="#L851">851</a>                     refNum = parentPattern.namedGroups().get(gname);
+<a class="jxr_linenumber" name="L852" href="#L852">852</a>                     cursor++;
+<a class="jxr_linenumber" name="L853" href="#L853">853</a>                 } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L854" href="#L854">854</a>                     <em class="jxr_comment">// The first number is always a group</em>
+<a class="jxr_linenumber" name="L855" href="#L855">855</a>                     refNum = (<strong class="jxr_keyword">int</strong>)nextChar - '0';
+<a class="jxr_linenumber" name="L856" href="#L856">856</a>                     <strong class="jxr_keyword">if</strong> ((refNum &lt; 0)||(refNum &gt; 9))
+<a class="jxr_linenumber" name="L857" href="#L857">857</a>                         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(
+<a class="jxr_linenumber" name="L858" href="#L858">858</a>                             <span class="jxr_string">"Illegal group reference"</span>);
+<a class="jxr_linenumber" name="L859" href="#L859">859</a>                     cursor++;
+<a class="jxr_linenumber" name="L860" href="#L860">860</a>                     <em class="jxr_comment">// Capture the largest legal group string</em>
+<a class="jxr_linenumber" name="L861" href="#L861">861</a>                     <strong class="jxr_keyword">boolean</strong> done = false;
+<a class="jxr_linenumber" name="L862" href="#L862">862</a>                     <strong class="jxr_keyword">while</strong> (!done) {
+<a class="jxr_linenumber" name="L863" href="#L863">863</a>                         <strong class="jxr_keyword">if</strong> (cursor &gt;= replacement.length()) {
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>                             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L865" href="#L865">865</a>                         }
+<a class="jxr_linenumber" name="L866" href="#L866">866</a>                         <strong class="jxr_keyword">int</strong> nextDigit = replacement.charAt(cursor) - '0';
+<a class="jxr_linenumber" name="L867" href="#L867">867</a>                         <strong class="jxr_keyword">if</strong> ((nextDigit &lt; 0)||(nextDigit &gt; 9)) { <em class="jxr_comment">// not a number</em>
+<a class="jxr_linenumber" name="L868" href="#L868">868</a>                             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L869" href="#L869">869</a>                         }
+<a class="jxr_linenumber" name="L870" href="#L870">870</a>                         <strong class="jxr_keyword">int</strong> newRefNum = (refNum * 10) + nextDigit;
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>                         <strong class="jxr_keyword">if</strong> (groupCount() &lt; newRefNum) {
+<a class="jxr_linenumber" name="L872" href="#L872">872</a>                             done = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>                         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L874" href="#L874">874</a>                             refNum = newRefNum;
+<a class="jxr_linenumber" name="L875" href="#L875">875</a>                             cursor++;
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>                         }
+<a class="jxr_linenumber" name="L877" href="#L877">877</a>                     }
+<a class="jxr_linenumber" name="L878" href="#L878">878</a>                 }
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>                 <em class="jxr_comment">// Append group</em>
+<a class="jxr_linenumber" name="L880" href="#L880">880</a>                 <strong class="jxr_keyword">if</strong> (start(refNum) != -1 &amp;&amp; end(refNum) != -1)
+<a class="jxr_linenumber" name="L881" href="#L881">881</a>                     result.append(text, start(refNum), end(refNum));
+<a class="jxr_linenumber" name="L882" href="#L882">882</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>                 result.append(nextChar);
+<a class="jxr_linenumber" name="L884" href="#L884">884</a>                 cursor++;
+<a class="jxr_linenumber" name="L885" href="#L885">885</a>             }
+<a class="jxr_linenumber" name="L886" href="#L886">886</a>         }
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>         <em class="jxr_comment">// Append the intervening text</em>
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>         sb.append(text, lastAppendPosition, first);
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>         <em class="jxr_comment">// Append the match substitution</em>
+<a class="jxr_linenumber" name="L890" href="#L890">890</a>         sb.append(result);
+<a class="jxr_linenumber" name="L891" href="#L891">891</a> 
+<a class="jxr_linenumber" name="L892" href="#L892">892</a>         lastAppendPosition = last;
+<a class="jxr_linenumber" name="L893" href="#L893">893</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L894" href="#L894">894</a>     }
+<a class="jxr_linenumber" name="L895" href="#L895">895</a> 
+<a class="jxr_linenumber" name="L896" href="#L896">896</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L897" href="#L897">897</a> <em class="jxr_javadoccomment">     * Implements a terminal append-and-replace step.</em>
+<a class="jxr_linenumber" name="L898" href="#L898">898</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L899" href="#L899">899</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method reads characters from the input sequence, starting at</em>
+<a class="jxr_linenumber" name="L900" href="#L900">900</a> <em class="jxr_javadoccomment">     * the append position, and appends them to the given string buffer.  It is</em>
+<a class="jxr_linenumber" name="L901" href="#L901">901</a> <em class="jxr_javadoccomment">     * intended to be invoked after one or more invocations of the {@link</em>
+<a class="jxr_linenumber" name="L902" href="#L902">902</a> <em class="jxr_javadoccomment">     * #appendReplacement appendReplacement} method in order to copy the</em>
+<a class="jxr_linenumber" name="L903" href="#L903">903</a> <em class="jxr_javadoccomment">     * remainder of the input sequence.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L904" href="#L904">904</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L905" href="#L905">905</a> <em class="jxr_javadoccomment">     * @param  sb</em>
+<a class="jxr_linenumber" name="L906" href="#L906">906</a> <em class="jxr_javadoccomment">     *         The target string buffer</em>
+<a class="jxr_linenumber" name="L907" href="#L907">907</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L908" href="#L908">908</a> <em class="jxr_javadoccomment">     * @return  The target string buffer</em>
+<a class="jxr_linenumber" name="L909" href="#L909">909</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/StringBuffer.html">StringBuffer</a> appendTail(<a href="../../../java/lang/StringBuffer.html">StringBuffer</a> sb) {
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>         sb.append(text, lastAppendPosition, getTextLength());
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>         <strong class="jxr_keyword">return</strong> sb;
+<a class="jxr_linenumber" name="L913" href="#L913">913</a>     }
+<a class="jxr_linenumber" name="L914" href="#L914">914</a> 
+<a class="jxr_linenumber" name="L915" href="#L915">915</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L916" href="#L916">916</a> <em class="jxr_javadoccomment">     * Replaces every subsequence of the input sequence that matches the</em>
+<a class="jxr_linenumber" name="L917" href="#L917">917</a> <em class="jxr_javadoccomment">     * pattern with the given replacement string.</em>
+<a class="jxr_linenumber" name="L918" href="#L918">918</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L919" href="#L919">919</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method first resets this matcher.  It then scans the input</em>
+<a class="jxr_linenumber" name="L920" href="#L920">920</a> <em class="jxr_javadoccomment">     * sequence looking for matches of the pattern.  Characters that are not</em>
+<a class="jxr_linenumber" name="L921" href="#L921">921</a> <em class="jxr_javadoccomment">     * part of any match are appended directly to the result string; each match</em>
+<a class="jxr_linenumber" name="L922" href="#L922">922</a> <em class="jxr_javadoccomment">     * is replaced in the result by the replacement string.  The replacement</em>
+<a class="jxr_linenumber" name="L923" href="#L923">923</a> <em class="jxr_javadoccomment">     * string may contain references to captured subsequences as in the {@link</em>
+<a class="jxr_linenumber" name="L924" href="#L924">924</a> <em class="jxr_javadoccomment">     * #appendReplacement appendReplacement} method.</em>
+<a class="jxr_linenumber" name="L925" href="#L925">925</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L926" href="#L926">926</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Note that backslashes (&lt;tt&gt;\&lt;/tt&gt;) and dollar signs (&lt;tt&gt;$&lt;/tt&gt;) in</em>
+<a class="jxr_linenumber" name="L927" href="#L927">927</a> <em class="jxr_javadoccomment">     * the replacement string may cause the results to be different than if it</em>
+<a class="jxr_linenumber" name="L928" href="#L928">928</a> <em class="jxr_javadoccomment">     * were being treated as a literal replacement string. Dollar signs may be</em>
+<a class="jxr_linenumber" name="L929" href="#L929">929</a> <em class="jxr_javadoccomment">     * treated as references to captured subsequences as described above, and</em>
+<a class="jxr_linenumber" name="L930" href="#L930">930</a> <em class="jxr_javadoccomment">     * backslashes are used to escape literal characters in the replacement</em>
+<a class="jxr_linenumber" name="L931" href="#L931">931</a> <em class="jxr_javadoccomment">     * string.</em>
+<a class="jxr_linenumber" name="L932" href="#L932">932</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L933" href="#L933">933</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Given the regular expression &lt;tt&gt;a*b&lt;/tt&gt;, the input</em>
+<a class="jxr_linenumber" name="L934" href="#L934">934</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;"aabfooaabfooabfoob"&lt;/tt&gt;, and the replacement string</em>
+<a class="jxr_linenumber" name="L935" href="#L935">935</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;"-"&lt;/tt&gt;, an invocation of this method on a matcher for that</em>
+<a class="jxr_linenumber" name="L936" href="#L936">936</a> <em class="jxr_javadoccomment">     * expression would yield the string &lt;tt&gt;"-foo-foo-foo-"&lt;/tt&gt;.</em>
+<a class="jxr_linenumber" name="L937" href="#L937">937</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L938" href="#L938">938</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Invoking this method changes this matcher's state.  If the matcher</em>
+<a class="jxr_linenumber" name="L939" href="#L939">939</a> <em class="jxr_javadoccomment">     * is to be used in further matching operations then it should first be</em>
+<a class="jxr_linenumber" name="L940" href="#L940">940</a> <em class="jxr_javadoccomment">     * reset.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L941" href="#L941">941</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L942" href="#L942">942</a> <em class="jxr_javadoccomment">     * @param  replacement</em>
+<a class="jxr_linenumber" name="L943" href="#L943">943</a> <em class="jxr_javadoccomment">     *         The replacement string</em>
+<a class="jxr_linenumber" name="L944" href="#L944">944</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L945" href="#L945">945</a> <em class="jxr_javadoccomment">     * @return  The string constructed by replacing each matching subsequence</em>
+<a class="jxr_linenumber" name="L946" href="#L946">946</a> <em class="jxr_javadoccomment">     *          by the replacement string, substituting captured subsequences</em>
+<a class="jxr_linenumber" name="L947" href="#L947">947</a> <em class="jxr_javadoccomment">     *          as needed</em>
+<a class="jxr_linenumber" name="L948" href="#L948">948</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L949" href="#L949">949</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> replaceAll(<a href="../../../java/lang/String.html">String</a> replacement) {
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>         reset();
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>         <strong class="jxr_keyword">boolean</strong> result = find();
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>         <strong class="jxr_keyword">if</strong> (result) {
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>             <a href="../../../java/lang/StringBuffer.html">StringBuffer</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuffer.html">StringBuffer</a>();
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>             <strong class="jxr_keyword">do</strong> {
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>                 appendReplacement(sb, replacement);
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>                 result = find();
+<a class="jxr_linenumber" name="L957" href="#L957">957</a>             } <strong class="jxr_keyword">while</strong> (result);
+<a class="jxr_linenumber" name="L958" href="#L958">958</a>             appendTail(sb);
+<a class="jxr_linenumber" name="L959" href="#L959">959</a>             <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L960" href="#L960">960</a>         }
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>         <strong class="jxr_keyword">return</strong> text.toString();
+<a class="jxr_linenumber" name="L962" href="#L962">962</a>     }
+<a class="jxr_linenumber" name="L963" href="#L963">963</a> 
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L965" href="#L965">965</a> <em class="jxr_javadoccomment">     * Replaces the first subsequence of the input sequence that matches the</em>
+<a class="jxr_linenumber" name="L966" href="#L966">966</a> <em class="jxr_javadoccomment">     * pattern with the given replacement string.</em>
+<a class="jxr_linenumber" name="L967" href="#L967">967</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L968" href="#L968">968</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method first resets this matcher.  It then scans the input</em>
+<a class="jxr_linenumber" name="L969" href="#L969">969</a> <em class="jxr_javadoccomment">     * sequence looking for a match of the pattern.  Characters that are not</em>
+<a class="jxr_linenumber" name="L970" href="#L970">970</a> <em class="jxr_javadoccomment">     * part of the match are appended directly to the result string; the match</em>
+<a class="jxr_linenumber" name="L971" href="#L971">971</a> <em class="jxr_javadoccomment">     * is replaced in the result by the replacement string.  The replacement</em>
+<a class="jxr_linenumber" name="L972" href="#L972">972</a> <em class="jxr_javadoccomment">     * string may contain references to captured subsequences as in the {@link</em>
+<a class="jxr_linenumber" name="L973" href="#L973">973</a> <em class="jxr_javadoccomment">     * #appendReplacement appendReplacement} method.</em>
+<a class="jxr_linenumber" name="L974" href="#L974">974</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L975" href="#L975">975</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Note that backslashes (&lt;tt&gt;\&lt;/tt&gt;) and dollar signs (&lt;tt&gt;$&lt;/tt&gt;) in</em>
+<a class="jxr_linenumber" name="L976" href="#L976">976</a> <em class="jxr_javadoccomment">     * the replacement string may cause the results to be different than if it</em>
+<a class="jxr_linenumber" name="L977" href="#L977">977</a> <em class="jxr_javadoccomment">     * were being treated as a literal replacement string. Dollar signs may be</em>
+<a class="jxr_linenumber" name="L978" href="#L978">978</a> <em class="jxr_javadoccomment">     * treated as references to captured subsequences as described above, and</em>
+<a class="jxr_linenumber" name="L979" href="#L979">979</a> <em class="jxr_javadoccomment">     * backslashes are used to escape literal characters in the replacement</em>
+<a class="jxr_linenumber" name="L980" href="#L980">980</a> <em class="jxr_javadoccomment">     * string.</em>
+<a class="jxr_linenumber" name="L981" href="#L981">981</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L982" href="#L982">982</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Given the regular expression &lt;tt&gt;dog&lt;/tt&gt;, the input</em>
+<a class="jxr_linenumber" name="L983" href="#L983">983</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;"zzzdogzzzdogzzz"&lt;/tt&gt;, and the replacement string</em>
+<a class="jxr_linenumber" name="L984" href="#L984">984</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;"cat"&lt;/tt&gt;, an invocation of this method on a matcher for that</em>
+<a class="jxr_linenumber" name="L985" href="#L985">985</a> <em class="jxr_javadoccomment">     * expression would yield the string &lt;tt&gt;"zzzcatzzzdogzzz"&lt;/tt&gt;.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L986" href="#L986">986</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L987" href="#L987">987</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Invoking this method changes this matcher's state.  If the matcher</em>
+<a class="jxr_linenumber" name="L988" href="#L988">988</a> <em class="jxr_javadoccomment">     * is to be used in further matching operations then it should first be</em>
+<a class="jxr_linenumber" name="L989" href="#L989">989</a> <em class="jxr_javadoccomment">     * reset.  &lt;/p&gt;</em>
+<a class="jxr_linenumber" name="L990" href="#L990">990</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L991" href="#L991">991</a> <em class="jxr_javadoccomment">     * @param  replacement</em>
+<a class="jxr_linenumber" name="L992" href="#L992">992</a> <em class="jxr_javadoccomment">     *         The replacement string</em>
+<a class="jxr_linenumber" name="L993" href="#L993">993</a> <em class="jxr_javadoccomment">     * @return  The string constructed by replacing the first matching</em>
+<a class="jxr_linenumber" name="L994" href="#L994">994</a> <em class="jxr_javadoccomment">     *          subsequence by the replacement string, substituting captured</em>
+<a class="jxr_linenumber" name="L995" href="#L995">995</a> <em class="jxr_javadoccomment">     *          subsequences as needed</em>
+<a class="jxr_linenumber" name="L996" href="#L996">996</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L997" href="#L997">997</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> replaceFirst(<a href="../../../java/lang/String.html">String</a> replacement) {
+<a class="jxr_linenumber" name="L998" href="#L998">998</a>         <strong class="jxr_keyword">if</strong> (replacement == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="L999" href="#L999">999</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/NullPointerException.html">NullPointerException</a>(<span class="jxr_string">"replacement"</span>);
+<a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>         reset();
+<a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>         <strong class="jxr_keyword">if</strong> (!find())
+<a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>             <strong class="jxr_keyword">return</strong> text.toString();
+<a class="jxr_linenumber" name="L1003" href="#L1003">1003</a>         <a href="../../../java/lang/StringBuffer.html">StringBuffer</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuffer.html">StringBuffer</a>();
+<a class="jxr_linenumber" name="L1004" href="#L1004">1004</a>         appendReplacement(sb, replacement);
+<a class="jxr_linenumber" name="L1005" href="#L1005">1005</a>         appendTail(sb);
+<a class="jxr_linenumber" name="L1006" href="#L1006">1006</a>         <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>     }
+<a class="jxr_linenumber" name="L1008" href="#L1008">1008</a> 
+<a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1010" href="#L1010">1010</a> <em class="jxr_javadoccomment">     * Sets the limits of this matcher's region. The region is the part of the</em>
+<a class="jxr_linenumber" name="L1011" href="#L1011">1011</a> <em class="jxr_javadoccomment">     * input sequence that will be searched to find a match. Invoking this</em>
+<a class="jxr_linenumber" name="L1012" href="#L1012">1012</a> <em class="jxr_javadoccomment">     * method resets the matcher, and then sets the region to start at the</em>
+<a class="jxr_linenumber" name="L1013" href="#L1013">1013</a> <em class="jxr_javadoccomment">     * index specified by the &lt;code&gt;start&lt;/code&gt; parameter and end at the</em>
+<a class="jxr_linenumber" name="L1014" href="#L1014">1014</a> <em class="jxr_javadoccomment">     * index specified by the &lt;code&gt;end&lt;/code&gt; parameter.</em>
+<a class="jxr_linenumber" name="L1015" href="#L1015">1015</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1016" href="#L1016">1016</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Depending on the transparency and anchoring being used (see</em>
+<a class="jxr_linenumber" name="L1017" href="#L1017">1017</a> <em class="jxr_javadoccomment">     * {@link #useTransparentBounds useTransparentBounds} and</em>
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a> <em class="jxr_javadoccomment">     * {@link #useAnchoringBounds useAnchoringBounds}), certain constructs such</em>
+<a class="jxr_linenumber" name="L1019" href="#L1019">1019</a> <em class="jxr_javadoccomment">     * as anchors may behave differently at or around the boundaries of the</em>
+<a class="jxr_linenumber" name="L1020" href="#L1020">1020</a> <em class="jxr_javadoccomment">     * region.</em>
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a> <em class="jxr_javadoccomment">     * @param  start</em>
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a> <em class="jxr_javadoccomment">     *         The index to start searching at (inclusive)</em>
+<a class="jxr_linenumber" name="L1024" href="#L1024">1024</a> <em class="jxr_javadoccomment">     * @param  end</em>
+<a class="jxr_linenumber" name="L1025" href="#L1025">1025</a> <em class="jxr_javadoccomment">     *         The index to end searching at (exclusive)</em>
+<a class="jxr_linenumber" name="L1026" href="#L1026">1026</a> <em class="jxr_javadoccomment">     * @throws  IndexOutOfBoundsException</em>
+<a class="jxr_linenumber" name="L1027" href="#L1027">1027</a> <em class="jxr_javadoccomment">     *          If start or end is less than zero, if</em>
+<a class="jxr_linenumber" name="L1028" href="#L1028">1028</a> <em class="jxr_javadoccomment">     *          start is greater than the length of the input sequence, if</em>
+<a class="jxr_linenumber" name="L1029" href="#L1029">1029</a> <em class="jxr_javadoccomment">     *          end is greater than the length of the input sequence, or if</em>
+<a class="jxr_linenumber" name="L1030" href="#L1030">1030</a> <em class="jxr_javadoccomment">     *          start is greater than end.</em>
+<a class="jxr_linenumber" name="L1031" href="#L1031">1031</a> <em class="jxr_javadoccomment">     * @return  this matcher</em>
+<a class="jxr_linenumber" name="L1032" href="#L1032">1032</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1033" href="#L1033">1033</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1034" href="#L1034">1034</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> region(<strong class="jxr_keyword">int</strong> start, <strong class="jxr_keyword">int</strong> end) {
+<a class="jxr_linenumber" name="L1035" href="#L1035">1035</a>         <strong class="jxr_keyword">if</strong> ((start &lt; 0) || (start &gt; getTextLength()))
+<a class="jxr_linenumber" name="L1036" href="#L1036">1036</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"start"</span>);
+<a class="jxr_linenumber" name="L1037" href="#L1037">1037</a>         <strong class="jxr_keyword">if</strong> ((end &lt; 0) || (end &gt; getTextLength()))
+<a class="jxr_linenumber" name="L1038" href="#L1038">1038</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"end"</span>);
+<a class="jxr_linenumber" name="L1039" href="#L1039">1039</a>         <strong class="jxr_keyword">if</strong> (start &gt; end)
+<a class="jxr_linenumber" name="L1040" href="#L1040">1040</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IndexOutOfBoundsException.html">IndexOutOfBoundsException</a>(<span class="jxr_string">"start &gt; end"</span>);
+<a class="jxr_linenumber" name="L1041" href="#L1041">1041</a>         reset();
+<a class="jxr_linenumber" name="L1042" href="#L1042">1042</a>         from = start;
+<a class="jxr_linenumber" name="L1043" href="#L1043">1043</a>         to = end;
+<a class="jxr_linenumber" name="L1044" href="#L1044">1044</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1045" href="#L1045">1045</a>     }
+<a class="jxr_linenumber" name="L1046" href="#L1046">1046</a> 
+<a class="jxr_linenumber" name="L1047" href="#L1047">1047</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1048" href="#L1048">1048</a> <em class="jxr_javadoccomment">     * Reports the start index of this matcher's region. The</em>
+<a class="jxr_linenumber" name="L1049" href="#L1049">1049</a> <em class="jxr_javadoccomment">     * searches this matcher conducts are limited to finding matches</em>
+<a class="jxr_linenumber" name="L1050" href="#L1050">1050</a> <em class="jxr_javadoccomment">     * within {@link #regionStart regionStart} (inclusive) and</em>
+<a class="jxr_linenumber" name="L1051" href="#L1051">1051</a> <em class="jxr_javadoccomment">     * {@link #regionEnd regionEnd} (exclusive).</em>
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1053" href="#L1053">1053</a> <em class="jxr_javadoccomment">     * @return  The starting point of this matcher's region</em>
+<a class="jxr_linenumber" name="L1054" href="#L1054">1054</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1055" href="#L1055">1055</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1056" href="#L1056">1056</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> regionStart() {
+<a class="jxr_linenumber" name="L1057" href="#L1057">1057</a>         <strong class="jxr_keyword">return</strong> from;
+<a class="jxr_linenumber" name="L1058" href="#L1058">1058</a>     }
+<a class="jxr_linenumber" name="L1059" href="#L1059">1059</a> 
+<a class="jxr_linenumber" name="L1060" href="#L1060">1060</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1061" href="#L1061">1061</a> <em class="jxr_javadoccomment">     * Reports the end index (exclusive) of this matcher's region.</em>
+<a class="jxr_linenumber" name="L1062" href="#L1062">1062</a> <em class="jxr_javadoccomment">     * The searches this matcher conducts are limited to finding matches</em>
+<a class="jxr_linenumber" name="L1063" href="#L1063">1063</a> <em class="jxr_javadoccomment">     * within {@link #regionStart regionStart} (inclusive) and</em>
+<a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> <em class="jxr_javadoccomment">     * {@link #regionEnd regionEnd} (exclusive).</em>
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> <em class="jxr_javadoccomment">     * @return  the ending point of this matcher's region</em>
+<a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1068" href="#L1068">1068</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> regionEnd() {
+<a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>         <strong class="jxr_keyword">return</strong> to;
+<a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>     }
+<a class="jxr_linenumber" name="L1072" href="#L1072">1072</a> 
+<a class="jxr_linenumber" name="L1073" href="#L1073">1073</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1074" href="#L1074">1074</a> <em class="jxr_javadoccomment">     * Queries the transparency of region bounds for this matcher.</em>
+<a class="jxr_linenumber" name="L1075" href="#L1075">1075</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1076" href="#L1076">1076</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method returns &lt;tt&gt;true&lt;/tt&gt; if this matcher uses</em>
+<a class="jxr_linenumber" name="L1077" href="#L1077">1077</a> <em class="jxr_javadoccomment">     * &lt;i&gt;transparent&lt;/i&gt; bounds, &lt;tt&gt;false&lt;/tt&gt; if it uses &lt;i&gt;opaque&lt;/i&gt;</em>
+<a class="jxr_linenumber" name="L1078" href="#L1078">1078</a> <em class="jxr_javadoccomment">     * bounds.</em>
+<a class="jxr_linenumber" name="L1079" href="#L1079">1079</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1080" href="#L1080">1080</a> <em class="jxr_javadoccomment">     * &lt;p&gt; See {@link #useTransparentBounds useTransparentBounds} for a</em>
+<a class="jxr_linenumber" name="L1081" href="#L1081">1081</a> <em class="jxr_javadoccomment">     * description of transparent and opaque bounds.</em>
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1083" href="#L1083">1083</a> <em class="jxr_javadoccomment">     * &lt;p&gt; By default, a matcher uses opaque region boundaries.</em>
+<a class="jxr_linenumber" name="L1084" href="#L1084">1084</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1085" href="#L1085">1085</a> <em class="jxr_javadoccomment">     * @return &lt;tt&gt;true&lt;/tt&gt; iff this matcher is using transparent bounds,</em>
+<a class="jxr_linenumber" name="L1086" href="#L1086">1086</a> <em class="jxr_javadoccomment">     *         &lt;tt&gt;false&lt;/tt&gt; otherwise.</em>
+<a class="jxr_linenumber" name="L1087" href="#L1087">1087</a> <em class="jxr_javadoccomment">     * @see java.util.regex.Matcher#useTransparentBounds(boolean)</em>
+<a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasTransparentBounds() {
+<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>         <strong class="jxr_keyword">return</strong> transparentBounds;
+<a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>     }
+<a class="jxr_linenumber" name="L1093" href="#L1093">1093</a> 
+<a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1095" href="#L1095">1095</a> <em class="jxr_javadoccomment">     * Sets the transparency of region bounds for this matcher.</em>
+<a class="jxr_linenumber" name="L1096" href="#L1096">1096</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1097" href="#L1097">1097</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Invoking this method with an argument of &lt;tt&gt;true&lt;/tt&gt; will set this</em>
+<a class="jxr_linenumber" name="L1098" href="#L1098">1098</a> <em class="jxr_javadoccomment">     * matcher to use &lt;i&gt;transparent&lt;/i&gt; bounds. If the boolean</em>
+<a class="jxr_linenumber" name="L1099" href="#L1099">1099</a> <em class="jxr_javadoccomment">     * argument is &lt;tt&gt;false&lt;/tt&gt;, then &lt;i&gt;opaque&lt;/i&gt; bounds will be used.</em>
+<a class="jxr_linenumber" name="L1100" href="#L1100">1100</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1101" href="#L1101">1101</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Using transparent bounds, the boundaries of this</em>
+<a class="jxr_linenumber" name="L1102" href="#L1102">1102</a> <em class="jxr_javadoccomment">     * matcher's region are transparent to lookahead, lookbehind,</em>
+<a class="jxr_linenumber" name="L1103" href="#L1103">1103</a> <em class="jxr_javadoccomment">     * and boundary matching constructs. Those constructs can see beyond the</em>
+<a class="jxr_linenumber" name="L1104" href="#L1104">1104</a> <em class="jxr_javadoccomment">     * boundaries of the region to see if a match is appropriate.</em>
+<a class="jxr_linenumber" name="L1105" href="#L1105">1105</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1106" href="#L1106">1106</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Using opaque bounds, the boundaries of this matcher's</em>
+<a class="jxr_linenumber" name="L1107" href="#L1107">1107</a> <em class="jxr_javadoccomment">     * region are opaque to lookahead, lookbehind, and boundary matching</em>
+<a class="jxr_linenumber" name="L1108" href="#L1108">1108</a> <em class="jxr_javadoccomment">     * constructs that may try to see beyond them. Those constructs cannot</em>
+<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a> <em class="jxr_javadoccomment">     * look past the boundaries so they will fail to match anything outside</em>
+<a class="jxr_linenumber" name="L1110" href="#L1110">1110</a> <em class="jxr_javadoccomment">     * of the region.</em>
+<a class="jxr_linenumber" name="L1111" href="#L1111">1111</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1112" href="#L1112">1112</a> <em class="jxr_javadoccomment">     * &lt;p&gt; By default, a matcher uses opaque bounds.</em>
+<a class="jxr_linenumber" name="L1113" href="#L1113">1113</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1114" href="#L1114">1114</a> <em class="jxr_javadoccomment">     * @param  b a boolean indicating whether to use opaque or transparent</em>
+<a class="jxr_linenumber" name="L1115" href="#L1115">1115</a> <em class="jxr_javadoccomment">     *         regions</em>
+<a class="jxr_linenumber" name="L1116" href="#L1116">1116</a> <em class="jxr_javadoccomment">     * @return this matcher</em>
+<a class="jxr_linenumber" name="L1117" href="#L1117">1117</a> <em class="jxr_javadoccomment">     * @see java.util.regex.Matcher#hasTransparentBounds</em>
+<a class="jxr_linenumber" name="L1118" href="#L1118">1118</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1119" href="#L1119">1119</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1120" href="#L1120">1120</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> useTransparentBounds(<strong class="jxr_keyword">boolean</strong> b) {
+<a class="jxr_linenumber" name="L1121" href="#L1121">1121</a>         transparentBounds = b;
+<a class="jxr_linenumber" name="L1122" href="#L1122">1122</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1123" href="#L1123">1123</a>     }
+<a class="jxr_linenumber" name="L1124" href="#L1124">1124</a> 
+<a class="jxr_linenumber" name="L1125" href="#L1125">1125</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a> <em class="jxr_javadoccomment">     * Queries the anchoring of region bounds for this matcher.</em>
+<a class="jxr_linenumber" name="L1127" href="#L1127">1127</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1128" href="#L1128">1128</a> <em class="jxr_javadoccomment">     * &lt;p&gt; This method returns &lt;tt&gt;true&lt;/tt&gt; if this matcher uses</em>
+<a class="jxr_linenumber" name="L1129" href="#L1129">1129</a> <em class="jxr_javadoccomment">     * &lt;i&gt;anchoring&lt;/i&gt; bounds, &lt;tt&gt;false&lt;/tt&gt; otherwise.</em>
+<a class="jxr_linenumber" name="L1130" href="#L1130">1130</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1131" href="#L1131">1131</a> <em class="jxr_javadoccomment">     * &lt;p&gt; See {@link #useAnchoringBounds useAnchoringBounds} for a</em>
+<a class="jxr_linenumber" name="L1132" href="#L1132">1132</a> <em class="jxr_javadoccomment">     * description of anchoring bounds.</em>
+<a class="jxr_linenumber" name="L1133" href="#L1133">1133</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1134" href="#L1134">1134</a> <em class="jxr_javadoccomment">     * &lt;p&gt; By default, a matcher uses anchoring region boundaries.</em>
+<a class="jxr_linenumber" name="L1135" href="#L1135">1135</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1136" href="#L1136">1136</a> <em class="jxr_javadoccomment">     * @return &lt;tt&gt;true&lt;/tt&gt; iff this matcher is using anchoring bounds,</em>
+<a class="jxr_linenumber" name="L1137" href="#L1137">1137</a> <em class="jxr_javadoccomment">     *         &lt;tt&gt;false&lt;/tt&gt; otherwise.</em>
+<a class="jxr_linenumber" name="L1138" href="#L1138">1138</a> <em class="jxr_javadoccomment">     * @see java.util.regex.Matcher#useAnchoringBounds(boolean)</em>
+<a class="jxr_linenumber" name="L1139" href="#L1139">1139</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hasAnchoringBounds() {
+<a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>         <strong class="jxr_keyword">return</strong> anchoringBounds;
+<a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>     }
+<a class="jxr_linenumber" name="L1144" href="#L1144">1144</a> 
+<a class="jxr_linenumber" name="L1145" href="#L1145">1145</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1146" href="#L1146">1146</a> <em class="jxr_javadoccomment">     * Sets the anchoring of region bounds for this matcher.</em>
+<a class="jxr_linenumber" name="L1147" href="#L1147">1147</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1148" href="#L1148">1148</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Invoking this method with an argument of &lt;tt&gt;true&lt;/tt&gt; will set this</em>
+<a class="jxr_linenumber" name="L1149" href="#L1149">1149</a> <em class="jxr_javadoccomment">     * matcher to use &lt;i&gt;anchoring&lt;/i&gt; bounds. If the boolean</em>
+<a class="jxr_linenumber" name="L1150" href="#L1150">1150</a> <em class="jxr_javadoccomment">     * argument is &lt;tt&gt;false&lt;/tt&gt;, then &lt;i&gt;non-anchoring&lt;/i&gt; bounds will be</em>
+<a class="jxr_linenumber" name="L1151" href="#L1151">1151</a> <em class="jxr_javadoccomment">     * used.</em>
+<a class="jxr_linenumber" name="L1152" href="#L1152">1152</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1153" href="#L1153">1153</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Using anchoring bounds, the boundaries of this</em>
+<a class="jxr_linenumber" name="L1154" href="#L1154">1154</a> <em class="jxr_javadoccomment">     * matcher's region match anchors such as ^ and $.</em>
+<a class="jxr_linenumber" name="L1155" href="#L1155">1155</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1156" href="#L1156">1156</a> <em class="jxr_javadoccomment">     * &lt;p&gt; Without anchoring bounds, the boundaries of this</em>
+<a class="jxr_linenumber" name="L1157" href="#L1157">1157</a> <em class="jxr_javadoccomment">     * matcher's region will not match anchors such as ^ and $.</em>
+<a class="jxr_linenumber" name="L1158" href="#L1158">1158</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1159" href="#L1159">1159</a> <em class="jxr_javadoccomment">     * &lt;p&gt; By default, a matcher uses anchoring region boundaries.</em>
+<a class="jxr_linenumber" name="L1160" href="#L1160">1160</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1161" href="#L1161">1161</a> <em class="jxr_javadoccomment">     * @param  b a boolean indicating whether or not to use anchoring bounds.</em>
+<a class="jxr_linenumber" name="L1162" href="#L1162">1162</a> <em class="jxr_javadoccomment">     * @return this matcher</em>
+<a class="jxr_linenumber" name="L1163" href="#L1163">1163</a> <em class="jxr_javadoccomment">     * @see java.util.regex.Matcher#hasAnchoringBounds</em>
+<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1165" href="#L1165">1165</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/util/regex/Matcher.html">Matcher</a> useAnchoringBounds(<strong class="jxr_keyword">boolean</strong> b) {
+<a class="jxr_linenumber" name="L1167" href="#L1167">1167</a>         anchoringBounds = b;
+<a class="jxr_linenumber" name="L1168" href="#L1168">1168</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1169" href="#L1169">1169</a>     }
+<a class="jxr_linenumber" name="L1170" href="#L1170">1170</a> 
+<a class="jxr_linenumber" name="L1171" href="#L1171">1171</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1172" href="#L1172">1172</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Returns the string representation of this matcher. The</em>
+<a class="jxr_linenumber" name="L1173" href="#L1173">1173</a> <em class="jxr_javadoccomment">     * string representation of a &lt;code&gt;Matcher&lt;/code&gt; contains information</em>
+<a class="jxr_linenumber" name="L1174" href="#L1174">1174</a> <em class="jxr_javadoccomment">     * that may be useful for debugging. The exact format is unspecified.</em>
+<a class="jxr_linenumber" name="L1175" href="#L1175">1175</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1176" href="#L1176">1176</a> <em class="jxr_javadoccomment">     * @return  The string representation of this matcher</em>
+<a class="jxr_linenumber" name="L1177" href="#L1177">1177</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1178" href="#L1178">1178</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1179" href="#L1179">1179</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> toString() {
+<a class="jxr_linenumber" name="L1180" href="#L1180">1180</a>         <a href="../../../java/lang/StringBuilder.html">StringBuilder</a> sb = <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/StringBuilder.html">StringBuilder</a>();
+<a class="jxr_linenumber" name="L1181" href="#L1181">1181</a>         sb.append(<span class="jxr_string">"java.util.regex.Matcher"</span>);
+<a class="jxr_linenumber" name="L1182" href="#L1182">1182</a>         sb.append(<span class="jxr_string">"[pattern="</span> + pattern());
+<a class="jxr_linenumber" name="L1183" href="#L1183">1183</a>         sb.append(<span class="jxr_string">" region="</span>);
+<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a>         sb.append(regionStart() + <span class="jxr_string">","</span> + regionEnd());
+<a class="jxr_linenumber" name="L1185" href="#L1185">1185</a>         sb.append(<span class="jxr_string">" lastmatch="</span>);
+<a class="jxr_linenumber" name="L1186" href="#L1186">1186</a>         <strong class="jxr_keyword">if</strong> ((first &gt;= 0) &amp;&amp; (group() != <strong class="jxr_keyword">null</strong>)) {
+<a class="jxr_linenumber" name="L1187" href="#L1187">1187</a>             sb.append(group());
+<a class="jxr_linenumber" name="L1188" href="#L1188">1188</a>         }
+<a class="jxr_linenumber" name="L1189" href="#L1189">1189</a>         sb.append(<span class="jxr_string">"]"</span>);
+<a class="jxr_linenumber" name="L1190" href="#L1190">1190</a>         <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L1191" href="#L1191">1191</a>     }
+<a class="jxr_linenumber" name="L1192" href="#L1192">1192</a> 
+<a class="jxr_linenumber" name="L1193" href="#L1193">1193</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Returns true if the end of input was hit by the search engine in</em>
+<a class="jxr_linenumber" name="L1195" href="#L1195">1195</a> <em class="jxr_javadoccomment">     * the last match operation performed by this matcher.</em>
+<a class="jxr_linenumber" name="L1196" href="#L1196">1196</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1197" href="#L1197">1197</a> <em class="jxr_javadoccomment">     * &lt;p&gt;When this method returns true, then it is possible that more input</em>
+<a class="jxr_linenumber" name="L1198" href="#L1198">1198</a> <em class="jxr_javadoccomment">     * would have changed the result of the last search.</em>
+<a class="jxr_linenumber" name="L1199" href="#L1199">1199</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1200" href="#L1200">1200</a> <em class="jxr_javadoccomment">     * @return  true iff the end of input was hit in the last match; false</em>
+<a class="jxr_linenumber" name="L1201" href="#L1201">1201</a> <em class="jxr_javadoccomment">     *          otherwise</em>
+<a class="jxr_linenumber" name="L1202" href="#L1202">1202</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1203" href="#L1203">1203</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1204" href="#L1204">1204</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> hitEnd() {
+<a class="jxr_linenumber" name="L1205" href="#L1205">1205</a>         <strong class="jxr_keyword">return</strong> hitEnd;
+<a class="jxr_linenumber" name="L1206" href="#L1206">1206</a>     }
+<a class="jxr_linenumber" name="L1207" href="#L1207">1207</a> 
+<a class="jxr_linenumber" name="L1208" href="#L1208">1208</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1209" href="#L1209">1209</a> <em class="jxr_javadoccomment">     * &lt;p&gt;Returns true if more input could change a positive match into a</em>
+<a class="jxr_linenumber" name="L1210" href="#L1210">1210</a> <em class="jxr_javadoccomment">     * negative one.</em>
+<a class="jxr_linenumber" name="L1211" href="#L1211">1211</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a> <em class="jxr_javadoccomment">     * &lt;p&gt;If this method returns true, and a match was found, then more</em>
+<a class="jxr_linenumber" name="L1213" href="#L1213">1213</a> <em class="jxr_javadoccomment">     * input could cause the match to be lost. If this method returns false</em>
+<a class="jxr_linenumber" name="L1214" href="#L1214">1214</a> <em class="jxr_javadoccomment">     * and a match was found, then more input might change the match but the</em>
+<a class="jxr_linenumber" name="L1215" href="#L1215">1215</a> <em class="jxr_javadoccomment">     * match won't be lost. If a match was not found, then requireEnd has no</em>
+<a class="jxr_linenumber" name="L1216" href="#L1216">1216</a> <em class="jxr_javadoccomment">     * meaning.</em>
+<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1218" href="#L1218">1218</a> <em class="jxr_javadoccomment">     * @return  true iff more input could change a positive match into a</em>
+<a class="jxr_linenumber" name="L1219" href="#L1219">1219</a> <em class="jxr_javadoccomment">     *          negative one.</em>
+<a class="jxr_linenumber" name="L1220" href="#L1220">1220</a> <em class="jxr_javadoccomment">     * @since 1.5</em>
+<a class="jxr_linenumber" name="L1221" href="#L1221">1221</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1222" href="#L1222">1222</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> requireEnd() {
+<a class="jxr_linenumber" name="L1223" href="#L1223">1223</a>         <strong class="jxr_keyword">return</strong> requireEnd;
+<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a>     }
+<a class="jxr_linenumber" name="L1225" href="#L1225">1225</a> 
+<a class="jxr_linenumber" name="L1226" href="#L1226">1226</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1227" href="#L1227">1227</a> <em class="jxr_javadoccomment">     * Initiates a search to find a Pattern within the given bounds.</em>
+<a class="jxr_linenumber" name="L1228" href="#L1228">1228</a> <em class="jxr_javadoccomment">     * The groups are filled with default values and the match of the root</em>
+<a class="jxr_linenumber" name="L1229" href="#L1229">1229</a> <em class="jxr_javadoccomment">     * of the state machine is called. The state machine will hold the state</em>
+<a class="jxr_linenumber" name="L1230" href="#L1230">1230</a> <em class="jxr_javadoccomment">     * of the match as it proceeds in this matcher.</em>
+<a class="jxr_linenumber" name="L1231" href="#L1231">1231</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1232" href="#L1232">1232</a> <em class="jxr_javadoccomment">     * Matcher.from is not set here, because it is the "hard" boundary</em>
+<a class="jxr_linenumber" name="L1233" href="#L1233">1233</a> <em class="jxr_javadoccomment">     * of the start of the search which anchors will set to. The from param</em>
+<a class="jxr_linenumber" name="L1234" href="#L1234">1234</a> <em class="jxr_javadoccomment">     * is the "soft" boundary of the start of the search, meaning that the</em>
+<a class="jxr_linenumber" name="L1235" href="#L1235">1235</a> <em class="jxr_javadoccomment">     * regex tries to match at that index but ^ won't match there. Subsequent</em>
+<a class="jxr_linenumber" name="L1236" href="#L1236">1236</a> <em class="jxr_javadoccomment">     * calls to the search methods start at a new "soft" boundary which is</em>
+<a class="jxr_linenumber" name="L1237" href="#L1237">1237</a> <em class="jxr_javadoccomment">     * the end of the previous match.</em>
+<a class="jxr_linenumber" name="L1238" href="#L1238">1238</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a>     <strong class="jxr_keyword">boolean</strong> search(<strong class="jxr_keyword">int</strong> from) {
+<a class="jxr_linenumber" name="L1240" href="#L1240">1240</a>         <strong class="jxr_keyword">this</strong>.hitEnd = false;
+<a class="jxr_linenumber" name="L1241" href="#L1241">1241</a>         <strong class="jxr_keyword">this</strong>.requireEnd = false;
+<a class="jxr_linenumber" name="L1242" href="#L1242">1242</a>         from        = from &lt; 0 ? 0 : from;
+<a class="jxr_linenumber" name="L1243" href="#L1243">1243</a>         <strong class="jxr_keyword">this</strong>.first  = from;
+<a class="jxr_linenumber" name="L1244" href="#L1244">1244</a>         <strong class="jxr_keyword">this</strong>.oldLast = oldLast &lt; 0 ? from : oldLast;
+<a class="jxr_linenumber" name="L1245" href="#L1245">1245</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; groups.length; i++)
+<a class="jxr_linenumber" name="L1246" href="#L1246">1246</a>             groups[i] = -1;
+<a class="jxr_linenumber" name="L1247" href="#L1247">1247</a>         acceptMode = NOANCHOR;
+<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a>         <strong class="jxr_keyword">boolean</strong> result = parentPattern.root.match(<strong class="jxr_keyword">this</strong>, from, text);
+<a class="jxr_linenumber" name="L1249" href="#L1249">1249</a>         <strong class="jxr_keyword">if</strong> (!result)
+<a class="jxr_linenumber" name="L1250" href="#L1250">1250</a>             <strong class="jxr_keyword">this</strong>.first = -1;
+<a class="jxr_linenumber" name="L1251" href="#L1251">1251</a>         <strong class="jxr_keyword">this</strong>.oldLast = <strong class="jxr_keyword">this</strong>.last;
+<a class="jxr_linenumber" name="L1252" href="#L1252">1252</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L1253" href="#L1253">1253</a>     }
+<a class="jxr_linenumber" name="L1254" href="#L1254">1254</a> 
+<a class="jxr_linenumber" name="L1255" href="#L1255">1255</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a> <em class="jxr_javadoccomment">     * Initiates a search for an anchored match to a Pattern within the given</em>
+<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a> <em class="jxr_javadoccomment">     * bounds. The groups are filled with default values and the match of the</em>
+<a class="jxr_linenumber" name="L1258" href="#L1258">1258</a> <em class="jxr_javadoccomment">     * root of the state machine is called. The state machine will hold the</em>
+<a class="jxr_linenumber" name="L1259" href="#L1259">1259</a> <em class="jxr_javadoccomment">     * state of the match as it proceeds in this matcher.</em>
+<a class="jxr_linenumber" name="L1260" href="#L1260">1260</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1261" href="#L1261">1261</a>     <strong class="jxr_keyword">boolean</strong> match(<strong class="jxr_keyword">int</strong> from, <strong class="jxr_keyword">int</strong> anchor) {
+<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a>         <strong class="jxr_keyword">this</strong>.hitEnd = false;
+<a class="jxr_linenumber" name="L1263" href="#L1263">1263</a>         <strong class="jxr_keyword">this</strong>.requireEnd = false;
+<a class="jxr_linenumber" name="L1264" href="#L1264">1264</a>         from        = from &lt; 0 ? 0 : from;
+<a class="jxr_linenumber" name="L1265" href="#L1265">1265</a>         <strong class="jxr_keyword">this</strong>.first  = from;
+<a class="jxr_linenumber" name="L1266" href="#L1266">1266</a>         <strong class="jxr_keyword">this</strong>.oldLast = oldLast &lt; 0 ? from : oldLast;
+<a class="jxr_linenumber" name="L1267" href="#L1267">1267</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; groups.length; i++)
+<a class="jxr_linenumber" name="L1268" href="#L1268">1268</a>             groups[i] = -1;
+<a class="jxr_linenumber" name="L1269" href="#L1269">1269</a>         acceptMode = anchor;
+<a class="jxr_linenumber" name="L1270" href="#L1270">1270</a>         <strong class="jxr_keyword">boolean</strong> result = parentPattern.matchRoot.match(<strong class="jxr_keyword">this</strong>, from, text);
+<a class="jxr_linenumber" name="L1271" href="#L1271">1271</a>         <strong class="jxr_keyword">if</strong> (!result)
+<a class="jxr_linenumber" name="L1272" href="#L1272">1272</a>             <strong class="jxr_keyword">this</strong>.first = -1;
+<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a>         <strong class="jxr_keyword">this</strong>.oldLast = <strong class="jxr_keyword">this</strong>.last;
+<a class="jxr_linenumber" name="L1274" href="#L1274">1274</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L1275" href="#L1275">1275</a>     }
+<a class="jxr_linenumber" name="L1276" href="#L1276">1276</a> 
+<a class="jxr_linenumber" name="L1277" href="#L1277">1277</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1278" href="#L1278">1278</a> <em class="jxr_javadoccomment">     * Returns the end index of the text.</em>
+<a class="jxr_linenumber" name="L1279" href="#L1279">1279</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1280" href="#L1280">1280</a> <em class="jxr_javadoccomment">     * @return the index after the last character in the text</em>
+<a class="jxr_linenumber" name="L1281" href="#L1281">1281</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1282" href="#L1282">1282</a>     <strong class="jxr_keyword">int</strong> getTextLength() {
+<a class="jxr_linenumber" name="L1283" href="#L1283">1283</a>         <strong class="jxr_keyword">return</strong> text.length();
+<a class="jxr_linenumber" name="L1284" href="#L1284">1284</a>     }
+<a class="jxr_linenumber" name="L1285" href="#L1285">1285</a> 
+<a class="jxr_linenumber" name="L1286" href="#L1286">1286</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1287" href="#L1287">1287</a> <em class="jxr_javadoccomment">     * Generates a String from this Matcher's input in the specified range.</em>
+<a class="jxr_linenumber" name="L1288" href="#L1288">1288</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1289" href="#L1289">1289</a> <em class="jxr_javadoccomment">     * @param  beginIndex   the beginning index, inclusive</em>
+<a class="jxr_linenumber" name="L1290" href="#L1290">1290</a> <em class="jxr_javadoccomment">     * @param  endIndex     the ending index, exclusive</em>
+<a class="jxr_linenumber" name="L1291" href="#L1291">1291</a> <em class="jxr_javadoccomment">     * @return A String generated from this Matcher's input</em>
+<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1293" href="#L1293">1293</a>     <a href="../../../java/lang/CharSequence.html">CharSequence</a> getSubSequence(<strong class="jxr_keyword">int</strong> beginIndex, <strong class="jxr_keyword">int</strong> endIndex) {
+<a class="jxr_linenumber" name="L1294" href="#L1294">1294</a>         <strong class="jxr_keyword">return</strong> text.subSequence(beginIndex, endIndex);
+<a class="jxr_linenumber" name="L1295" href="#L1295">1295</a>     }
+<a class="jxr_linenumber" name="L1296" href="#L1296">1296</a> 
+<a class="jxr_linenumber" name="L1297" href="#L1297">1297</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1298" href="#L1298">1298</a> <em class="jxr_javadoccomment">     * Returns this Matcher's input character at index i.</em>
+<a class="jxr_linenumber" name="L1299" href="#L1299">1299</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1300" href="#L1300">1300</a> <em class="jxr_javadoccomment">     * @return A char from the specified index</em>
+<a class="jxr_linenumber" name="L1301" href="#L1301">1301</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1302" href="#L1302">1302</a>     <strong class="jxr_keyword">char</strong> charAt(<strong class="jxr_keyword">int</strong> i) {
+<a class="jxr_linenumber" name="L1303" href="#L1303">1303</a>         <strong class="jxr_keyword">return</strong> text.charAt(i);
+<a class="jxr_linenumber" name="L1304" href="#L1304">1304</a>     }
+<a class="jxr_linenumber" name="L1305" href="#L1305">1305</a> 
+<a class="jxr_linenumber" name="L1306" href="#L1306">1306</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L1307" href="#L1307">1307</a> <em class="jxr_javadoccomment">     * Returns the group index of the matched capturing group.</em>
+<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L1309" href="#L1309">1309</a> <em class="jxr_javadoccomment">     * @return the index of the named-capturing group</em>
+<a class="jxr_linenumber" name="L1310" href="#L1310">1310</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L1311" href="#L1311">1311</a>     <strong class="jxr_keyword">int</strong> getMatchedGroupIndex(<a href="../../../java/lang/String.html">String</a> name) {
+<a class="jxr_linenumber" name="L1312" href="#L1312">1312</a>         Objects.requireNonNull(name, <span class="jxr_string">"Group name"</span>);
+<a class="jxr_linenumber" name="L1313" href="#L1313">1313</a>         <strong class="jxr_keyword">if</strong> (first &lt; 0)
+<a class="jxr_linenumber" name="L1314" href="#L1314">1314</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalStateException.html">IllegalStateException</a>(<span class="jxr_string">"No match found"</span>);
+<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a>         <strong class="jxr_keyword">if</strong> (!parentPattern.namedGroups().containsKey(name))
+<a class="jxr_linenumber" name="L1316" href="#L1316">1316</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../java/lang/IllegalArgumentException.html">IllegalArgumentException</a>(<span class="jxr_string">"No group with name &lt;"</span> + name + <span class="jxr_string">"&gt;"</span>);
+<a class="jxr_linenumber" name="L1317" href="#L1317">1317</a>         <strong class="jxr_keyword">return</strong> parentPattern.namedGroups().get(name);
+<a class="jxr_linenumber" name="L1318" href="#L1318">1318</a>     }
+<a class="jxr_linenumber" name="L1319" href="#L1319">1319</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

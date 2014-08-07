@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>JPEGImageMetadataFormatResources xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../apidocs/com/sun/imageio/plugins/jpeg/JPEGImageMetadataFormatResources.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 2001, 2005, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> com.sun.imageio.plugins.jpeg;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.util.ListResourceBundle;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/sun/imageio/plugins/jpeg/JPEGImageMetadataFormatResources.html">JPEGImageMetadataFormatResources</a>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>         <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/sun/imageio/plugins/jpeg/JPEGMetadataFormatResources.html">JPEGMetadataFormatResources</a> {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../../java/lang/Object.html">Object</a>[][] imageContents = {
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          <em class="jxr_comment">// Node name, followed by description</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          { <span class="jxr_string">"JPEGvariety"</span>, <span class="jxr_string">"A node grouping all marker segments specific to the variety of stream being read/written (e.g. JFIF) - may be empty"</span> },
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>          { <span class="jxr_string">"markerSequence"</span>, <span class="jxr_string">"A node grouping all non-jfif marker segments"</span> },
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>          { <span class="jxr_string">"app0jfif"</span>, <span class="jxr_string">"A JFIF APP0 marker segment"</span> },
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          { <span class="jxr_string">"app14Adobe"</span>, <span class="jxr_string">"An Adobe APP14 marker segment"</span> },
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>          { <span class="jxr_string">"sof"</span>, <span class="jxr_string">"A Start Of Frame marker segment"</span> },
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          { <span class="jxr_string">"sos"</span>, <span class="jxr_string">"A Start Of Scan marker segment"</span> },
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          { <span class="jxr_string">"app0JFXX"</span>, <span class="jxr_string">"A JFIF extension marker segment"</span> },
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          { <span class="jxr_string">"app2ICC"</span>, <span class="jxr_string">"An ICC profile APP2 marker segment"</span> },
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          { <span class="jxr_string">"JFIFthumbJPEG"</span>,
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>            <span class="jxr_string">"A JFIF thumbnail in JPEG format (no JFIF segments permitted)"</span> },
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          { <span class="jxr_string">"JFIFthumbPalette"</span>, <span class="jxr_string">"A JFIF thumbnail as an RGB indexed image"</span> },
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          { <span class="jxr_string">"JFIFthumbRGB"</span>, <span class="jxr_string">"A JFIF thumbnail as an RGB image"</span> },
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          { <span class="jxr_string">"componentSpec"</span>, <span class="jxr_string">"A component specification for a frame"</span> },
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          { <span class="jxr_string">"scanComponentSpec"</span>, <span class="jxr_string">"A component specification for a scan"</span> },
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <em class="jxr_comment">// Node name + "/" + AttributeName, followed by description</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>          { <span class="jxr_string">"app0JFIF/majorVersion"</span>,
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>            <span class="jxr_string">"The major JFIF version number"</span> },
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>          { <span class="jxr_string">"app0JFIF/minorVersion"</span>,
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>            <span class="jxr_string">"The minor JFIF version number"</span> },
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          { <span class="jxr_string">"app0JFIF/resUnits"</span>,
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>            <span class="jxr_string">"The resolution units for Xdensity and Ydensity "</span>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>            + <span class="jxr_string">"(0 = no units, just aspect ratio; 1 = dots/inch; 2 = dots/cm)"</span> },
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          { <span class="jxr_string">"app0JFIF/Xdensity"</span>,
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>            <span class="jxr_string">"The horizontal density or aspect ratio numerator"</span> },
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          { <span class="jxr_string">"app0JFIF/Ydensity"</span>,
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>            <span class="jxr_string">"The vertical density or aspect ratio denominator"</span> },
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          { <span class="jxr_string">"app0JFIF/thumbWidth"</span>,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>            <span class="jxr_string">"The width of the thumbnail, or 0 if there isn't one"</span> },
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          { <span class="jxr_string">"app0JFIF/thumbHeight"</span>,
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>            <span class="jxr_string">"The height of the thumbnail, or 0 if there isn't one"</span> },
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          { <span class="jxr_string">"app0JFXX/extensionCode"</span>,
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>            <span class="jxr_string">"The JFXX extension code identifying thumbnail type: "</span>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>            + <span class="jxr_string">"(16 = JPEG, 17 = indexed, 19 = RGB"</span> },
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          { <span class="jxr_string">"JFIFthumbPalette/thumbWidth"</span>,
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>            <span class="jxr_string">"The width of the thumbnail"</span> },
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          { <span class="jxr_string">"JFIFthumbPalette/thumbHeight"</span>,
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>            <span class="jxr_string">"The height of the thumbnail"</span> },
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          { <span class="jxr_string">"JFIFthumbRGB/thumbWidth"</span>,
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>            <span class="jxr_string">"The width of the thumbnail"</span> },
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          { <span class="jxr_string">"JFIFthumbRGB/thumbHeight"</span>,
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>            <span class="jxr_string">"The height of the thumbnail"</span> },
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          { <span class="jxr_string">"app14Adobe/version"</span>,
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>            <span class="jxr_string">"The version of Adobe APP14 marker segment"</span> },
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          { <span class="jxr_string">"app14Adobe/flags0"</span>,
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>            <span class="jxr_string">"The flags0 variable of an APP14 marker segment"</span> },
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>          { <span class="jxr_string">"app14Adobe/flags1"</span>,
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>            <span class="jxr_string">"The flags1 variable of an APP14 marker segment"</span> },
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          { <span class="jxr_string">"app14Adobe/transform"</span>,
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>            <span class="jxr_string">"The color transform applied to the image "</span>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>            + <span class="jxr_string">"(0 = Unknown, 1 = YCbCr, 2 = YCCK)"</span> },
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          { <span class="jxr_string">"sof/process"</span>,
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>            <span class="jxr_string">"The JPEG process (0 = Baseline sequential, "</span>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>            + <span class="jxr_string">"1 = Extended sequential, 2 = Progressive)"</span> },
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          { <span class="jxr_string">"sof/samplePrecision"</span>,
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>            <span class="jxr_string">"The number of bits per sample"</span> },
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          { <span class="jxr_string">"sof/numLines"</span>,
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>            <span class="jxr_string">"The number of lines in the image"</span> },
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          { <span class="jxr_string">"sof/samplesPerLine"</span>,
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>            <span class="jxr_string">"The number of samples per line"</span> },
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          { <span class="jxr_string">"sof/numFrameComponents"</span>,
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>            <span class="jxr_string">"The number of components in the image"</span> },
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          { <span class="jxr_string">"componentSpec/componentId"</span>,
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>            <span class="jxr_string">"The id for this component"</span> },
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          { <span class="jxr_string">"componentSpec/HsamplingFactor"</span>,
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>           <span class="jxr_string">"The horizontal sampling factor for this component"</span> },
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         { <span class="jxr_string">"componentSpec/VsamplingFactor"</span>,
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>           <span class="jxr_string">"The vertical sampling factor for this component"</span> },
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         { <span class="jxr_string">"componentSpec/QtableSelector"</span>,
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>           <span class="jxr_string">"The quantization table to use for this component"</span> },
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>         { <span class="jxr_string">"sos/numScanComponents"</span>,
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>           <span class="jxr_string">"The number of components in the scan"</span> },
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>         { <span class="jxr_string">"sos/startSpectralSelection"</span>,
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>           <span class="jxr_string">"The first spectral band included in this scan"</span> },
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>         { <span class="jxr_string">"sos/endSpectralSelection"</span>,
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>           <span class="jxr_string">"The last spectral band included in this scan"</span> },
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         { <span class="jxr_string">"sos/approxHigh"</span>,
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>           <span class="jxr_string">"The highest bit position included in this scan"</span> },
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>         { <span class="jxr_string">"sos/approxLow"</span>,
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>           <span class="jxr_string">"The lowest bit position included in this scan"</span> },
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>         { <span class="jxr_string">"scanComponentSpec/componentSelector"</span>,
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>           <span class="jxr_string">"The id of this component"</span> },
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         { <span class="jxr_string">"scanComponentSpec/dcHuffTable"</span>,
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>           <span class="jxr_string">"The huffman table to use for encoding DC coefficients"</span> },
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         { <span class="jxr_string">"scanComponentSpec/acHuffTable"</span>,
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>           <span class="jxr_string">"The huffman table to use for encoding AC coefficients"</span> }
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     };
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../../com/sun/imageio/plugins/jpeg/JPEGImageMetadataFormatResources.html">JPEGImageMetadataFormatResources</a>() {}
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">protected</strong> <a href="../../../../../java/lang/Object.html">Object</a>[][] getContents() {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>         <em class="jxr_comment">// return a copy of the combined commonContents and imageContents;</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>         <em class="jxr_comment">// in theory we want a deep clone of the combined arrays,</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>         <em class="jxr_comment">// but since it only contains (immutable) Strings, this shallow</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         <em class="jxr_comment">// copy is sufficient</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>         <a href="../../../../../java/lang/Object.html">Object</a>[][] combinedContents =
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>             <strong class="jxr_keyword">new</strong> <a href="../../../../../java/lang/Object.html">Object</a>[commonContents.length + imageContents.length][2];
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">int</strong> combined = 0;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; commonContents.length; i++, combined++) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>             combinedContents[combined][0] = commonContents[i][0];
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>             combinedContents[combined][1] = commonContents[i][1];
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         }
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; imageContents.length; i++, combined++) {
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>             combinedContents[combined][0] = imageContents[i][0];
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>             combinedContents[combined][1] = imageContents[i][1];
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         }
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>         <strong class="jxr_keyword">return</strong> combinedContents;
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     }
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

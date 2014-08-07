@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Attr xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../apidocs/org/w3c/dom/Attr.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_comment"> * Copyright (c) 2004 World Wide Web Consortium,</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_comment"> * (Massachusetts Institute of Technology, European Research Consortium for</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_comment"> * Informatics and Mathematics, Keio University). All Rights Reserved. This</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_comment"> * work is distributed under the W3C(r) Software License [1] in the hope that</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_comment"> * it will be useful, but WITHOUT ANY WARRANTY; without even the implied</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_comment"> * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_comment"> * [1] <a href="http://www.w3.org/Consortium/Legal/2002/copyright-software-2002123" target="alexandria_uri">http://www.w3.org/Consortium/Legal/2002/copyright-software-2002123</a>1</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">package</strong> org.w3c.dom;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * The &lt;code&gt;Attr&lt;/code&gt; interface represents an attribute in an</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Element&lt;/code&gt; object. Typically the allowable values for the</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * attribute are defined in a schema associated with the document.</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;&lt;code&gt;Attr&lt;/code&gt; objects inherit the &lt;code&gt;Node&lt;/code&gt; interface, but</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * since they are not actually child nodes of the element they describe, the</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> * DOM does not consider them part of the document tree. Thus, the</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Node&lt;/code&gt; attributes &lt;code&gt;parentNode&lt;/code&gt;,</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;previousSibling&lt;/code&gt;, and &lt;code&gt;nextSibling&lt;/code&gt; have a</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;null&lt;/code&gt; value for &lt;code&gt;Attr&lt;/code&gt; objects. The DOM takes the</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * view that attributes are properties of elements rather than having a</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * separate identity from the elements they are associated with; this should</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * make it more efficient to implement such features as default attributes</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * associated with all elements of a given type. Furthermore,</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Attr&lt;/code&gt; nodes may not be immediate children of a</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;DocumentFragment&lt;/code&gt;. However, they can be associated with</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Element&lt;/code&gt; nodes contained within a</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;DocumentFragment&lt;/code&gt;. In short, users and implementors of the</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * DOM need to be aware that &lt;code&gt;Attr&lt;/code&gt; nodes have some things in</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * common with other objects inheriting the &lt;code&gt;Node&lt;/code&gt; interface, but</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * they also are quite distinct.</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;The attribute's effective value is determined as follows: if this</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * attribute has been explicitly assigned any value, that value is the</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * attribute's effective value; otherwise, if there is a declaration for</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> * this attribute, and that declaration includes a default value, then that</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * default value is the attribute's effective value; otherwise, the</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * attribute does not exist on this element in the structure model until it</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * has been explicitly added. Note that the &lt;code&gt;Node.nodeValue&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * attribute on the &lt;code&gt;Attr&lt;/code&gt; instance can also be used to retrieve</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * the string version of the attribute's value(s).</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> * &lt;p&gt; If the attribute was not explicitly given a value in the instance</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * document but has a default value provided by the schema associated with</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * the document, an attribute node will be created with</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;specified&lt;/code&gt; set to &lt;code&gt;false&lt;/code&gt;. Removing attribute</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> * nodes for which a default value is defined in the schema generates a new</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * attribute node with the default value and &lt;code&gt;specified&lt;/code&gt; set to</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;false&lt;/code&gt;. If validation occurred while invoking</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Document.normalizeDocument()&lt;/code&gt;, attribute nodes with</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;specified&lt;/code&gt; equals to &lt;code&gt;false&lt;/code&gt; are recomputed</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> * according to the default attribute values provided by the schema. If no</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * default value is associate with this attribute in the schema, the</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * attribute node is discarded.</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;In XML, where the value of an attribute can contain entity references,</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> * the child nodes of the &lt;code&gt;Attr&lt;/code&gt; node may be either</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;Text&lt;/code&gt; or &lt;code&gt;EntityReference&lt;/code&gt; nodes (when these are</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> * in use; see the description of &lt;code&gt;EntityReference&lt;/code&gt; for</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> * discussion).</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;The DOM Core represents all attribute values as simple strings, even if</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> * the DTD or schema associated with the document declares them of some</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> * specific type such as tokenized.</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;The way attribute value normalization is performed by the DOM</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> * implementation depends on how much the implementation knows about the</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> * schema in use. Typically, the &lt;code&gt;value&lt;/code&gt; and</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> * &lt;code&gt;nodeValue&lt;/code&gt; attributes of an &lt;code&gt;Attr&lt;/code&gt; node initially</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * returns the normalized value given by the parser. It is also the case</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> * after &lt;code&gt;Document.normalizeDocument()&lt;/code&gt; is called (assuming the</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> * right options have been set). But this may not be the case after</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> * mutation, independently of whether the mutation is performed by setting</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * the string value directly or by changing the &lt;code&gt;Attr&lt;/code&gt; child</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> * nodes. In particular, this is true when &lt;a href='<a href="http://www.w3.org/TR/2004/REC-xml-20040204" target="alexandria_uri">http://www.w3.org/TR/2004/REC-xml-20040204</a>#dt-charref'&gt;character</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> * references&lt;/a&gt; are involved, given that they are not represented in the DOM and they</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment"> * impact attribute value normalization. On the other hand, if the</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment"> * implementation knows about the schema in use when the attribute value is</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment"> * changed, and it is of a different type than CDATA, it may normalize it</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment"> * again at that time. This is especially true of specialized DOM</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment"> * implementations, such as SVG DOM implementations, which store attribute</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment"> * values in an internal form different from a string.</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment"> * &lt;p&gt;The following table gives some examples of the relations between the</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment"> * attribute value in the original document (parsed attribute), the value as</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment"> * exposed in the DOM, and the serialization of the value:</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment"> * &lt;table border='1' cellpadding='3'&gt;</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment"> * &lt;th&gt;Examples&lt;/th&gt;</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment"> * &lt;th&gt;Parsed</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment"> * attribute value&lt;/th&gt;</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment"> * &lt;th&gt;Initial &lt;code&gt;Attr.value&lt;/code&gt;&lt;/th&gt;</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment"> * &lt;th&gt;Serialized attribute value&lt;/th&gt;</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment"> * Character reference&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x&amp;amp;#178;=5"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x\u00b2=5"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x&amp;amp;#178;=5"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;Built-in</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment"> * character entity&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"y&amp;amp;lt;6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"y&amp;lt;6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"y&amp;amp;lt;6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;Literal newline between&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment"> * "x=5&amp;amp;#10;y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x=5 y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x=5&amp;amp;#10;y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;Normalized newline between&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x=5</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment"> * y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x=5 y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;"x=5 y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment"> * &lt;tr&gt;</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;Entity &lt;code&gt;e&lt;/code&gt; with literal newline&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment"> * &lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment"> * &amp;lt;!ENTITY e '...&amp;amp;#10;...'&amp;gt; [...]&amp;gt; "x=5&amp;amp;e;y=6"&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment"> * &lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;&lt;em&gt;Dependent on Implementation and Load Options&lt;/em&gt;&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment"> * &lt;td valign='top' rowspan='1' colspan='1'&gt;&lt;em&gt;Dependent on Implementation and Load/Save Options&lt;/em&gt;&lt;/td&gt;</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment"> * &lt;/tr&gt;</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment"> * &lt;/table&gt;</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment"> * &lt;p&gt;See also the &lt;a href='<a href="http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407'&gt;Document" target="alexandria_uri">http://www.w3.org/TR/2004/REC-DOM-Level-3-Core-20040407'&gt;Document</a> Object Model (DOM) Level 3 Core Specification&lt;/a&gt;.</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../org/w3c/dom/Attr.html">Attr</a> <strong class="jxr_keyword">extends</strong> <a href="../../../org/w3c/dom/Node.html">Node</a> {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">     * Returns the name of this attribute. If &lt;code&gt;Node.localName&lt;/code&gt; is</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * different from &lt;code&gt;null&lt;/code&gt;, this attribute is a qualified name.</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> getName();
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">     *  &lt;code&gt;True&lt;/code&gt; if this attribute was explicitly given a value in</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">     * the instance document, &lt;code&gt;false&lt;/code&gt; otherwise. If the</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">     * application changed the value of this attribute node (even if it ends</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">     * up having the same value as the default value) then it is set to</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     * &lt;code&gt;true&lt;/code&gt;. The implementation may handle attributes with</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     * default values from other schemas similarly but applications should</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * use &lt;code&gt;Document.normalizeDocument()&lt;/code&gt; to guarantee this</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * information is up-to-date.</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> getSpecified();
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> 
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * On retrieval, the value of the attribute is returned as a string.</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * Character and general entity references are replaced with their</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     * values. See also the method &lt;code&gt;getAttribute&lt;/code&gt; on the</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Element&lt;/code&gt; interface.</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     * &lt;br&gt;On setting, this creates a &lt;code&gt;Text&lt;/code&gt; node with the unparsed</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">     * contents of the string, i.e. any characters that an XML processor</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     * would recognize as markup are instead treated as literal text. See</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">     * also the method &lt;code&gt;Element.setAttribute()&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> <em class="jxr_javadoccomment">     * &lt;br&gt; Some specialized implementations, such as some [&lt;a href='<a href="http://www.w3.org/TR/2003/REC-SVG11-20030114/'&gt;SVG" target="alexandria_uri">http://www.w3.org/TR/2003/REC-SVG11-20030114/'&gt;SVG</a> 1.1&lt;/a&gt;]</em>
+<a class="jxr_linenumber" name="L215" href="#L215">215</a> <em class="jxr_javadoccomment">     * implementations, may do normalization automatically, even after</em>
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> <em class="jxr_javadoccomment">     * mutation; in such case, the value on retrieval may differ from the</em>
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> <em class="jxr_javadoccomment">     * value on setting.</em>
+<a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">public</strong> <a href="../../../java/lang/String.html">String</a> getValue();
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">     * On retrieval, the value of the attribute is returned as a string.</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * Character and general entity references are replaced with their</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * values. See also the method &lt;code&gt;getAttribute&lt;/code&gt; on the</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Element&lt;/code&gt; interface.</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     * &lt;br&gt;On setting, this creates a &lt;code&gt;Text&lt;/code&gt; node with the unparsed</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     * contents of the string, i.e. any characters that an XML processor</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">     * would recognize as markup are instead treated as literal text. See</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">     * also the method &lt;code&gt;Element.setAttribute()&lt;/code&gt;.</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * &lt;br&gt; Some specialized implementations, such as some [&lt;a href='<a href="http://www.w3.org/TR/2003/REC-SVG11-20030114/'&gt;SVG" target="alexandria_uri">http://www.w3.org/TR/2003/REC-SVG11-20030114/'&gt;SVG</a> 1.1&lt;/a&gt;]</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * implementations, may do normalization automatically, even after</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * mutation; in such case, the value on retrieval may differ from the</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     * value on setting.</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     * @exception DOMException</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setValue(<a href="../../../java/lang/String.html">String</a> value)
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>                             <strong class="jxr_keyword">throws</strong> DOMException;
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">     * The &lt;code&gt;Element&lt;/code&gt; node this attribute is attached to or</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">     * &lt;code&gt;null&lt;/code&gt; if this attribute is not in use.</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> <em class="jxr_javadoccomment">     * @since DOM Level 2</em>
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     <strong class="jxr_keyword">public</strong> <a href="../../../org/w3c/dom/Element.html">Element</a> getOwnerElement();
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     *  The type information associated with this attribute. While the type</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     * information contained in this attribute is guarantee to be correct</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     * after loading the document or invoking</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Document.normalizeDocument()&lt;/code&gt;, &lt;code&gt;schemaTypeInfo&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     *  may not be reliable if the node was moved.</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * @since DOM Level 3</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     <strong class="jxr_keyword">public</strong> <a href="../../../org/w3c/dom/TypeInfo.html">TypeInfo</a> getSchemaTypeInfo();
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     *  Returns whether this attribute is known to be of type ID (i.e. to</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * contain an identifier for its owner element) or not. When it is and</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     * its value is unique, the &lt;code&gt;ownerElement&lt;/code&gt; of this attribute</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     * can be retrieved using the method &lt;code&gt;Document.getElementById&lt;/code&gt;</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     * . The implementation could use several ways to determine if an</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> <em class="jxr_javadoccomment">     * attribute node is known to contain an identifier:</em>
+<a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     * &lt;li&gt; If validation</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">     * occurred using an XML Schema [&lt;a href='<a href="http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/'&gt;XML" target="alexandria_uri">http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/'&gt;XML</a> Schema Part 1&lt;/a&gt;]</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">     *  while loading the document or while invoking</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Document.normalizeDocument()&lt;/code&gt;, the post-schema-validation</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">     * infoset contributions (PSVI contributions) values are used to</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     * determine if this attribute is a schema-determined ID attribute using</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     * the &lt;a href='<a href="http://www.w3.org/TR/2003/REC-xptr-framework-20030325/" target="alexandria_uri">http://www.w3.org/TR/2003/REC-xptr-framework-20030325/</a>#term-sdi'&gt;</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     * schema-determined ID&lt;/a&gt; definition in [&lt;a href='<a href="http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;" target="alexandria_uri">http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;</a>]</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * .</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     * &lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     * &lt;li&gt; If validation occurred using a DTD while loading the document or</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * while invoking &lt;code&gt;Document.normalizeDocument()&lt;/code&gt;, the infoset &lt;b&gt;[type definition]&lt;/b&gt; value is used to determine if this attribute is a DTD-determined ID</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * attribute using the &lt;a href='<a href="http://www.w3.org/TR/2003/REC-xptr-framework-20030325/" target="alexandria_uri">http://www.w3.org/TR/2003/REC-xptr-framework-20030325/</a>#term-ddi'&gt;</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     * DTD-determined ID&lt;/a&gt; definition in [&lt;a href='<a href="http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;" target="alexandria_uri">http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;</a>]</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     * .</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     * &lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">     * &lt;li&gt; from the use of the methods &lt;code&gt;Element.setIdAttribute()&lt;/code&gt;,</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Element.setIdAttributeNS()&lt;/code&gt;, or</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Element.setIdAttributeNode()&lt;/code&gt;, i.e. it is an</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> <em class="jxr_javadoccomment">     * user-determined ID attribute;</em>
+<a class="jxr_linenumber" name="L284" href="#L284">284</a> <em class="jxr_javadoccomment">     * &lt;p &gt;&lt;b&gt;Note:&lt;/b&gt;  XPointer framework (see section 3.2 in [&lt;a href='<a href="http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;" target="alexandria_uri">http://www.w3.org/TR/2003/REC-xptr-framework-20030325/'&gt;XPointer&lt;/a&gt;</a>]</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> <em class="jxr_javadoccomment">     * ) consider the DOM user-determined ID attribute as being part of the</em>
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> <em class="jxr_javadoccomment">     * XPointer externally-determined ID definition.</em>
+<a class="jxr_linenumber" name="L287" href="#L287">287</a> <em class="jxr_javadoccomment">     * &lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     * &lt;li&gt; using mechanisms that</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     * are outside the scope of this specification, it is then an</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     * externally-determined ID attribute. This includes using schema</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">     * languages different from XML schema and DTD.</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">     * &lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     * &lt;br&gt; If validation occurred while invoking</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * &lt;code&gt;Document.normalizeDocument()&lt;/code&gt;, all user-determined ID</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     * attributes are reset and all attribute nodes ID information are then</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * reevaluated in accordance to the schema used. As a consequence, if</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * the &lt;code&gt;Attr.schemaTypeInfo&lt;/code&gt; attribute contains an ID type,</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     * &lt;code&gt;isId&lt;/code&gt; will always return true.</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * @since DOM Level 3</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isId();
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

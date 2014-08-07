@@ -1,0 +1,547 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>Comparator xref</title>
+<link type="text/css" rel="stylesheet" href="../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../apidocs/java/util/Comparator.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_comment"> *</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">package</strong> java.util;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> java.util.function.Function;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> java.util.function.ToIntFunction;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> java.util.function.ToLongFunction;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> java.util.function.ToDoubleFunction;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> java.util.Comparators;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * A comparison function, which imposes a &lt;i&gt;total ordering&lt;/i&gt; on some</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * collection of objects.  Comparators can be passed to a sort method (such</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * as {@link Collections#sort(List,Comparator) Collections.sort} or {@link</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * Arrays#sort(Object[],Comparator) Arrays.sort}) to allow precise control</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * over the sort order.  Comparators can also be used to control the order of</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * certain data structures (such as {@link SortedSet sorted sets} or {@link</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * SortedMap sorted maps}), or to provide an ordering for collections of</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * objects that don't have a {@link Comparable natural ordering}.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * The ordering imposed by a comparator &lt;tt&gt;c&lt;/tt&gt; on a set of elements</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * &lt;tt&gt;S&lt;/tt&gt; is said to be &lt;i&gt;consistent with equals&lt;/i&gt; if and only if</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * &lt;tt&gt;c.compare(e1, e2)==0&lt;/tt&gt; has the same boolean value as</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * &lt;tt&gt;e1.equals(e2)&lt;/tt&gt; for every &lt;tt&gt;e1&lt;/tt&gt; and &lt;tt&gt;e2&lt;/tt&gt; in</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> * &lt;tt&gt;S&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <em class="jxr_javadoccomment"> * Caution should be exercised when using a comparator capable of imposing an</em>
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * ordering inconsistent with equals to order a sorted set (or sorted map).</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * Suppose a sorted set (or sorted map) with an explicit comparator &lt;tt&gt;c&lt;/tt&gt;</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * is used with elements (or keys) drawn from a set &lt;tt&gt;S&lt;/tt&gt;.  If the</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * ordering imposed by &lt;tt&gt;c&lt;/tt&gt; on &lt;tt&gt;S&lt;/tt&gt; is inconsistent with equals,</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * the sorted set (or sorted map) will behave "strangely."  In particular the</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * sorted set (or sorted map) will violate the general contract for set (or</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * map), which is defined in terms of &lt;tt&gt;equals&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment"> * For example, suppose one adds two elements {@code a} and {@code b} such that</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment"> * {@code (a.equals(b) &amp;&amp; c.compare(a, b) != 0)}</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment"> * to an empty {@code TreeSet} with comparator {@code c}.</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment"> * The second {@code add} operation will return</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment"> * true (and the size of the tree set will increase) because {@code a} and</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment"> * {@code b} are not equivalent from the tree set's perspective, even though</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment"> * this is contrary to the specification of the</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment"> * {@link Set#add Set.add} method.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> * Note: It is generally a good idea for comparators to also implement</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * &lt;tt&gt;java.io.Serializable&lt;/tt&gt;, as they may be used as ordering methods in</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> * serializable data structures (like {@link TreeSet}, {@link TreeMap}).  In</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * order for the data structure to serialize successfully, the comparator (if</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> * provided) must implement &lt;tt&gt;Serializable&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment"> * For the mathematically inclined, the &lt;i&gt;relation&lt;/i&gt; that defines the</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment"> * &lt;i&gt;imposed ordering&lt;/i&gt; that a given comparator &lt;tt&gt;c&lt;/tt&gt; imposes on a</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment"> * given set of objects &lt;tt&gt;S&lt;/tt&gt; is:&lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_javadoccomment"> *       {(x, y) such that c.compare(x, y) &amp;lt;= 0}.</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment"> * &lt;/pre&gt; The &lt;i&gt;quotient&lt;/i&gt; for this total order is:&lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment"> *       {(x, y) such that c.compare(x, y) == 0}.</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment"> * &lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment"> * It follows immediately from the contract for &lt;tt&gt;compare&lt;/tt&gt; that the</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment"> * quotient is an &lt;i&gt;equivalence relation&lt;/i&gt; on &lt;tt&gt;S&lt;/tt&gt;, and that the</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment"> * imposed ordering is a &lt;i&gt;total order&lt;/i&gt; on &lt;tt&gt;S&lt;/tt&gt;.  When we say that</em>
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment"> * the ordering imposed by &lt;tt&gt;c&lt;/tt&gt; on &lt;tt&gt;S&lt;/tt&gt; is &lt;i&gt;consistent with</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment"> * equals&lt;/i&gt;, we mean that the quotient for the ordering is the equivalence</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment"> * relation defined by the objects' {@link Object#equals(Object)</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment"> * equals(Object)} method(s):&lt;pre&gt;</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment"> *     {(x, y) such that x.equals(y)}. &lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Unlike {@code Comparable}, a comparator may optionally permit</em>
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment"> * comparison of null arguments, while maintaining the requirements for</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment"> * an equivalence relation.</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;This interface is a member of the</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment"> * &lt;a href="{@docRoot}/../technotes/guides/collections/index.html"&gt;</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment"> * Java Collections Framework&lt;/a&gt;.</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment"> * @param &lt;T&gt; the type of objects that may be compared by this comparator</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment"> * @author  Josh Bloch</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_javadoccomment"> * @author  Neal Gafter</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_javadoccomment"> * @see Comparable</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment"> * @see java.io.Serializable</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment"> * @since 1.2</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> @FunctionalInterface
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> Comparator&lt;T&gt; {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">     * Compares its two arguments for order.  Returns a negative integer,</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">     * zero, or a positive integer as the first argument is less than, equal</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * to, or greater than the second.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * In the foregoing description, the notation</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;sgn(&lt;/tt&gt;&lt;i&gt;expression&lt;/i&gt;&lt;tt&gt;)&lt;/tt&gt; designates the mathematical</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * &lt;i&gt;signum&lt;/i&gt; function, which is defined to return one of &lt;tt&gt;-1&lt;/tt&gt;,</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;0&lt;/tt&gt;, or &lt;tt&gt;1&lt;/tt&gt; according to whether the value of</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * &lt;i&gt;expression&lt;/i&gt; is negative, zero or positive.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">     * The implementor must ensure that &lt;tt&gt;sgn(compare(x, y)) ==</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">     * -sgn(compare(y, x))&lt;/tt&gt; for all &lt;tt&gt;x&lt;/tt&gt; and &lt;tt&gt;y&lt;/tt&gt;.  (This</em>
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">     * implies that &lt;tt&gt;compare(x, y)&lt;/tt&gt; must throw an exception if and only</em>
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">     * if &lt;tt&gt;compare(y, x)&lt;/tt&gt; throws an exception.)&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">     * The implementor must also ensure that the relation is transitive:</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;((compare(x, y)&amp;gt;0) &amp;amp;&amp;amp; (compare(y, z)&amp;gt;0))&lt;/tt&gt; implies</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;compare(x, z)&amp;gt;0&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">     * Finally, the implementor must ensure that &lt;tt&gt;compare(x, y)==0&lt;/tt&gt;</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * implies that &lt;tt&gt;sgn(compare(x, z))==sgn(compare(y, z))&lt;/tt&gt; for all</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;z&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">     * It is generally the case, but &lt;i&gt;not&lt;/i&gt; strictly required that</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;(compare(x, y)==0) == (x.equals(y))&lt;/tt&gt;.  Generally speaking,</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">     * any comparator that violates this condition should clearly indicate</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * this fact.  The recommended language is "Note: this comparator</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     * imposes orderings that are inconsistent with equals."</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     * @param o1 the first object to be compared.</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * @param o2 the second object to be compared.</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     * @return a negative integer, zero, or a positive integer as the</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     *         first argument is less than, equal to, or greater than the</em>
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     *         second.</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if an argument is null and this</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     *         comparator does not permit null arguments</em>
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> <em class="jxr_javadoccomment">     * @throws ClassCastException if the arguments' types prevent them from</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> <em class="jxr_javadoccomment">     *         being compared by this comparator.</em>
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     <strong class="jxr_keyword">int</strong> compare(T o1, T o2);
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * Indicates whether some other object is &amp;quot;equal to&amp;quot; this</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * comparator.  This method must obey the general contract of</em>
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     * {@link Object#equals(Object)}.  Additionally, this method can return</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;true&lt;/tt&gt; &lt;i&gt;only&lt;/i&gt; if the specified object is also a comparator</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">     * and it imposes the same ordering as this comparator.  Thus,</em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">     * &lt;code&gt;comp1.equals(comp2)&lt;/code&gt; implies that &lt;tt&gt;sgn(comp1.compare(o1,</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">     * o2))==sgn(comp2.compare(o1, o2))&lt;/tt&gt; for every object reference</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;o1&lt;/tt&gt; and &lt;tt&gt;o2&lt;/tt&gt;.&lt;p&gt;</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">     * Note that it is &lt;i&gt;always&lt;/i&gt; safe &lt;i&gt;not&lt;/i&gt; to override</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * &lt;tt&gt;Object.equals(Object)&lt;/tt&gt;.  However, overriding this method may,</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     * in some cases, improve performance by allowing programs to determine</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">     * that two distinct comparators impose the same order.</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> <em class="jxr_javadoccomment">     * @param   obj   the reference object with which to compare.</em>
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> <em class="jxr_javadoccomment">     * @return  &lt;code&gt;true&lt;/code&gt; only if the specified object is also</em>
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> <em class="jxr_javadoccomment">     *          a comparator and it imposes the same ordering as this</em>
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> <em class="jxr_javadoccomment">     *          comparator.</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * @see Object#equals(Object)</em>
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     * @see Object#hashCode()</em>
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     <strong class="jxr_keyword">boolean</strong> equals(<a href="../../java/lang/Object.html">Object</a> obj);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> 
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">     * Returns a comparator that imposes the reverse ordering of this</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">     * comparator.</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">     * @return a comparator that imposes the reverse ordering of this</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">     *         comparator.</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">default</strong> Comparator&lt;T&gt; reversed() {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         <strong class="jxr_keyword">return</strong> Collections.reverseOrder(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> 
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with another comparator.</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">     * If this {@code Comparator} considers two elements equal, i.e.</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">     * {@code compare(a, b) == 0}, {@code other} is used to determine the order.</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified comparator</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">     * is also serializable.</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">     * @apiNote</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">     * For example, to sort a collection of {@code String} based on the length</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">     * and then case-insensitive natural ordering, the comparator can be</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">     * composed using following code,</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     *     Comparator&lt;String&gt; cmp = Comparator.comparingInt(String::length)</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     *             .thenComparing(String.CASE_INSENSITIVE_ORDER);</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     * @param  other the other comparator to be used when this comparator</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     *         compares two objects that are equal.</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this and then the</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     *         other comparator</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null.</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">default</strong> Comparator&lt;T&gt; thenComparing(Comparator&lt;? <strong class="jxr_keyword">super</strong> T&gt; other) {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         Objects.requireNonNull(other);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable) (c1, c2) -&gt; {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>             <strong class="jxr_keyword">int</strong> res = compare(c1, c2);
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>             <strong class="jxr_keyword">return</strong> (res != 0) ? res : other.compare(c1, c2);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>         };
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     }
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> 
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with a function that</em>
+<a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">     * extracts a key to be compared with the given {@code Comparator}.</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">     * @implSpec This default implementation behaves as if {@code</em>
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">     *           thenComparing(comparing(keyExtractor, cmp))}.</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">     * @param  &lt;U&gt;  the type of the sort key</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the sort key</em>
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * @param  keyComparator the {@code Comparator} used to compare the sort key</em>
+<a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this comparator</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">     *         and then comparing on the key extracted by the keyExtractor function</em>
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if either argument is null.</em>
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> <em class="jxr_javadoccomment">     * @see #comparing(Function, Comparator)</em>
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">     * @see #thenComparing(Comparator)</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>     <strong class="jxr_keyword">default</strong> &lt;U&gt; Comparator&lt;T&gt; thenComparing(
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             Function&lt;? <strong class="jxr_keyword">super</strong> T, ? <strong class="jxr_keyword">extends</strong> U&gt; keyExtractor,
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>             Comparator&lt;? <strong class="jxr_keyword">super</strong> U&gt; keyComparator)
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     {
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <strong class="jxr_keyword">return</strong> thenComparing(comparing(keyExtractor, keyComparator));
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     }
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with a function that</em>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">     * extracts a {@code Comparable} sort key.</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">     * @implSpec This default implementation behaves as if {@code</em>
+<a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">     *           thenComparing(comparing(keyExtractor))}.</em>
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">     * @param  &lt;U&gt;  the type of the {@link Comparable} sort key</em>
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the {@link</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">     *         Comparable} sort key</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this and then the</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">     *         {@link Comparable} sort key.</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null.</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">     * @see #comparing(Function)</em>
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">     * @see #thenComparing(Comparator)</em>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     <strong class="jxr_keyword">default</strong> &lt;U <strong class="jxr_keyword">extends</strong> Comparable&lt;? <strong class="jxr_keyword">super</strong> U&gt;&gt; Comparator&lt;T&gt; thenComparing(
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>             Function&lt;? <strong class="jxr_keyword">super</strong> T, ? <strong class="jxr_keyword">extends</strong> U&gt; keyExtractor)
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     {
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         <strong class="jxr_keyword">return</strong> thenComparing(comparing(keyExtractor));
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with a function that</em>
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">     * extracts a {@code int} sort key.</em>
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">     * @implSpec This default implementation behaves as if {@code</em>
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">     *           thenComparing(comparingInt(keyExtractor))}.</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the integer sort key</em>
+<a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this and then the</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     *         {@code int} sort key</em>
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null.</em>
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">     * @see #comparingInt(ToIntFunction)</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">     * @see #thenComparing(Comparator)</em>
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L282" href="#L282">282</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>     <strong class="jxr_keyword">default</strong> Comparator&lt;T&gt; thenComparingInt(ToIntFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         <strong class="jxr_keyword">return</strong> thenComparing(comparingInt(keyExtractor));
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L288" href="#L288">288</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with a function that</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> <em class="jxr_javadoccomment">     * extracts a {@code long} sort key.</em>
+<a class="jxr_linenumber" name="L290" href="#L290">290</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L291" href="#L291">291</a> <em class="jxr_javadoccomment">     * @implSpec This default implementation behaves as if {@code</em>
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> <em class="jxr_javadoccomment">     *           thenComparing(comparingLong(keyExtractor))}.</em>
+<a class="jxr_linenumber" name="L293" href="#L293">293</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the long sort key</em>
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this and then the</em>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> <em class="jxr_javadoccomment">     *         {@code long} sort key</em>
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null.</em>
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">     * @see #comparingLong(ToLongFunction)</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     * @see #thenComparing(Comparator)</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>     <strong class="jxr_keyword">default</strong> Comparator&lt;T&gt; thenComparingLong(ToLongFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         <strong class="jxr_keyword">return</strong> thenComparing(comparingLong(keyExtractor));
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>     }
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     * Returns a lexicographic-order comparator with a function that</em>
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * extracts a {@code double} sort key.</em>
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * @implSpec This default implementation behaves as if {@code</em>
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     *           thenComparing(comparingDouble(keyExtractor))}.</em>
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the double sort key</em>
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">     * @return a lexicographic-order comparator composed of this and then the</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">     *         {@code double} sort key</em>
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null.</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * @see #comparingDouble(ToDoubleFunction)</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     * @see #thenComparing(Comparator)</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>     <strong class="jxr_keyword">default</strong> Comparator&lt;T&gt; thenComparingDouble(ToDoubleFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         <strong class="jxr_keyword">return</strong> thenComparing(comparingDouble(keyExtractor));
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     }
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     * Returns a comparator that imposes the reverse of the &lt;em&gt;natural</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     * ordering&lt;/em&gt;.</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable and throws {@link</em>
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     * NullPointerException} when comparing {@code null}.</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the {@link Comparable} type of element to be compared</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">     * @return a comparator that imposes the reverse of the &lt;i&gt;natural</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">     *         ordering&lt;/i&gt; on {@code Comparable} objects.</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> <em class="jxr_javadoccomment">     * @see Comparable</em>
+<a class="jxr_linenumber" name="L336" href="#L336">336</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> Comparable&lt;? <strong class="jxr_keyword">super</strong> T&gt;&gt; Comparator&lt;T&gt; reverseOrder() {
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>         <strong class="jxr_keyword">return</strong> Collections.reverseOrder();
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     }
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     * Returns a comparator that compares {@link Comparable} objects in natural</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     * order.</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable and throws {@link</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     * NullPointerException} when comparing {@code null}.</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the {@link Comparable} type of element to be compared</em>
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     * @return a comparator that imposes the &lt;i&gt;natural ordering&lt;/i&gt; on {@code</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">     *         Comparable} objects.</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     * @see Comparable</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>     @SuppressWarnings(<span class="jxr_string">"unchecked"</span>)
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> Comparable&lt;? <strong class="jxr_keyword">super</strong> T&gt;&gt; Comparator&lt;T&gt; naturalOrder() {
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt;) Comparators.NaturalOrderComparator.INSTANCE;
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>     }
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     * Returns a null-friendly comparator that considers {@code null} to be</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     * less than non-null. When both are {@code null}, they are considered</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     * equal. If both are non-null, the specified {@code Comparator} is used</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     * to determine the order. If the specified comparator is {@code null},</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * then the returned comparator considers all non-null values to be equal.</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified comparator</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     * is serializable.</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of the elements to be compared</em>
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">     * @param  comparator a {@code Comparator} for comparing non-null values</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">     * @return a comparator that considers {@code null} to be less than</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">     *         non-null, and compares non-null objects with the supplied</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">     *         {@code Comparator}.</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; Comparator&lt;T&gt; nullsFirst(Comparator&lt;? <strong class="jxr_keyword">super</strong> T&gt; comparator) {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Comparators.NullComparator&lt;&gt;(<strong class="jxr_keyword">true</strong>, comparator);
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     }
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * Returns a null-friendly comparator that considers {@code null} to be</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     * greater than non-null. When both are {@code null}, they are considered</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     * equal. If both are non-null, the specified {@code Comparator} is used</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">     * to determine the order. If the specified comparator is {@code null},</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_javadoccomment">     * then the returned comparator considers all non-null values to be equal.</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified comparator</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * is serializable.</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of the elements to be compared</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     * @param  comparator a {@code Comparator} for comparing non-null values</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     * @return a comparator that considers {@code null} to be greater than</em>
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     *         non-null, and compares non-null objects with the supplied</em>
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     *         {@code Comparator}.</em>
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; Comparator&lt;T&gt; nullsLast(Comparator&lt;? <strong class="jxr_keyword">super</strong> T&gt; comparator) {
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> Comparators.NullComparator&lt;&gt;(false, comparator);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     * Accepts a function that extracts a sort key from a type {@code T}, and</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     * returns a {@code Comparator&lt;T&gt;} that compares by that sort key using</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * the specified {@link Comparator}.</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">      *</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified function</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     * and comparator are both serializable.</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     * @apiNote</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     * For example, to obtain a {@code Comparator} that compares {@code</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     * Person} objects by their last name ignoring case differences,</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">     *     Comparator&lt;Person&gt; cmp = Comparator.comparing(</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">     *             Person::getLastName,</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">     *             String.CASE_INSENSITIVE_ORDER);</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of element to be compared</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">     * @param  &lt;U&gt; the type of the sort key</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the sort key</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">     * @param  keyComparator the {@code Comparator} used to compare the sort key</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">     * @return a comparator that compares by an extracted key using the</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">     *         specified {@code Comparator}</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if either argument is null</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T, U&gt; Comparator&lt;T&gt; comparing(
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>             Function&lt;? <strong class="jxr_keyword">super</strong> T, ? <strong class="jxr_keyword">extends</strong> U&gt; keyExtractor,
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>             Comparator&lt;? <strong class="jxr_keyword">super</strong> U&gt; keyComparator)
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>     {
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         Objects.requireNonNull(keyExtractor);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>         Objects.requireNonNull(keyComparator);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable)
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>             (c1, c2) -&gt; keyComparator.compare(keyExtractor.apply(c1),
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>                                               keyExtractor.apply(c2));
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>     }
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> 
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     * Accepts a function that extracts a {@link java.lang.Comparable</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">     * Comparable} sort key from a type {@code T}, and returns a {@code</em>
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">     * Comparator&lt;T&gt;} that compares by that sort key.</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified function</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> <em class="jxr_javadoccomment">     * is also serializable.</em>
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> <em class="jxr_javadoccomment">     * @apiNote</em>
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> <em class="jxr_javadoccomment">     * For example, to obtain a {@code Comparator} that compares {@code</em>
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> <em class="jxr_javadoccomment">     * Person} objects by their last name,</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">     * &lt;pre&gt;{@code</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">     *     Comparator&lt;Person&gt; byLastName = Comparator.comparing(Person::getLastName);</em>
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">     * }&lt;/pre&gt;</em>
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of element to be compared</em>
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">     * @param  &lt;U&gt; the type of the {@code Comparable} sort key</em>
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the {@link</em>
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     *         Comparable} sort key</em>
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> <em class="jxr_javadoccomment">     * @return a comparator that compares by an extracted key</em>
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T, U <strong class="jxr_keyword">extends</strong> Comparable&lt;? <strong class="jxr_keyword">super</strong> U&gt;&gt; Comparator&lt;T&gt; comparing(
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>             Function&lt;? <strong class="jxr_keyword">super</strong> T, ? <strong class="jxr_keyword">extends</strong> U&gt; keyExtractor)
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>     {
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         Objects.requireNonNull(keyExtractor);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable)
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>             (c1, c2) -&gt; keyExtractor.apply(c1).compareTo(keyExtractor.apply(c2));
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>     }
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_javadoccomment">     * Accepts a function that extracts an {@code int} sort key from a type</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> <em class="jxr_javadoccomment">     * {@code T}, and returns a {@code Comparator&lt;T&gt;} that compares by that</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_javadoccomment">     * sort key.</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified function</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">     * is also serializable.</em>
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of element to be compared</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the integer sort key</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">     * @return a comparator that compares by an extracted key</em>
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">     * @see #comparing(Function)</em>
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; Comparator&lt;T&gt; comparingInt(ToIntFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>         Objects.requireNonNull(keyExtractor);
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable)
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>             (c1, c2) -&gt; Integer.compare(keyExtractor.applyAsInt(c1), keyExtractor.applyAsInt(c2));
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>     }
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> 
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> <em class="jxr_javadoccomment">     * Accepts a function that extracts a {@code long} sort key from a type</em>
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> <em class="jxr_javadoccomment">     * {@code T}, and returns a {@code Comparator&lt;T&gt;} that compares by that</em>
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> <em class="jxr_javadoccomment">     * sort key.</em>
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified function is</em>
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> <em class="jxr_javadoccomment">     * also serializable.</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of element to be compared</em>
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the long sort key</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     * @return a comparator that compares by an extracted key</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">     * @see #comparing(Function)</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null</em>
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; Comparator&lt;T&gt; comparingLong(ToLongFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L509" href="#L509">509</a>         Objects.requireNonNull(keyExtractor);
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable)
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>             (c1, c2) -&gt; Long.compare(keyExtractor.applyAsLong(c1), keyExtractor.applyAsLong(c2));
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>     }
+<a class="jxr_linenumber" name="L513" href="#L513">513</a> 
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">     * Accepts a function that extracts a {@code double} sort key from a type</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">     * {@code T}, and returns a {@code Comparator&lt;T&gt;} that compares by that</em>
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">     * sort key.</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">     * &lt;p&gt;The returned comparator is serializable if the specified function</em>
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> <em class="jxr_javadoccomment">     * is also serializable.</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">     * @param  &lt;T&gt; the type of element to be compared</em>
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">     * @param  keyExtractor the function used to extract the double sort key</em>
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">     * @return a comparator that compares by an extracted key</em>
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> <em class="jxr_javadoccomment">     * @see #comparing(Function)</em>
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> <em class="jxr_javadoccomment">     * @throws NullPointerException if the argument is null</em>
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> <em class="jxr_javadoccomment">     * @since 1.8</em>
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong>&lt;T&gt; Comparator&lt;T&gt; comparingDouble(ToDoubleFunction&lt;? <strong class="jxr_keyword">super</strong> T&gt; keyExtractor) {
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>         Objects.requireNonNull(keyExtractor);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>         <strong class="jxr_keyword">return</strong> (Comparator&lt;T&gt; &amp; Serializable)
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>             (c1, c2) -&gt; Double.compare(keyExtractor.applyAsDouble(c1), keyExtractor.applyAsDouble(c2));
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>     }
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>
